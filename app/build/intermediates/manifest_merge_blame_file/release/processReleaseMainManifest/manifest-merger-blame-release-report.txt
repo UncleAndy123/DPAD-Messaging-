@@ -1,0 +1,301 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.dpad.messaging"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="23"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.READ_SMS" />
+11-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:5:5-67
+11-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:5:22-64
+12    <uses-permission android:name="android.permission.SEND_SMS" />
+12-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:6:5-67
+12-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:6:22-64
+13    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+13-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:7:5-70
+13-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:7:22-67
+14    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+14-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:8:5-70
+14-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:8:22-67
+15    <uses-permission android:name="android.permission.READ_CONTACTS" />
+15-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:9:5-72
+15-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:9:22-69
+16    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+16-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:10:5-76
+16-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:10:22-73
+17    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+17-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:11:5-75
+17-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:11:22-72
+18    <uses-permission
+18-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:12:5-13:38
+19        android:name="android.permission.READ_EXTERNAL_STORAGE"
+19-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:12:22-77
+20        android:maxSdkVersion="32" />
+20-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:13:9-35
+21    <uses-permission android:name="android.permission.INTERNET" />
+21-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:14:5-67
+21-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:14:22-64
+22
+23    <uses-feature
+23-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:16:5-87
+24        android:name="android.software.leanback"
+24-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:16:19-59
+25        android:required="false" />
+25-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:16:60-84
+26    <uses-feature
+26-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:17:5-90
+27        android:name="android.hardware.touchscreen"
+27-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:17:19-62
+28        android:required="false" />
+28-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:17:63-87
+29
+30    <permission
+30-->[androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+31        android:name="com.dpad.messaging.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+31-->[androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+32        android:protectionLevel="signature" />
+32-->[androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+33
+34    <uses-permission android:name="com.dpad.messaging.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+34-->[androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+34-->[androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+35
+36    <application
+36-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:19:5-96:19
+37        android:allowBackup="true"
+37-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:20:9-35
+38        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+38-->[androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+39        android:extractNativeLibs="false"
+40        android:icon="@mipmap/ic_launcher"
+40-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:21:9-43
+41        android:label="@string/app_name"
+41-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:22:9-41
+42        android:roundIcon="@mipmap/ic_launcher_round"
+42-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:23:9-54
+43        android:supportsRtl="true"
+43-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:24:9-35
+44        android:theme="@style/Theme.DpadMessaging" >
+44-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:25:9-51
+45        <activity
+45-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:28:9-49:20
+46            android:name="com.dpad.messaging.MainActivity"
+46-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:29:13-41
+47            android:exported="true"
+47-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:30:13-36
+48            android:label="@string/app_name"
+48-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:31:13-45
+49            android:windowSoftInputMode="adjustResize" >
+49-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:32:13-55
+50            <intent-filter>
+50-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:33:13-36:29
+51                <action android:name="android.intent.action.MAIN" />
+51-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:34:17-69
+51-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:34:25-66
+52
+53                <category android:name="android.intent.category.LAUNCHER" />
+53-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:35:17-77
+53-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:35:27-74
+54            </intent-filter>
+55            <intent-filter>
+55-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:37:13-40:29
+56                <action android:name="android.intent.action.MAIN" />
+56-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:34:17-69
+56-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:34:25-66
+57
+58                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+58-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:39:17-86
+58-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:39:27-83
+59            </intent-filter>
+60            <!-- Handle "Send to" intents from other apps -->
+61            <intent-filter>
+61-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:42:13-48:29
+62                <action android:name="android.intent.action.SEND" />
+62-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:43:17-69
+62-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:43:25-66
+63                <action android:name="android.intent.action.SENDTO" />
+63-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:44:17-71
+63-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:44:25-68
+64
+65                <data android:scheme="sms" />
+65-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:17-46
+65-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:23-43
+66                <data android:scheme="smsto" />
+66-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:17-46
+66-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:23-43
+67
+68                <category android:name="android.intent.category.DEFAULT" />
+68-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:47:17-76
+68-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:47:27-73
+69            </intent-filter>
+70        </activity>
+71
+72        <receiver
+72-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:51:9-58:20
+73            android:name="com.dpad.messaging.receiver.SmsReceiver"
+73-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:52:13-49
+74            android:exported="true"
+74-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:53:13-36
+75            android:permission="android.permission.BROADCAST_SMS" >
+75-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:54:13-66
+76            <intent-filter android:priority="999" >
+76-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:55:13-57:29
+76-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:55:28-50
+77                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+77-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:56:17-82
+77-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:56:25-79
+78            </intent-filter>
+79        </receiver>
+80
+81        <!-- Required to become the default SMS app -->
+82        <receiver
+82-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:61:9-68:20
+83            android:name="com.dpad.messaging.receiver.SmsDeliverReceiver"
+83-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:62:13-56
+84            android:exported="true"
+84-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:63:13-36
+85            android:permission="android.permission.BROADCAST_SMS" >
+85-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:64:13-66
+86            <intent-filter>
+86-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:65:13-67:29
+87                <action android:name="android.provider.Telephony.SMS_DELIVER" />
+87-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:66:17-81
+87-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:66:25-78
+88            </intent-filter>
+89        </receiver>
+90
+91        <!-- Required to become the default MMS app -->
+92        <receiver
+92-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:71:9-79:20
+93            android:name="com.dpad.messaging.receiver.MmsPushDeliverReceiver"
+93-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:72:13-60
+94            android:exported="true"
+94-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:73:13-36
+95            android:permission="android.permission.BROADCAST_WAP_PUSH" >
+95-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:74:13-71
+96            <intent-filter>
+96-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:75:13-78:29
+97                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+97-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:76:17-86
+97-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:76:25-83
+98
+99                <data android:mimeType="application/vnd.wap.mms-message" />
+99-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:17-46
+99-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:77:23-73
+100            </intent-filter>
+101        </receiver>
+102
+103        <!-- Required to become the default SMS app (Quick responses) -->
+104        <service
+104-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:82:9-94:19
+105            android:name="com.dpad.messaging.service.HeadlessSmsSendService"
+105-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:83:13-59
+106            android:exported="true"
+106-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:84:13-36
+107            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE" >
+107-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:85:13-77
+108            <intent-filter>
+108-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:86:13-93:29
+109                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+109-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:87:17-84
+109-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:87:25-81
+110
+111                <category android:name="android.intent.category.DEFAULT" />
+111-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:47:17-76
+111-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:47:27-73
+112
+113                <data android:scheme="sms" />
+113-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:17-46
+113-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:23-43
+114                <data android:scheme="smsto" />
+114-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:17-46
+114-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:23-43
+115                <data android:scheme="mms" />
+115-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:17-46
+115-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:23-43
+116                <data android:scheme="mmsto" />
+116-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:17-46
+116-->/Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:23-43
+117            </intent-filter>
+118        </service>
+119
+120        <provider
+120-->[androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+121            android:name="androidx.startup.InitializationProvider"
+121-->[androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:25:13-67
+122            android:authorities="com.dpad.messaging.androidx-startup"
+122-->[androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:26:13-68
+123            android:exported="false" >
+123-->[androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:27:13-37
+124            <meta-data
+124-->[androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+125                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+125-->[androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:30:17-75
+126                android:value="androidx.startup" />
+126-->[androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:31:17-49
+127            <meta-data
+127-->[androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:29:13-31:52
+128                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+128-->[androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:30:17-78
+129                android:value="androidx.startup" />
+129-->[androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:31:17-49
+130            <meta-data
+130-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+131                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+131-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+132                android:value="androidx.startup" />
+132-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+133        </provider>
+134
+135        <service
+135-->[androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:24:9-28:63
+136            android:name="androidx.room.MultiInstanceInvalidationService"
+136-->[androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:25:13-74
+137            android:directBootAware="true"
+137-->[androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:26:13-43
+138            android:exported="false" />
+138-->[androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:27:13-37
+139
+140        <receiver
+140-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+141            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+141-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+142            android:directBootAware="false"
+142-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+143            android:enabled="true"
+143-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+144            android:exported="true"
+144-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+145            android:permission="android.permission.DUMP" >
+145-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+146            <intent-filter>
+146-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+147                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+147-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+147-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+148            </intent-filter>
+149            <intent-filter>
+149-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+150                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+150-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+150-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+151            </intent-filter>
+152            <intent-filter>
+152-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+153                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+153-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+153-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+154            </intent-filter>
+155            <intent-filter>
+155-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+156                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+156-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+156-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+157            </intent-filter>
+158        </receiver>
+159    </application>
+160
+161</manifest>

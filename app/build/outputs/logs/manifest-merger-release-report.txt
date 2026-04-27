@@ -1,0 +1,505 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:2:1-98:12
+INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:2:1-98:12
+INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:2:1-98:12
+INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:2:1-98:12
+MERGED from [androidx.navigation:navigation-common:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/0bec088c59aec5d19e56e1f7b9022ce7/transformed/navigation-common-2.7.7/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.navigation:navigation-runtime:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/d9b0912ad41301f81ac5d8a5b18e91cc/transformed/navigation-runtime-2.7.7/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/7451df12da0d4caa07cf274369cf3383/transformed/navigation-common-ktx-2.7.7/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/c6ad8a485c470c54771766ac247d09a3/transformed/navigation-runtime-ktx-2.7.7/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.navigation:navigation-compose:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/c13ad813f0a7c9e31010a62e40da951e/transformed/jetified-navigation-compose-2.7.7/AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.accompanist:accompanist-permissions:0.34.0] /Users/jbriones/.gradle/caches/8.14/transforms/26f6f345f26a929e8974a1ccb308140d/transformed/jetified-accompanist-permissions-0.34.0/AndroidManifest.xml:17:1-23:12
+MERGED from [androidx.compose.material3:material3-android:1.2.1] /Users/jbriones/.gradle/caches/8.14/transforms/d705773fe0ec8e8f77f52041e90ca7ec/transformed/jetified-material3-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity-compose:1.9.0] /Users/jbriones/.gradle/caches/8.14/transforms/f107b7268231c3543a1b6a5f34e41407/transformed/jetified-activity-compose-1.9.0/AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil-compose:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/6ae264ce6d71a09f8610970d9f4f02a8/transformed/jetified-coil-compose-2.6.0/AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil-compose-base:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/4bbf4d0d13442061b0dfadcad256ede0/transformed/jetified-coil-compose-base-2.6.0/AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/2492fe6c5e03a009d576575ba8070827/transformed/jetified-coil-2.6.0/AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil-base:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/5ef2b3ad601f313d49f441121f0e8a90/transformed/jetified-coil-base-2.6.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-icons-core-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/0e5ae4a5e2b8ec7be641a084186a2689/transformed/jetified-material-icons-core-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-icons-extended-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/4092250e086f9f5e9572646fe5de4dcd/transformed/jetified-material-icons-extended-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-ripple-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/1296ab3de4e35e34e56a9e2b4cd22d4a/transformed/jetified-material-ripple-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.animation:animation-core-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/9f6db02ac94ffc304a38f4128fa7d264/transformed/jetified-animation-core-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.animation:animation-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/fdfec5b6d7b2047c31b766a8e6e07273/transformed/jetified-animation-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/26abd756dafd10a31bfb5cde2072c5ff/transformed/jetified-foundation-layout-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/9d598efca6f5d77445f01ec66c913929/transformed/jetified-foundation-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-unit-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/98a6025de2eb2ad1ebc3439637a0cc2b/transformed/jetified-ui-unit-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-geometry-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/2cf0a6eecb9ab2d74f640a83e116e425/transformed/jetified-ui-geometry-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-util-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/a48c8fa150c9afa40c3f88a1f6749104/transformed/jetified-ui-util-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/884b5b937411fd31feee78243a56a2d3/transformed/jetified-ui-tooling-preview-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.compose.ui:ui-graphics-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/ef59225e04eebc3160ffed4cef6d501e/transformed/jetified-ui-graphics-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-text-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/1919cc280d9e650bb233d4f015dd3b1a/transformed/jetified-ui-text-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/4069b6d149844a2a8169f0d9ec4c1ba5/transformed/lifecycle-livedata-core-2.8.3/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /Users/jbriones/.gradle/caches/8.14/transforms/eea07699601fa7857a1ec59a11f6631f/transformed/jetified-savedstate-ktx-1.2.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/jbriones/.gradle/caches/8.14/transforms/62802fc12dc710356ca5d8dcdb92cd64/transformed/jetified-savedstate-1.2.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/c728989401aed5d59e3091afdf15ec2b/transformed/jetified-lifecycle-viewmodel-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/20746722090ba2979dadda4a6885bd5a/transformed/jetified-lifecycle-runtime-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/139ad10731cc9b5e6312da8c922b2bd3/transformed/jetified-lifecycle-viewmodel-ktx-2.8.3/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/5c135b9c9faaa93ee6fcbcc0817565a5/transformed/jetified-lifecycle-viewmodel-savedstate-2.8.3/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/debe9d1434859d93306ef4c28dc417d5/transformed/jetified-lifecycle-runtime-ktx-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/1a1cbab350fdd771b0ba77e7268ff446/transformed/jetified-lifecycle-viewmodel-compose-release/AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] /Users/jbriones/.gradle/caches/8.14/transforms/e7bf90b3d1ca1d3e05e89b58e4a05f69/transformed/jetified-accompanist-drawablepainter-0.32.0/AndroidManifest.xml:17:1-23:12
+MERGED from [androidx.compose.ui:ui-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/5df6f08f02f13982f29ff91370db2195/transformed/jetified-ui-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.activity:activity-ktx:1.9.0] /Users/jbriones/.gradle/caches/8.14/transforms/ea011cd8bf616841da237c6ac3121b6b/transformed/jetified-activity-ktx-1.9.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.activity:activity:1.9.0] /Users/jbriones/.gradle/caches/8.14/transforms/a9a0885a5245440cc30522bb359982b5/transformed/jetified-activity-1.9.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.autofill:autofill:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/1b88a7524e87f2e64fadd9f16dcee951/transformed/jetified-autofill-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/494eb28aae81a2dc3cfa454ac344e24f/transformed/jetified-appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/jbriones/.gradle/caches/8.14/transforms/85ab1c633270aa32c80a87ac64eef424/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/jbriones/.gradle/caches/8.14/transforms/a65cc5736614f2d420097ca33a1b9650/transformed/vectordrawable-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/e5bf395b5da56baf0eb103c6991b0af0/transformed/jetified-customview-poolingcontainer-1.0.0/AndroidManifest.xml:17:1-23:12
+MERGED from [androidx.core:core-ktx:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/14129ea7e0e0f1a4339f71059064c6f8/transformed/jetified-core-ktx-1.13.1/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:17:1-31:12
+MERGED from [androidx.room:room-ktx:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/7a587f4b6047228612ab31f21041d414/transformed/jetified-room-ktx-2.6.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.datastore:datastore-core-android:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/5fc99975353f44641c91833ce9afb028/transformed/jetified-datastore-core-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.datastore:datastore-android:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/7e52bb7c88676daabe89c8c2ad336a4e/transformed/jetified-datastore-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.datastore:datastore-preferences-android:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/09806a0f397e8228fe7c0c0cb71bf470/transformed/jetified-datastore-preferences-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.sqlite:sqlite-framework:2.4.0] /Users/jbriones/.gradle/caches/8.14/transforms/101a7347177eb2976180b4fa7b3c74f9/transformed/sqlite-framework-2.4.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.sqlite:sqlite:2.4.0] /Users/jbriones/.gradle/caches/8.14/transforms/c558261ba71a4844fb4abf8c80abf65e/transformed/sqlite-2.4.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] /Users/jbriones/.gradle/caches/8.14/transforms/4cbea411ceb4eac9b4fa049d285a5159/transformed/jetified-annotation-experimental-1.4.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/a390c0fc5ee6f14db84a4af89fa453b3/transformed/jetified-runtime-saveable-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.runtime:runtime-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/9fda2464fcc79d5c802e421b19d8a3f8/transformed/jetified-runtime-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/jbriones/.gradle/caches/8.14/transforms/77713e8d7967e565f87de372a967bf1f/transformed/core-runtime-2.2.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/d84653f1d1a3c3de1a6926cf76679d5a/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/c48386e9b2faa5e4d7989b9f3f3610b0/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:17:1-55:12
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/792feb74a05cd621022b1b08968152b4/transformed/jetified-startup-runtime-1.1.1/AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/cf38e71652674b2e411769fff2e6183e/transformed/jetified-tracing-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.exifinterface:exifinterface:1.3.7] /Users/jbriones/.gradle/caches/8.14/transforms/1b6c64b3a41f5a51b52ace1acfb02285/transformed/exifinterface-1.3.7/AndroidManifest.xml:17:1-24:12
+	package
+		INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml
+	xmlns:tools
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:3:5-51
+	android:versionCode
+		INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:2:11-69
+uses-permission#android.permission.READ_SMS
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:5:5-67
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:5:22-64
+uses-permission#android.permission.SEND_SMS
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:6:5-67
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:6:22-64
+uses-permission#android.permission.RECEIVE_SMS
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:7:5-70
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:7:22-67
+uses-permission#android.permission.RECEIVE_MMS
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:8:5-70
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:8:22-67
+uses-permission#android.permission.READ_CONTACTS
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:9:5-72
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:9:22-69
+uses-permission#android.permission.READ_MEDIA_IMAGES
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:10:5-76
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:10:22-73
+uses-permission#android.permission.READ_MEDIA_VIDEO
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:11:5-75
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:11:22-72
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:12:5-13:38
+	android:maxSdkVersion
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:13:9-35
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:12:22-77
+uses-permission#android.permission.INTERNET
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:14:5-67
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:14:22-64
+uses-feature#android.software.leanback
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:16:5-87
+	android:required
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:16:60-84
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:16:19-59
+uses-feature#android.hardware.touchscreen
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:17:5-90
+	android:required
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:17:63-87
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:17:19-62
+application
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:19:5-96:19
+INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:19:5-96:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:28:5-89
+MERGED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:28:5-89
+MERGED from [androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:23:5-29:19
+MERGED from [androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:23:5-29:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/c48386e9b2faa5e4d7989b9f3f3610b0/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/c48386e9b2faa5e4d7989b9f3f3610b0/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/792feb74a05cd621022b1b08968152b4/transformed/jetified-startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/792feb74a05cd621022b1b08968152b4/transformed/jetified-startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
+	android:extractNativeLibs
+		INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+	android:supportsRtl
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:24:9-35
+	android:label
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:22:9-41
+	android:roundIcon
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:23:9-54
+	tools:targetApi
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:26:9-29
+	android:icon
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:21:9-43
+	android:allowBackup
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:20:9-35
+	android:theme
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:25:9-51
+activity#com.dpad.messaging.MainActivity
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:28:9-49:20
+	android:label
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:31:13-45
+	android:windowSoftInputMode
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:32:13-55
+	android:exported
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:30:13-36
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:29:13-41
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:33:13-36:29
+action#android.intent.action.MAIN
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:34:17-69
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:34:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:35:17-77
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:35:27-74
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LEANBACK_LAUNCHER
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:37:13-40:29
+category#android.intent.category.LEANBACK_LAUNCHER
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:39:17-86
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:39:27-83
+intent-filter#action:name:android.intent.action.SEND+action:name:android.intent.action.SENDTO+category:name:android.intent.category.DEFAULT+data:scheme:sms+data:scheme:smsto
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:42:13-48:29
+action#android.intent.action.SEND
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:43:17-69
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:43:25-66
+action#android.intent.action.SENDTO
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:44:17-71
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:44:25-68
+data
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:17-46
+	android:scheme
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:45:23-43
+	android:mimeType
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:77:23-73
+category#android.intent.category.DEFAULT
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:47:17-76
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:47:27-73
+receiver#com.dpad.messaging.receiver.SmsReceiver
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:51:9-58:20
+	android:exported
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:53:13-36
+	android:permission
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:54:13-66
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:52:13-49
+intent-filter#action:name:android.provider.Telephony.SMS_RECEIVED
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:55:13-57:29
+	android:priority
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:55:28-50
+action#android.provider.Telephony.SMS_RECEIVED
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:56:17-82
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:56:25-79
+receiver#com.dpad.messaging.receiver.SmsDeliverReceiver
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:61:9-68:20
+	android:exported
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:63:13-36
+	android:permission
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:64:13-66
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:62:13-56
+intent-filter#action:name:android.provider.Telephony.SMS_DELIVER
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:65:13-67:29
+action#android.provider.Telephony.SMS_DELIVER
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:66:17-81
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:66:25-78
+receiver#com.dpad.messaging.receiver.MmsPushDeliverReceiver
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:71:9-79:20
+	android:exported
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:73:13-36
+	android:permission
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:74:13-71
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:72:13-60
+intent-filter#action:name:android.provider.Telephony.WAP_PUSH_DELIVER+data:mimeType:application/vnd.wap.mms-message
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:75:13-78:29
+action#android.provider.Telephony.WAP_PUSH_DELIVER
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:76:17-86
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:76:25-83
+service#com.dpad.messaging.service.HeadlessSmsSendService
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:82:9-94:19
+	android:exported
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:84:13-36
+	android:permission
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:85:13-77
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:83:13-59
+intent-filter#action:name:android.intent.action.RESPOND_VIA_MESSAGE+category:name:android.intent.category.DEFAULT+data:scheme:mms+data:scheme:mmsto+data:scheme:sms+data:scheme:smsto
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:86:13-93:29
+action#android.intent.action.RESPOND_VIA_MESSAGE
+ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:87:17-84
+	android:name
+		ADDED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml:87:25-81
+uses-sdk
+INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml
+INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml
+MERGED from [androidx.navigation:navigation-common:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/0bec088c59aec5d19e56e1f7b9022ce7/transformed/navigation-common-2.7.7/AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-common:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/0bec088c59aec5d19e56e1f7b9022ce7/transformed/navigation-common-2.7.7/AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-runtime:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/d9b0912ad41301f81ac5d8a5b18e91cc/transformed/navigation-runtime-2.7.7/AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-runtime:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/d9b0912ad41301f81ac5d8a5b18e91cc/transformed/navigation-runtime-2.7.7/AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/7451df12da0d4caa07cf274369cf3383/transformed/navigation-common-ktx-2.7.7/AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/7451df12da0d4caa07cf274369cf3383/transformed/navigation-common-ktx-2.7.7/AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/c6ad8a485c470c54771766ac247d09a3/transformed/navigation-runtime-ktx-2.7.7/AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/c6ad8a485c470c54771766ac247d09a3/transformed/navigation-runtime-ktx-2.7.7/AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-compose:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/c13ad813f0a7c9e31010a62e40da951e/transformed/jetified-navigation-compose-2.7.7/AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-compose:2.7.7] /Users/jbriones/.gradle/caches/8.14/transforms/c13ad813f0a7c9e31010a62e40da951e/transformed/jetified-navigation-compose-2.7.7/AndroidManifest.xml:5:5-44
+MERGED from [com.google.accompanist:accompanist-permissions:0.34.0] /Users/jbriones/.gradle/caches/8.14/transforms/26f6f345f26a929e8974a1ccb308140d/transformed/jetified-accompanist-permissions-0.34.0/AndroidManifest.xml:21:5-44
+MERGED from [com.google.accompanist:accompanist-permissions:0.34.0] /Users/jbriones/.gradle/caches/8.14/transforms/26f6f345f26a929e8974a1ccb308140d/transformed/jetified-accompanist-permissions-0.34.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.compose.material3:material3-android:1.2.1] /Users/jbriones/.gradle/caches/8.14/transforms/d705773fe0ec8e8f77f52041e90ca7ec/transformed/jetified-material3-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.material3:material3-android:1.2.1] /Users/jbriones/.gradle/caches/8.14/transforms/d705773fe0ec8e8f77f52041e90ca7ec/transformed/jetified-material3-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity-compose:1.9.0] /Users/jbriones/.gradle/caches/8.14/transforms/f107b7268231c3543a1b6a5f34e41407/transformed/jetified-activity-compose-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-compose:1.9.0] /Users/jbriones/.gradle/caches/8.14/transforms/f107b7268231c3543a1b6a5f34e41407/transformed/jetified-activity-compose-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/6ae264ce6d71a09f8610970d9f4f02a8/transformed/jetified-coil-compose-2.6.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/6ae264ce6d71a09f8610970d9f4f02a8/transformed/jetified-coil-compose-2.6.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose-base:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/4bbf4d0d13442061b0dfadcad256ede0/transformed/jetified-coil-compose-base-2.6.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose-base:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/4bbf4d0d13442061b0dfadcad256ede0/transformed/jetified-coil-compose-base-2.6.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/2492fe6c5e03a009d576575ba8070827/transformed/jetified-coil-2.6.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/2492fe6c5e03a009d576575ba8070827/transformed/jetified-coil-2.6.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-base:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/5ef2b3ad601f313d49f441121f0e8a90/transformed/jetified-coil-base-2.6.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-base:2.6.0] /Users/jbriones/.gradle/caches/8.14/transforms/5ef2b3ad601f313d49f441121f0e8a90/transformed/jetified-coil-base-2.6.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-core-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/0e5ae4a5e2b8ec7be641a084186a2689/transformed/jetified-material-icons-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-core-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/0e5ae4a5e2b8ec7be641a084186a2689/transformed/jetified-material-icons-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-extended-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/4092250e086f9f5e9572646fe5de4dcd/transformed/jetified-material-icons-extended-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-extended-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/4092250e086f9f5e9572646fe5de4dcd/transformed/jetified-material-icons-extended-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/1296ab3de4e35e34e56a9e2b4cd22d4a/transformed/jetified-material-ripple-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/1296ab3de4e35e34e56a9e2b4cd22d4a/transformed/jetified-material-ripple-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-core-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/9f6db02ac94ffc304a38f4128fa7d264/transformed/jetified-animation-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-core-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/9f6db02ac94ffc304a38f4128fa7d264/transformed/jetified-animation-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/fdfec5b6d7b2047c31b766a8e6e07273/transformed/jetified-animation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/fdfec5b6d7b2047c31b766a8e6e07273/transformed/jetified-animation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/26abd756dafd10a31bfb5cde2072c5ff/transformed/jetified-foundation-layout-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/26abd756dafd10a31bfb5cde2072c5ff/transformed/jetified-foundation-layout-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/9d598efca6f5d77445f01ec66c913929/transformed/jetified-foundation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/9d598efca6f5d77445f01ec66c913929/transformed/jetified-foundation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-unit-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/98a6025de2eb2ad1ebc3439637a0cc2b/transformed/jetified-ui-unit-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-unit-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/98a6025de2eb2ad1ebc3439637a0cc2b/transformed/jetified-ui-unit-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-geometry-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/2cf0a6eecb9ab2d74f640a83e116e425/transformed/jetified-ui-geometry-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-geometry-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/2cf0a6eecb9ab2d74f640a83e116e425/transformed/jetified-ui-geometry-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-util-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/a48c8fa150c9afa40c3f88a1f6749104/transformed/jetified-ui-util-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-util-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/a48c8fa150c9afa40c3f88a1f6749104/transformed/jetified-ui-util-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/884b5b937411fd31feee78243a56a2d3/transformed/jetified-ui-tooling-preview-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/884b5b937411fd31feee78243a56a2d3/transformed/jetified-ui-tooling-preview-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-graphics-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/ef59225e04eebc3160ffed4cef6d501e/transformed/jetified-ui-graphics-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-graphics-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/ef59225e04eebc3160ffed4cef6d501e/transformed/jetified-ui-graphics-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-text-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/1919cc280d9e650bb233d4f015dd3b1a/transformed/jetified-ui-text-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-text-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/1919cc280d9e650bb233d4f015dd3b1a/transformed/jetified-ui-text-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/4069b6d149844a2a8169f0d9ec4c1ba5/transformed/lifecycle-livedata-core-2.8.3/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/4069b6d149844a2a8169f0d9ec4c1ba5/transformed/lifecycle-livedata-core-2.8.3/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /Users/jbriones/.gradle/caches/8.14/transforms/eea07699601fa7857a1ec59a11f6631f/transformed/jetified-savedstate-ktx-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /Users/jbriones/.gradle/caches/8.14/transforms/eea07699601fa7857a1ec59a11f6631f/transformed/jetified-savedstate-ktx-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/jbriones/.gradle/caches/8.14/transforms/62802fc12dc710356ca5d8dcdb92cd64/transformed/jetified-savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/jbriones/.gradle/caches/8.14/transforms/62802fc12dc710356ca5d8dcdb92cd64/transformed/jetified-savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/c728989401aed5d59e3091afdf15ec2b/transformed/jetified-lifecycle-viewmodel-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/c728989401aed5d59e3091afdf15ec2b/transformed/jetified-lifecycle-viewmodel-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/20746722090ba2979dadda4a6885bd5a/transformed/jetified-lifecycle-runtime-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/20746722090ba2979dadda4a6885bd5a/transformed/jetified-lifecycle-runtime-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/139ad10731cc9b5e6312da8c922b2bd3/transformed/jetified-lifecycle-viewmodel-ktx-2.8.3/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/139ad10731cc9b5e6312da8c922b2bd3/transformed/jetified-lifecycle-viewmodel-ktx-2.8.3/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/5c135b9c9faaa93ee6fcbcc0817565a5/transformed/jetified-lifecycle-viewmodel-savedstate-2.8.3/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/5c135b9c9faaa93ee6fcbcc0817565a5/transformed/jetified-lifecycle-viewmodel-savedstate-2.8.3/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/debe9d1434859d93306ef4c28dc417d5/transformed/jetified-lifecycle-runtime-ktx-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/debe9d1434859d93306ef4c28dc417d5/transformed/jetified-lifecycle-runtime-ktx-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/1a1cbab350fdd771b0ba77e7268ff446/transformed/jetified-lifecycle-viewmodel-compose-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/1a1cbab350fdd771b0ba77e7268ff446/transformed/jetified-lifecycle-viewmodel-compose-release/AndroidManifest.xml:5:5-44
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] /Users/jbriones/.gradle/caches/8.14/transforms/e7bf90b3d1ca1d3e05e89b58e4a05f69/transformed/jetified-accompanist-drawablepainter-0.32.0/AndroidManifest.xml:21:5-44
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] /Users/jbriones/.gradle/caches/8.14/transforms/e7bf90b3d1ca1d3e05e89b58e4a05f69/transformed/jetified-accompanist-drawablepainter-0.32.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.compose.ui:ui-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/5df6f08f02f13982f29ff91370db2195/transformed/jetified-ui-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/5df6f08f02f13982f29ff91370db2195/transformed/jetified-ui-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-ktx:1.9.0] /Users/jbriones/.gradle/caches/8.14/transforms/ea011cd8bf616841da237c6ac3121b6b/transformed/jetified-activity-ktx-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-ktx:1.9.0] /Users/jbriones/.gradle/caches/8.14/transforms/ea011cd8bf616841da237c6ac3121b6b/transformed/jetified-activity-ktx-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity:1.9.0] /Users/jbriones/.gradle/caches/8.14/transforms/a9a0885a5245440cc30522bb359982b5/transformed/jetified-activity-1.9.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.9.0] /Users/jbriones/.gradle/caches/8.14/transforms/a9a0885a5245440cc30522bb359982b5/transformed/jetified-activity-1.9.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.autofill:autofill:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/1b88a7524e87f2e64fadd9f16dcee951/transformed/jetified-autofill-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.autofill:autofill:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/1b88a7524e87f2e64fadd9f16dcee951/transformed/jetified-autofill-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/494eb28aae81a2dc3cfa454ac344e24f/transformed/jetified-appcompat-resources-1.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/494eb28aae81a2dc3cfa454ac344e24f/transformed/jetified-appcompat-resources-1.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/jbriones/.gradle/caches/8.14/transforms/85ab1c633270aa32c80a87ac64eef424/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/jbriones/.gradle/caches/8.14/transforms/85ab1c633270aa32c80a87ac64eef424/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/jbriones/.gradle/caches/8.14/transforms/a65cc5736614f2d420097ca33a1b9650/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/jbriones/.gradle/caches/8.14/transforms/a65cc5736614f2d420097ca33a1b9650/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/e5bf395b5da56baf0eb103c6991b0af0/transformed/jetified-customview-poolingcontainer-1.0.0/AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/e5bf395b5da56baf0eb103c6991b0af0/transformed/jetified-customview-poolingcontainer-1.0.0/AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.core:core-ktx:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/14129ea7e0e0f1a4339f71059064c6f8/transformed/jetified-core-ktx-1.13.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-ktx:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/14129ea7e0e0f1a4339f71059064c6f8/transformed/jetified-core-ktx-1.13.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.room:room-ktx:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/7a587f4b6047228612ab31f21041d414/transformed/jetified-room-ktx-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-ktx:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/7a587f4b6047228612ab31f21041d414/transformed/jetified-room-ktx-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-core-android:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/5fc99975353f44641c91833ce9afb028/transformed/jetified-datastore-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.datastore:datastore-core-android:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/5fc99975353f44641c91833ce9afb028/transformed/jetified-datastore-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.datastore:datastore-android:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/7e52bb7c88676daabe89c8c2ad336a4e/transformed/jetified-datastore-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-android:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/7e52bb7c88676daabe89c8c2ad336a4e/transformed/jetified-datastore-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-preferences-android:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/09806a0f397e8228fe7c0c0cb71bf470/transformed/jetified-datastore-preferences-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-preferences-android:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/09806a0f397e8228fe7c0c0cb71bf470/transformed/jetified-datastore-preferences-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.4.0] /Users/jbriones/.gradle/caches/8.14/transforms/101a7347177eb2976180b4fa7b3c74f9/transformed/sqlite-framework-2.4.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.4.0] /Users/jbriones/.gradle/caches/8.14/transforms/101a7347177eb2976180b4fa7b3c74f9/transformed/sqlite-framework-2.4.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.4.0] /Users/jbriones/.gradle/caches/8.14/transforms/c558261ba71a4844fb4abf8c80abf65e/transformed/sqlite-2.4.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.4.0] /Users/jbriones/.gradle/caches/8.14/transforms/c558261ba71a4844fb4abf8c80abf65e/transformed/sqlite-2.4.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] /Users/jbriones/.gradle/caches/8.14/transforms/4cbea411ceb4eac9b4fa049d285a5159/transformed/jetified-annotation-experimental-1.4.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] /Users/jbriones/.gradle/caches/8.14/transforms/4cbea411ceb4eac9b4fa049d285a5159/transformed/jetified-annotation-experimental-1.4.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/a390c0fc5ee6f14db84a4af89fa453b3/transformed/jetified-runtime-saveable-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/a390c0fc5ee6f14db84a4af89fa453b3/transformed/jetified-runtime-saveable-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/9fda2464fcc79d5c802e421b19d8a3f8/transformed/jetified-runtime-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-android:1.6.8] /Users/jbriones/.gradle/caches/8.14/transforms/9fda2464fcc79d5c802e421b19d8a3f8/transformed/jetified-runtime-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/jbriones/.gradle/caches/8.14/transforms/77713e8d7967e565f87de372a967bf1f/transformed/core-runtime-2.2.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/jbriones/.gradle/caches/8.14/transforms/77713e8d7967e565f87de372a967bf1f/transformed/core-runtime-2.2.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/d84653f1d1a3c3de1a6926cf76679d5a/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/d84653f1d1a3c3de1a6926cf76679d5a/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/c48386e9b2faa5e4d7989b9f3f3610b0/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/c48386e9b2faa5e4d7989b9f3f3610b0/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/792feb74a05cd621022b1b08968152b4/transformed/jetified-startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/792feb74a05cd621022b1b08968152b4/transformed/jetified-startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/cf38e71652674b2e411769fff2e6183e/transformed/jetified-tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/jbriones/.gradle/caches/8.14/transforms/cf38e71652674b2e411769fff2e6183e/transformed/jetified-tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.7] /Users/jbriones/.gradle/caches/8.14/transforms/1b6c64b3a41f5a51b52ace1acfb02285/transformed/exifinterface-1.3.7/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.7] /Users/jbriones/.gradle/caches/8.14/transforms/1b6c64b3a41f5a51b52ace1acfb02285/transformed/exifinterface-1.3.7/AndroidManifest.xml:20:5-22:41
+	android:targetSdkVersion
+		INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/jbriones/Documents/GitHub/DPAD Messaging/app/src/main/AndroidManifest.xml
+provider#androidx.startup.InitializationProvider
+ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/792feb74a05cd621022b1b08968152b4/transformed/jetified-startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/jbriones/.gradle/caches/8.14/transforms/792feb74a05cd621022b1b08968152b4/transformed/jetified-startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
+	tools:node
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:28:13-31
+	android:authorities
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:26:13-68
+	android:exported
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:27:13-37
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:25:13-67
+meta-data#androidx.emoji2.text.EmojiCompatInitializer
+ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/jbriones/.gradle/caches/8.14/transforms/80b2b2f717f1a4c914776c2ce338e253/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:30:17-75
+meta-data#androidx.lifecycle.ProcessLifecycleInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.8.3] /Users/jbriones/.gradle/caches/8.14/transforms/8242cc8a519cd35207390f770ea59af0/transformed/jetified-lifecycle-process-2.8.3/AndroidManifest.xml:30:17-78
+permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+permission#com.dpad.messaging.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+uses-permission#com.dpad.messaging.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /Users/jbriones/.gradle/caches/8.14/transforms/d60ff5ee29e567eb22ccdbbc0c5a44be/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+service#androidx.room.MultiInstanceInvalidationService
+ADDED from [androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:24:9-28:63
+	android:exported
+		ADDED from [androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:27:13-37
+	tools:ignore
+		ADDED from [androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:28:13-60
+	android:directBootAware
+		ADDED from [androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:26:13-43
+	android:name
+		ADDED from [androidx.room:room-runtime:2.6.1] /Users/jbriones/.gradle/caches/8.14/transforms/4e7f3aaefa8a2aef9ec9d5f62b2fde51/transformed/room-runtime-2.6.1/AndroidManifest.xml:25:13-74
+meta-data#androidx.profileinstaller.ProfileInstallerInitializer
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+receiver#androidx.profileinstaller.ProfileInstallReceiver
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+	android:enabled
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+	android:exported
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+	android:permission
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+	android:directBootAware
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+intent-filter#action:name:androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+action#androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+intent-filter#action:name:androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+action#androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+intent-filter#action:name:androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+action#androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+intent-filter#action:name:androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+action#androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/jbriones/.gradle/caches/8.14/transforms/d5917e207d0cf6d4a5a87a5b684a8ecc/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
