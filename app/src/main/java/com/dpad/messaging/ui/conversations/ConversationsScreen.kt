@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.NotificationsOff
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dpad.messaging.data.model.SmsThread
 import com.dpad.messaging.util.dpadFocusableItem
@@ -45,24 +46,48 @@ fun ConversationsScreen(
 
     LaunchedEffect(Unit) { viewModel.loadThreads() }
 
+    var showArchived by remember { mutableStateOf(false) }
     val fabFocus = remember { FocusRequester() }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Messages") },
+                title = {
+                    Text(
+                        if (showArchived) "Archived" else "Messages",
+                        style = MaterialTheme.typography.titleMedium // smaller than default titleLarge
+                    )
+                },
                 actions = {
-                    IconButton(onClick = onSettings) {
-                        Icon(Icons.Default.Settings, "Settings")
+                    IconButton(
+                        onClick = {
+                            showArchived = !showArchived
+                            viewModel.setShowArchived(showArchived)
+                        },
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Archive,
+                            if (showArchived) "Show Inbox" else "Show Archived",
+                            modifier = Modifier.size(20.dp)
+                        )
                     }
-                }
+                    IconButton(
+                        onClick = onSettings,
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(Icons.Default.Settings, "Settings", modifier = Modifier.size(20.dp))
+                    }
+                },
+                // Shrink the top bar height — default is 64dp, we want ~48dp on this screen
+                windowInsets = WindowInsets(0.dp)
             )
         },
         floatingActionButton = {
-            var focused by remember { mutableStateOf(false) }
             FloatingActionButton(
                 onClick = onNewMessage,
                 modifier = Modifier
+                    .size(48.dp) // smaller FAB for small screen
                     .focusRequester(fabFocus)
                     .dpadFocusableItem(
                         onClick = onNewMessage,
@@ -70,17 +95,22 @@ fun ConversationsScreen(
                         borderWidth = 3.dp
                     )
             ) {
-                Icon(Icons.Default.Edit, contentDescription = "New message")
+                Icon(Icons.Default.Edit, contentDescription = "New message", modifier = Modifier.size(20.dp))
             }
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp)
     ) { padding ->
         when {
             isLoading -> Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(modifier = Modifier.size(32.dp))
             }
             threads.isEmpty() -> Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                Text("No messages yet.\nPress the pencil button to start a conversation.",
-                    style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    if (showArchived) "No archived conversations." else "No messages yet.\nTap the pencil to start.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
             }
             else -> {
                 val listState = rememberLazyListState()
@@ -98,9 +128,10 @@ fun ConversationsScreen(
                             onPin = { viewModel.togglePin(thread.threadId) },
                             onArchive = { viewModel.toggleArchive(thread.threadId) },
                             onMute = { viewModel.toggleMute(thread.threadId) },
-                            onBlock = { viewModel.toggleBlock(thread.threadId) }
+                            onBlock = { viewModel.toggleBlock(thread.threadId) },
+                            onDelete = { viewModel.deleteThread(thread.threadId) }
                         )
-                        HorizontalDivider()
+                        HorizontalDivider(thickness = 0.5.dp)
                     }
                 }
             }
@@ -117,25 +148,26 @@ private fun ThreadItem(
     onPin: () -> Unit,
     onArchive: () -> Unit,
     onMute: () -> Unit,
-    onBlock: () -> Unit
+    onBlock: () -> Unit,
+    onDelete: () -> Unit
 ) {
-    var isFocused by remember { mutableStateOf(false) }
     var showOptionsDialog by remember { mutableStateOf(false) }
 
     if (showOptionsDialog) {
         AlertDialog(
             onDismissRequest = { showOptionsDialog = false },
-            title = { Text("Conversation Options") },
+            title = { Text("Options", style = MaterialTheme.typography.titleSmall) },
             text = {
                 Column {
-                    DialogOption(if (thread.isPinned) "Unpin from Top" else "Pin to Top") { showOptionsDialog = false; onPin() }
+                    DialogOption(if (thread.isPinned) "Unpin" else "Pin to Top") { showOptionsDialog = false; onPin() }
                     DialogOption(if (thread.isArchived) "Unarchive" else "Archive") { showOptionsDialog = false; onArchive() }
-                    DialogOption(if (thread.isMuted) "Unmute Notifications" else "Mute Notifications") { showOptionsDialog = false; onMute() }
-                    DialogOption(if (thread.isBlocked) "Unblock Number" else "Block Number") { showOptionsDialog = false; onBlock() }
+                    DialogOption(if (thread.isMuted) "Unmute" else "Mute") { showOptionsDialog = false; onMute() }
+                    DialogOption(if (thread.isBlocked) "Unblock" else "Block") { showOptionsDialog = false; onBlock() }
+                    DialogOption("Delete") { showOptionsDialog = false; onDelete() }
                 }
             },
             confirmButton = {
-                TextButton(onClick = { showOptionsDialog = false }) { Text("Close") }
+                TextButton(onClick = { showOptionsDialog = false }) { Text("Close", style = MaterialTheme.typography.labelMedium) }
             }
         )
     }
@@ -146,81 +178,84 @@ private fun ThreadItem(
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
             .dpadFocusableItem(
                 onClick = onClick,
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(6.dp),
                 borderWidth = 3.dp,
-                padding = 4.dp
+                padding = 2.dp
             )
-            .padding(horizontal = 12.dp, vertical = 10.dp),
+            .padding(horizontal = 8.dp, vertical = 6.dp), // tighter than original 12/10
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Initials avatar
+        // Avatar — 36dp instead of 48dp
         val initials = thread.contactName.split(" ").mapNotNull { it.firstOrNull()?.uppercaseChar() }.take(2).joinToString("")
-        val avatarColor = avatarColor(thread.contactName)
         Box(
             modifier = Modifier
-                .size(48.dp)
-                .background(avatarColor, shape = androidx.compose.foundation.shape.CircleShape),
+                .size(36.dp)
+                .background(avatarColor(thread.contactName), shape = androidx.compose.foundation.shape.CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Text(initials.ifBlank { "?" }, color = Color.White, fontWeight = FontWeight.Bold)
+            Text(
+                initials.ifBlank { "?" },
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 13.sp
+            )
         }
 
-        Spacer(Modifier.width(12.dp))
+        Spacer(Modifier.width(8.dp))
 
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = thread.contactName,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyMedium, // down from titleMedium
                     fontWeight = if (thread.unreadCount > 0) FontWeight.Bold else FontWeight.Normal,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
-                if (thread.isPinned) {
-                    Icon(Icons.Default.PushPin, contentDescription = "Pinned", modifier = Modifier.size(16.dp).padding(end = 4.dp), tint = MaterialTheme.colorScheme.primary)
-                }
-                if (thread.isArchived) {
-                    Icon(Icons.Default.Archive, contentDescription = "Archived", modifier = Modifier.size(16.dp).padding(end = 4.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-                if (thread.isMuted) {
-                    Icon(Icons.Default.NotificationsOff, contentDescription = "Muted", modifier = Modifier.size(16.dp).padding(end = 4.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-                if (thread.isBlocked) {
-                    Icon(Icons.Default.Block, contentDescription = "Blocked", modifier = Modifier.size(16.dp).padding(end = 4.dp), tint = MaterialTheme.colorScheme.error)
-                }
+                // Status icons — 12dp instead of 16dp
+                if (thread.isPinned) Icon(Icons.Default.PushPin, "Pinned", modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.primary)
+                if (thread.isMuted) Icon(Icons.Default.NotificationsOff, "Muted", modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                if (thread.isBlocked) Icon(Icons.Default.Block, "Blocked", modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.error)
+                Spacer(Modifier.width(4.dp))
                 Text(
                     text = formatDate(thread.date),
                     style = MaterialTheme.typography.labelSmall,
+                    fontSize = 10.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Spacer(Modifier.height(2.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = thread.snippet,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = if (thread.unreadCount > 0) FontWeight.SemiBold else FontWeight.Normal,
+                    style = MaterialTheme.typography.bodySmall, // down from bodyMedium
+                    fontWeight = if (thread.unreadCount > 0) FontWeight.Medium else FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
                 )
                 if (thread.unreadCount > 0) {
-                    Spacer(Modifier.width(8.dp))
-                    Badge { Text(thread.unreadCount.toString()) }
+                    Spacer(Modifier.width(4.dp))
+                    Badge(modifier = Modifier.padding(0.dp)) {
+                        Text(thread.unreadCount.toString(), fontSize = 9.sp)
+                    }
                 }
             }
         }
-        
+
+        // Options button — 32dp touch target instead of default 48dp
         IconButton(
             onClick = { showOptionsDialog = true },
             modifier = Modifier
+                .size(32.dp)
                 .dpadFocusableItem(
                     onClick = { showOptionsDialog = true },
                     shape = androidx.compose.foundation.shape.CircleShape,
-                    borderWidth = 3.dp
+                    borderWidth = 2.dp
                 )
         ) {
-            Icon(Icons.Default.MoreVert, "Options", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            Icon(Icons.Default.MoreVert, "Options", modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 
@@ -233,16 +268,16 @@ private fun ThreadItem(
 private fun DialogOption(text: String, onClick: () -> Unit) {
     Text(
         text = text,
-        style = MaterialTheme.typography.bodyLarge,
+        style = MaterialTheme.typography.bodyMedium, // down from bodyLarge
         modifier = Modifier
             .fillMaxWidth()
             .dpadFocusableItem(
                 onClick = onClick,
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(6.dp),
                 borderWidth = 3.dp,
-                padding = 4.dp
+                padding = 2.dp
             )
-            .padding(16.dp)
+            .padding(vertical = 10.dp, horizontal = 12.dp)
     )
 }
 

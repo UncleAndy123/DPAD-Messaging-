@@ -13,8 +13,8 @@ import com.dpad.messaging.ui.settings.SettingsScreen
 import java.net.URLDecoder
 
 @Composable
-fun AppNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Conversations.route) {
+fun AppNavGraph(navController: NavHostController, startRoute: String = Screen.Conversations.route) {
+    NavHost(navController = navController, startDestination = startRoute) {
 
         composable(Screen.Conversations.route) {
             ConversationsScreen(

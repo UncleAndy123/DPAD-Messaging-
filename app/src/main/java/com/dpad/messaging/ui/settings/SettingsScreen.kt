@@ -51,16 +51,20 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings") },
+                title = { Text("Settings", style = MaterialTheme.typography.titleSmall) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") }
-                }
+                    IconButton(onClick = onBack, modifier = Modifier.size(40.dp)) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", modifier = Modifier.size(20.dp))
+                    }
+                },
+                windowInsets = WindowInsets(0.dp)
             )
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp)
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(vertical = 8.dp)
+            contentPadding = PaddingValues(vertical = 4.dp)
         ) {
             item { CategoryHeader("Appearance") }
             item {
@@ -80,7 +84,7 @@ fun SettingsScreen(
                 )
 
                 if (expanded) {
-                    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)) {
                         listOf(
                             0 to "System Default",
                             1 to "Light Theme",
@@ -98,12 +102,12 @@ fun SettingsScreen(
                                         shape = RoundedCornerShape(8.dp),
                                         padding = 4.dp
                                     )
-                                    .padding(12.dp),
+                                    .padding(8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 RadioButton(selected = themeMode == mode, onClick = null)
-                                Spacer(Modifier.width(16.dp))
-                                Text(name, style = MaterialTheme.typography.bodyLarge)
+                                Spacer(Modifier.width(8.dp))
+                                Text(name, style = MaterialTheme.typography.bodyMedium)
                             }
                         }
                     }
@@ -119,32 +123,32 @@ fun SettingsScreen(
             }
             if (useCustomColors) {
                 item {
-                    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp)) {
-                        Text("Select Accent Color", style = MaterialTheme.typography.labelLarge)
-                        Spacer(Modifier.height(8.dp))
-                        LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                            items(presetColors) { colorInt ->
-                                val color = Color(colorInt)
-                                Box(
-                                    contentAlignment = Alignment.Center,
-                                    modifier = Modifier
-                                        .size(48.dp)
-                                        .clip(CircleShape)
-                                        .background(color)
-                                        .dpadFocusableItem(
-                                            onClick = { viewModel.setPrimaryColor(colorInt) },
-                                            shape = CircleShape,
-                                            borderWidth = 3.dp
-                                        )
-                                        .clickable { viewModel.setPrimaryColor(colorInt) }
-                                ) {
-                                    if (primaryColor == colorInt) {
-                                        Icon(Icons.Default.Check, "Selected", tint = Color.White)
+                        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp)) {
+                            Text("Accent Color", style = MaterialTheme.typography.labelMedium)
+                            Spacer(Modifier.height(4.dp))
+                            LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                items(presetColors) { colorInt ->
+                                    val color = Color(colorInt)
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier
+                                            .size(36.dp)
+                                            .clip(CircleShape)
+                                            .background(color)
+                                            .dpadFocusableItem(
+                                                onClick = { viewModel.setPrimaryColor(colorInt) },
+                                                shape = CircleShape,
+                                                borderWidth = 3.dp
+                                            )
+                                            .clickable { viewModel.setPrimaryColor(colorInt) }
+                                    ) {
+                                        if (primaryColor == colorInt) {
+                                            Icon(Icons.Default.Check, "Selected", tint = Color.White, modifier = Modifier.size(18.dp))
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
                 }
             }
 
@@ -216,9 +220,9 @@ fun SettingsScreen(
 private fun CategoryHeader(title: String) {
     Text(
         text = title,
-        style = MaterialTheme.typography.titleSmall,
+        style = MaterialTheme.typography.labelMedium,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
     )
 }
 
@@ -235,12 +239,12 @@ private fun SettingsSwitch(
                 borderWidth = 3.dp,
                 padding = 4.dp
             )
-            .padding(horizontal = 12.dp, vertical = 10.dp),
+            .padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.titleMedium)
-            Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(title, style = MaterialTheme.typography.bodyMedium)
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Switch(checked = checked, onCheckedChange = null)
     }
@@ -254,15 +258,15 @@ private fun SettingsSlider(
         modifier = Modifier
             .fillMaxWidth()
             .dpadFocusableItem(
-                onClick = {}, // Slide handler would go here if needed
+                onClick = {},
                 shape = RoundedCornerShape(8.dp),
                 borderWidth = 3.dp,
                 padding = 4.dp
             )
-            .padding(horizontal = 12.dp, vertical = 10.dp)
+            .padding(horizontal = 12.dp, vertical = 6.dp)
     ) {
-        Text(title, style = MaterialTheme.typography.titleMedium)
-        Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(title, style = MaterialTheme.typography.bodyMedium)
+        Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Slider(value = value, onValueChange = onValueChange, valueRange = valueRange, steps = steps)
     }
 }
@@ -278,9 +282,9 @@ private fun SettingsAction(title: String, subtitle: String, onClick: () -> Unit)
                 borderWidth = 3.dp,
                 padding = 4.dp
             )
-            .padding(horizontal = 12.dp, vertical = 10.dp)
+            .padding(horizontal = 12.dp, vertical = 6.dp)
     ) {
-        Text(title, style = MaterialTheme.typography.titleMedium)
-        Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(title, style = MaterialTheme.typography.bodyMedium)
+        Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }

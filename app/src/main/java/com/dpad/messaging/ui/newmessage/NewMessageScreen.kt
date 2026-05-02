@@ -60,54 +60,61 @@ fun NewMessageScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (selectedContacts.size > 1) "New Group" else "New Message") },
+                title = {
+                    Text(
+                        if (selectedContacts.size > 1) "New Group" else "New Message",
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                    IconButton(onClick = onBack, modifier = Modifier.size(40.dp)) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", modifier = Modifier.size(20.dp))
                     }
-                }
+                },
+                windowInsets = WindowInsets(0.dp)
             )
         },
         floatingActionButton = {
             if (selectedContacts.isNotEmpty()) {
-                ExtendedFloatingActionButton(
+                FloatingActionButton(
                     onClick = {
                         val addresses = selectedContacts.joinToString(",") { it.number }
                         val names = selectedContacts.joinToString(", ") { it.name }
                         onStartChat(addresses, names)
                     },
-                    modifier = Modifier.dpadFocusableItem(
-                        onClick = {
-                            val addresses = selectedContacts.joinToString(",") { it.number }
-                            val names = selectedContacts.joinToString(", ") { it.name }
-                            onStartChat(addresses, names)
-                        },
-                        shape = RoundedCornerShape(16.dp),
-                        borderWidth = 3.dp
-                    )
+                    modifier = Modifier
+                        .size(48.dp)
+                        .dpadFocusableItem(
+                            onClick = {
+                                val addresses = selectedContacts.joinToString(",") { it.number }
+                                val names = selectedContacts.joinToString(", ") { it.name }
+                                onStartChat(addresses, names)
+                            },
+                            shape = RoundedCornerShape(12.dp),
+                            borderWidth = 3.dp
+                        )
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Start chat")
-                    Spacer(Modifier.width(8.dp))
-                    Text("Start Chat")
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Start chat", modifier = Modifier.size(20.dp))
                 }
             }
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp)
     ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)
+            modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 8.dp, vertical = 4.dp)
         ) {
-            // Selected Contacts Area
+            // Selected Contacts chips
             if (selectedContacts.isNotEmpty()) {
                 LazyRow(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     items(selectedContacts) { contact ->
                         InputChip(
                             selected = false,
                             onClick = { selectedContacts.remove(contact) },
-                            label = { Text(contact.name) },
-                            trailingIcon = { Icon(Icons.Default.Close, contentDescription = "Remove", modifier = Modifier.size(16.dp)) },
+                            label = { Text(contact.name, style = MaterialTheme.typography.labelSmall) },
+                            trailingIcon = { Icon(Icons.Default.Close, "Remove", modifier = Modifier.size(14.dp)) },
                             modifier = Modifier.dpadFocusableItem(
                                 onClick = { selectedContacts.remove(contact) },
                                 shape = RoundedCornerShape(8.dp),
@@ -118,13 +125,14 @@ fun NewMessageScreen(
                 }
             }
 
-            // Input Area
+            // Input row
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
                     value = query,
                     onValueChange = { query = it },
-                    label = { Text("Phone number or name") },
+                    placeholder = { Text("Number or name", style = MaterialTheme.typography.bodySmall) },
                     singleLine = true,
+                    textStyle = MaterialTheme.typography.bodySmall,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
                         imeAction = ImeAction.Done
@@ -137,9 +145,9 @@ fun NewMessageScreen(
                         }
                     }),
                     modifier = Modifier.weight(1f).focusRequester(inputFocus),
-                    shape = RoundedCornerShape(24.dp)
+                    shape = RoundedCornerShape(20.dp)
                 )
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(4.dp))
                 IconButton(
                     onClick = {
                         if (query.isNotBlank()) {
@@ -150,6 +158,7 @@ fun NewMessageScreen(
                     },
                     enabled = query.isNotBlank(),
                     modifier = Modifier
+                        .size(36.dp)
                         .dpadFocusableItem(
                             onClick = {
                                 if (query.isNotBlank()) {
@@ -162,19 +171,28 @@ fun NewMessageScreen(
                             borderWidth = 3.dp
                         )
                 ) {
-                    Icon(Icons.Default.Add, "Add to chat")
+                    Icon(Icons.Default.Add, "Add", modifier = Modifier.size(18.dp))
                 }
             }
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(6.dp))
 
-            // Suggestions List
+            // Suggestions list
             if (suggestions.isEmpty() && query.isBlank()) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(Icons.Default.GroupAdd, contentDescription = null, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Spacer(Modifier.height(8.dp))
-                        Text("Search for contacts or enter a number", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Icon(
+                            Icons.Default.GroupAdd,
+                            contentDescription = null,
+                            modifier = Modifier.size(36.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            "Search contacts or enter a number",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
             } else {
@@ -193,15 +211,15 @@ fun NewMessageScreen(
                                     borderWidth = 3.dp,
                                     padding = 0.dp
                                 )
-                                .padding(vertical = 12.dp, horizontal = 12.dp),
+                                .padding(vertical = 8.dp, horizontal = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column(Modifier.weight(1f)) {
-                                Text(contact.name, fontWeight = FontWeight.Medium)
+                                Text(contact.name, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
                                 Text(contact.number, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
-                        HorizontalDivider()
+                        HorizontalDivider(thickness = 0.5.dp)
                     }
                 }
             }

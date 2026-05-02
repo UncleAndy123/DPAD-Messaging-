@@ -25,10 +25,17 @@ class ConversationsViewModel(application: Application) : AndroidViewModel(applic
         loadThreads()
     }
 
+    private var showArchived = false
+
+    fun setShowArchived(show: Boolean) {
+        showArchived = show
+        loadThreads()
+    }
+
     fun loadThreads() {
         viewModelScope.launch {
             _isLoading.value = true
-            val smsThreads = repository.getThreads()
+            val smsThreads = repository.getThreads(includeArchived = showArchived)
             _threads.value = smsThreads
             _isLoading.value = false
         }
@@ -62,6 +69,13 @@ class ConversationsViewModel(application: Application) : AndroidViewModel(applic
         val thread = _threads.value.find { it.threadId == threadId } ?: return
         viewModelScope.launch {
             repository.toggleBlock(threadId, !thread.isBlocked)
+            loadThreads()
+        }
+    }
+
+    fun deleteThread(threadId: Long) {
+        viewModelScope.launch {
+            repository.deleteThread(threadId)
             loadThreads()
         }
     }

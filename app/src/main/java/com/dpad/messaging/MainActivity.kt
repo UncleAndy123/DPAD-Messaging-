@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.dpad.messaging.navigation.AppNavGraph
+import com.dpad.messaging.navigation.Screen
 import com.dpad.messaging.ui.theme.DpadMessagingTheme
 import com.dpad.messaging.data.repository.SettingsRepository
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -133,8 +134,18 @@ private fun PermissionAndDefaultSmsGate() {
             }
         }
         else -> {
+            val activity = context as? android.app.Activity
+            val startRoute = remember {
+                val tid = activity?.intent?.getLongExtra("threadId", -1L) ?: -1L
+                val addr = activity?.intent?.getStringExtra("address") ?: ""
+                if (tid > 0 && addr.isNotBlank()) {
+                    Screen.Chat.createRoute(tid, addr, addr)
+                } else {
+                    Screen.Conversations.route
+                }
+            }
             val navController = rememberNavController()
-            AppNavGraph(navController = navController)
+            AppNavGraph(navController = navController, startRoute = startRoute)
         }
     }
 }

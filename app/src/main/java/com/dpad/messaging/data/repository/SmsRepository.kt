@@ -23,7 +23,7 @@ class SmsRepository(
 
     // ── Threads ──────────────────────────────────────────────────────────────
 
-    suspend fun getThreads(): List<SmsThread> = withContext(Dispatchers.IO) {
+    suspend fun getThreads(includeArchived: Boolean = false): List<SmsThread> = withContext(Dispatchers.IO) {
         val threads = mutableListOf<SmsThread>()
         val uri = Telephony.Threads.CONTENT_URI.buildUpon()
             .appendQueryParameter("simple", "true").build()
@@ -66,6 +66,9 @@ class SmsRepository(
                 val customTitle = metadata?.customTitle
 
                 val finalContactName = customTitle ?: baseContactName
+
+                // Skip archived threads unless caller requested them explicitly
+                if (!includeArchived && isArchived) continue
 
                 threads.add(
                     SmsThread(
@@ -115,7 +118,8 @@ class SmsRepository(
                 val date = c.getLong(c.getColumnIndexOrThrow(Telephony.Sms.DATE))
                 val type = c.getInt(c.getColumnIndexOrThrow(Telephony.Sms.TYPE))
                 val msgType = if (type == Telephony.Sms.MESSAGE_TYPE_SENT) MsgType.SMS_OUT else MsgType.SMS_IN
-                messages.add(SmsMessage(id, threadId, address, body, date, msgType))
+                val state = if (msgType == com.dpad.messaging.data.model.MsgType.SMS_OUT) com.dpad.messaging.data.model.DeliveryState.SENT else com.dpad.messaging.data.model.DeliveryState.UNKNOWN
+                messages.add(SmsMessage(id, threadId, address, body, date, msgType, emptyList(), state))
             }
         }
 
@@ -138,11 +142,21 @@ class SmsRepository(
                 val msgType = if (box == Telephony.Mms.MESSAGE_BOX_SENT) MsgType.MMS_OUT else MsgType.MMS_IN
                 val address = getMmsAddress(mmsId)
                 val (body, partUris) = getMmsParts(mmsId)
-                messages.add(SmsMessage(mmsId, threadId, address, body, date, msgType, partUris))
+                // Provider messages should be marked SENT for outgoing types
+                val state = if (msgType == com.dpad.messaging.data.model.MsgType.MMS_OUT) com.dpad.messaging.data.model.DeliveryState.SENT else com.dpad.messaging.data.model.DeliveryState.UNKNOWN
+                messages.add(SmsMessage(mmsId, threadId, address, body, date, msgType, partUris, state))
             }
         }
 
         messages.sortedBy { it.date }
+    }
+
+    /** Read the thread_id for a given inserted SMS Uri (e.g. content://sms/2). */
+    suspend fun threadIdForUri(uri: Uri): Long? = withContext(Dispatchers.IO) {
+        try {
+            val cursor = cr.query(uri, arrayOf(Telephony.Sms.THREAD_ID), null, null, null)
+            cursor?.use { c -> if (c.moveToFirst()) c.getLong(0) else null }
+        } catch (_: Exception) { null }
     }
 
     suspend fun markThreadRead(threadId: Long) = withContext(Dispatchers.IO) {
@@ -188,6 +202,33 @@ class SmsRepository(
         } else {
             metadataDao.updateBlocked(threadId, isBlocked)
         }
+    }
+
+    suspend fun deleteThread(threadId: Long) = withContext(Dispatchers.IO) {
+        try {
+            // Delete SMS rows
+            cr.delete(Telephony.Sms.CONTENT_URI, "${Telephony.Sms.THREAD_ID} = ?", arrayOf(threadId.toString()))
+        } catch (_: Exception) {}
+        try {
+            // Delete MMS rows (parts and headers)
+            cr.delete(Telephony.Mms.CONTENT_URI, "${Telephony.Mms.THREAD_ID} = ?", arrayOf(threadId.toString()))
+        } catch (_: Exception) {}
+
+        // Remove any metadata
+        try {
+            metadataDao.deleteMetadata(threadId)
+        } catch (_: Exception) {}
+    }
+
+    suspend fun deleteMessage(msg: com.dpad.messaging.data.model.SmsMessage) = withContext(Dispatchers.IO) {
+        try {
+            when (msg.type) {
+                com.dpad.messaging.data.model.MsgType.SMS_IN, com.dpad.messaging.data.model.MsgType.SMS_OUT ->
+                    cr.delete(Telephony.Sms.CONTENT_URI, "${Telephony.Sms._ID} = ?", arrayOf(msg.id.toString()))
+                com.dpad.messaging.data.model.MsgType.MMS_IN, com.dpad.messaging.data.model.MsgType.MMS_OUT ->
+                    cr.delete(Telephony.Mms.CONTENT_URI, "${Telephony.Mms._ID} = ?", arrayOf(msg.id.toString()))
+            }
+        } catch (_: Exception) {}
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -240,11 +281,12 @@ class SmsRepository(
             )
         } catch (e: Exception) { null }
         return cursor?.use { c ->
+            var result = ""
             while (c.moveToNext()) {
                 val addr = c.getString(0) ?: continue
-                if (addr != "insert-address-token") return addr
+                if (addr != "insert-address-token") { result = addr; break }
             }
-            ""
+            result
         } ?: ""
     }
 
