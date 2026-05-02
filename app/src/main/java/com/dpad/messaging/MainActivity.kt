@@ -30,7 +30,9 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // Do NOT call enableEdgeToEdge() — this device has a persistent IME bar
+        // that is always reported as visible, causing incorrect inset calculations.
+        // Traditional window fitting gives correct layout without manual inset handling.
         
         val settingsRepository = SettingsRepository(applicationContext)
         

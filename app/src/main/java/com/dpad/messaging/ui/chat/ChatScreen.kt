@@ -96,8 +96,11 @@ fun ChatScreen(
             )
         },
         bottomBar = {
-            Surface(tonalElevation = 3.dp) {
-                Column(modifier = Modifier.navigationBarsPadding().imePadding()) {
+            Surface(
+                tonalElevation = 3.dp,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column {
                     // Attachment preview — only shown when image is selected
                     if (selectedImageUri != null) {
                         Box(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
