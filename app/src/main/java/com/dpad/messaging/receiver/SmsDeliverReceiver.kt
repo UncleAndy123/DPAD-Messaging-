@@ -15,7 +15,6 @@ import com.dpad.messaging.data.db.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SmsDeliverReceiver : BroadcastReceiver() {
 
@@ -27,7 +26,12 @@ class SmsDeliverReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Telephony.Sms.Intents.SMS_DELIVER_ACTION) return
 
-        val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
+        val messages = try {
+            Telephony.Sms.Intents.getMessagesFromIntent(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return
+        }
         if (messages.isNullOrEmpty()) return
 
         val address = messages[0].displayOriginatingAddress ?: return
@@ -39,7 +43,7 @@ class SmsDeliverReceiver : BroadcastReceiver() {
             try {
                 val db = AppDatabase.getDatabase(context)
 
-                // Resolve thread ID for this address
+                // Resolve thread ID for this address (may be null for first-ever message)
                 val threadId = resolveThreadId(context, address)
 
                 // Check metadata for blocked / muted
@@ -62,11 +66,12 @@ class SmsDeliverReceiver : BroadcastReceiver() {
                 }
                 context.contentResolver.insert(Telephony.Sms.Inbox.CONTENT_URI, values)
 
-                // Post notification unless muted
+                // Resolve thread ID again after insert — now it will exist for new senders
+                val resolvedThreadId = resolveThreadId(context, address) ?: threadId
+
+                // Post notification on IO thread — NotificationManager is thread-safe
                 if (!isMuted) {
-                    withContext(Dispatchers.Main) {
-                        postNotification(context, address, body, threadId)
-                    }
+                    postNotification(context, address, body, resolvedThreadId)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
