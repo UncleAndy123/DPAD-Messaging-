@@ -7,6 +7,24 @@ build/
 *.iml
 .idea/
 local.properties
+.DS_Store
+
+# Keystore and signing files
+keystore.properties
+*.jks
+*.keystore
+
+# Build outputs and IDE
+/.gradle
+/build
+**/build/
+
+# Android Studio
+*.iml
+
+# Misc
+.DS_Store
+Thumbs.db
 
 # OS
 .DS_Store

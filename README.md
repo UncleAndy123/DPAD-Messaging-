@@ -1,83 +1,31 @@
-# DPAD Messenger — Setup Guide
+DPAD Messaging
+===============
 
-## Prerequisites
+A D-pad friendly SMS/MMS messaging app built with Kotlin + Jetpack Compose. Designed for low-RAM devices and navigation via D-pad (TV or hardware keypad).
 
-- Android Studio Hedgehog or newer
-- A Firebase project
+Key features
+- D-pad-first navigation with clear focus highlights
+- SMS and MMS support (group messaging, image attachments)
+- Compact UI optimized for small viewports
+- Thread metadata (pin, archive, mute, block) persisted locally
+- Configurable theme and accent color
 
-## Firebase Setup
+Screenshots
+- screenshots/conversations.png — Main conversation list
+- screenshots/3dot_focus.png — D-pad focus on the three-dot menu
+- screenshots/options_dialog.png — Thread options dialog
+- screenshots/chat.png — Chat view with compact input bar
+- screenshots/newmessage.png — New message screen
+- screenshots/settings.png — Settings / theme and accent
 
-1. Go to [Firebase Console](https://console.firebase.google.com/) and create a project.
-2. Add an **Android app** with package name `com.dpad.messaging`.
-3. Download `google-services.json` and place it at `app/google-services.json`.
-4. Enable the following Firebase services:
-   - **Authentication** → Email/Password
-   - **Firestore Database** → Start in production mode
-   - **Storage** → Default bucket
-   - **Cloud Messaging** (no extra config needed)
+Getting started
+1. Build: ./gradlew :app:assembleDebug
+2. Install: adb install -r app/build/outputs/apk/debug/app-debug.apk
+3. Grant runtime permissions when the app launches and set as default SMS app when prompted.
 
-## Firestore Security Rules
+Notes before publishing
+- This repo intentionally does not include keystore credentials. Create a root-level keystore.properties for release signing if needed. See app/build.gradle.kts for the signing config.
+- Ensure you understand carrier and platform constraints when using Telephony providers (MMS delivery may vary by carrier).
 
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{uid} {
-      allow read: if request.auth != null;
-      allow write: if request.auth.uid == uid;
-    }
-    match /conversations/{convId} {
-      allow read, write: if request.auth.uid in resource.data.participantIds
-                         || request.auth.uid in request.resource.data.participantIds;
-      match /messages/{msgId} {
-        allow read, write: if request.auth.uid in
-          get(/databases/$(database)/documents/conversations/$(convId)).data.participantIds;
-      }
-    }
-  }
-}
-```
-
-## Firestore Indexes
-
-Create a **composite index** on the `users` collection:
-- Field: `displayName` (Ascending)
-
-## Support
-
-If you find this app helpful and want to support its development, you can buy me a coffee!
-
-<a href="https://www.buymeacoffee.com/jbriones95" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
-
-## Building
-
-```bash
-./gradlew assembleDebug
-```
-
-## D-pad Navigation Notes
-
-- All list items are `focusable()` and respond to **D-pad Center / Enter** via `dpadClickable`.
-- Focus automatically moves to the first item in each list when the screen loads.
-- The chat input bar items (attach, text field, send) are all focusable and navigable with the D-pad left/right.
-- Works on **Android TV** (remote D-pad) and **phone/tablet + gamepad**.
-
-## Project Structure
-
-```
-app/src/main/java/com/dpad/messaging/
-├── data/
-│   ├── model/          Conversation, Message, User
-│   └── firebase/       AuthRepository, MessagingRepository, UserRepository
-├── navigation/         Screen, AppNavGraph
-├── service/            DpadFirebaseMessagingService (FCM)
-├── ui/
-│   ├── auth/           LoginScreen, RegisterScreen, AuthViewModel
-│   ├── chat/           ChatScreen, ChatViewModel
-│   ├── components/     Avatar
-│   ├── conversations/  ConversationsScreen, ConversationsViewModel
-│   ├── search/         SearchScreen, SearchViewModel
-│   └── theme/          Theme.kt
-├── util/               DpadUtils (dpadClickable modifier)
-└── MainActivity.kt
-```
+License
+MIT (add your preferred license file)
