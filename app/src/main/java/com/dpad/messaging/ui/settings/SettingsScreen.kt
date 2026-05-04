@@ -154,14 +154,61 @@ fun SettingsScreen(
 
             item { CategoryHeader("Conversation & UI") }
             item {
-                SettingsSlider(
-                    title = "Font Size Scale: ${String.format("%.1fx", fontSizeScale)}",
-                    subtitle = "Adjust text size for TV viewing distance",
-                    value = fontSizeScale,
-                    valueRange = 0.8f..2.0f,
-                    steps = 11,
-                    onValueChange = viewModel::setFontSize
+                // 4 named size options — easier to reason about than a raw multiplier
+                val fontSizeOptions = listOf(
+                    0.85f to "Small",
+                    1.0f  to "Normal",
+                    1.15f to "Large",
+                    1.3f  to "Extra Large"
                 )
+                // Snap to nearest named option for display (handles any legacy float value)
+                val currentLabel = fontSizeOptions.minByOrNull { (scale, _) ->
+                    kotlin.math.abs(scale - fontSizeScale)
+                }?.second ?: "Normal"
+
+                var expanded by remember { mutableStateOf(false) }
+                SettingsAction(
+                    title = "Font Size",
+                    subtitle = "Currently: $currentLabel",
+                    onClick = { expanded = !expanded }
+                )
+                if (expanded) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)) {
+                        fontSizeOptions.forEach { (scale, label) ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .dpadFocusableItem(
+                                        onClick = {
+                                            viewModel.setFontSize(scale)
+                                            expanded = false
+                                        },
+                                        shape = RoundedCornerShape(8.dp),
+                                        padding = 4.dp
+                                    )
+                                    .padding(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = kotlin.math.abs(fontSizeScale - scale) < 0.01f,
+                                    onClick = null
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Column {
+                                    Text(label, style = MaterialTheme.typography.bodyMedium)
+                                    val preview = when (label) {
+                                        "Small"       -> "Fits more content on screen"
+                                        "Normal"      -> "Default size"
+                                        "Large"       -> "Easier to read"
+                                        "Extra Large" -> "Maximum readability"
+                                        else          -> ""
+                                    }
+                                    Text(preview, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                            }
+                        }
+                    }
+                }
             }
             item {
                 SettingsSwitch(
@@ -247,27 +294,6 @@ private fun SettingsSwitch(
             Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Switch(checked = checked, onCheckedChange = null)
-    }
-}
-
-@Composable
-private fun SettingsSlider(
-    title: String, subtitle: String, value: Float, valueRange: ClosedFloatingPointRange<Float>, steps: Int, onValueChange: (Float) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .dpadFocusableItem(
-                onClick = {},
-                shape = RoundedCornerShape(8.dp),
-                borderWidth = 3.dp,
-                padding = 4.dp
-            )
-            .padding(horizontal = 12.dp, vertical = 6.dp)
-    ) {
-        Text(title, style = MaterialTheme.typography.bodyMedium)
-        Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Slider(value = value, onValueChange = onValueChange, valueRange = valueRange, steps = steps)
     }
 }
 

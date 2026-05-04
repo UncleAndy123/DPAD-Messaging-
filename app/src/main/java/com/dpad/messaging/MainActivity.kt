@@ -40,10 +40,12 @@ class MainActivity : ComponentActivity() {
             val themeMode by settingsRepository.themeMode.collectAsState(initial = 0)
             val primaryColorInt by settingsRepository.primaryColor.collectAsState(initial = 0xFF1565C0.toInt())
             val useCustomColors by settingsRepository.useCustomColors.collectAsState(initial = false)
+            val fontSizeScale by settingsRepository.fontSizeScale.collectAsState(initial = 1.0f)
             
             DpadMessagingTheme(
                 themeMode = themeMode,
-                customPrimaryColor = if (useCustomColors) primaryColorInt else null
+                customPrimaryColor = if (useCustomColors) primaryColorInt else null,
+                fontSizeScale = fontSizeScale
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),

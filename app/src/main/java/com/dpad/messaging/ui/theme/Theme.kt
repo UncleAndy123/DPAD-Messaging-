@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.TextStyle
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
@@ -34,11 +35,34 @@ private val AmoledColorScheme = darkColorScheme(
     surfaceVariant = Color(0xFF121212)
 )
 
+/** Scale every sp value in a [Typography] by [scale]. */
+private fun Typography.scale(scale: Float): Typography {
+    fun TextStyle.s() = copy(fontSize = fontSize * scale, lineHeight = lineHeight * scale)
+    return copy(
+        displayLarge = displayLarge.s(),
+        displayMedium = displayMedium.s(),
+        displaySmall = displaySmall.s(),
+        headlineLarge = headlineLarge.s(),
+        headlineMedium = headlineMedium.s(),
+        headlineSmall = headlineSmall.s(),
+        titleLarge = titleLarge.s(),
+        titleMedium = titleMedium.s(),
+        titleSmall = titleSmall.s(),
+        bodyLarge = bodyLarge.s(),
+        bodyMedium = bodyMedium.s(),
+        bodySmall = bodySmall.s(),
+        labelLarge = labelLarge.s(),
+        labelMedium = labelMedium.s(),
+        labelSmall = labelSmall.s(),
+    )
+}
+
 @Composable
 fun DpadMessagingTheme(
     themeMode: Int = 0, // 0: System, 1: Light, 2: Dark, 3: Amoled
     customPrimaryColor: Int? = null,
     dynamicColor: Boolean = true,
+    fontSizeScale: Float = 1.0f,
     content: @Composable () -> Unit
 ) {
     val darkTheme = when (themeMode) {
@@ -46,7 +70,7 @@ fun DpadMessagingTheme(
         2, 3 -> true
         else -> isSystemInDarkTheme()
     }
-    
+
     val isAmoled = themeMode == 3
 
     var colorScheme = when {
@@ -58,7 +82,7 @@ fun DpadMessagingTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    
+
     if (customPrimaryColor != null) {
         val customColor = Color(customPrimaryColor)
         colorScheme = colorScheme.copy(
@@ -86,9 +110,12 @@ fun DpadMessagingTheme(
         }
     }
 
+    // Scale typography only when the user has changed from the default (1.0)
+    val typography = if (fontSizeScale != 1.0f) Typography().scale(fontSizeScale) else Typography()
+
     MaterialTheme(
         colorScheme = colorScheme,
+        typography = typography,
         content = content
     )
 }
-
