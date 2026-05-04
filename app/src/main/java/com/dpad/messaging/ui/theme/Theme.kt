@@ -72,7 +72,15 @@ fun DpadMessagingTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.background.toArgb()
+            // Use a visually distinct status bar color so it doesn't blend into
+            // the app background on light theme. surfaceVariant is slightly grey
+            // on light and dark themes, making the bar always visible.
+            val statusBarColor = when {
+                isAmoled -> Color(0xFF000000)
+                darkTheme -> colorScheme.surface
+                else -> colorScheme.surfaceVariant
+            }
+            window.statusBarColor = statusBarColor.toArgb()
             window.navigationBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
