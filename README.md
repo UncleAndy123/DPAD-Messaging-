@@ -1,6 +1,8 @@
 DPAD Messaging
 ===============
 
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-Donate-yellow?logo=buy-me-a-coffee)](https://buymeacoffee.com/jbriones95)
+
 A D-pad friendly SMS/MMS messaging app built with Kotlin + Jetpack Compose. Designed for low-RAM devices and navigation via D-pad (TV or hardware keypad).
 
 Key features
