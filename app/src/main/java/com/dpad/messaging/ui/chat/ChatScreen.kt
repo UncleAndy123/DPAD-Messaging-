@@ -55,6 +55,7 @@ fun ChatScreen(
     val isSending by viewModel.isSending.collectAsState()
     val hasMore by viewModel.hasMore.collectAsState()
     val draftText by viewModel.draftText.collectAsState()
+    val sendError by viewModel.sendError.collectAsState()
     var inputText by remember { mutableStateOf("") }
     var draftSeeded by remember { mutableStateOf(false) }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -62,6 +63,15 @@ fun ChatScreen(
     val listState = rememberLazyListState()
     val inputFocus = remember { FocusRequester() }
     val sendFocus = remember { FocusRequester() }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Show send errors as a snackbar
+    LaunchedEffect(sendError) {
+        if (sendError != null) {
+            snackbarHostState.showSnackbar(sendError!!)
+            viewModel.clearSendError()
+        }
+    }
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -90,6 +100,7 @@ fun ChatScreen(
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {

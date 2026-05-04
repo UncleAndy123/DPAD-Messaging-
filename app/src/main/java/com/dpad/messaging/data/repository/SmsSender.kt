@@ -58,15 +58,16 @@ class SmsSender(private val context: Context) {
     }
 
     suspend fun sendMms(addresses: List<String>, body: String, imageBytes: ByteArray? = null, mimeType: String? = null) = withContext(Dispatchers.IO) {
-        val settings = Settings()
-        settings.useSystemSending = true
-        settings.group = addresses.size > 1
-        settings.sendLongAsMms = true
-        settings.sendLongAsMmsAfter = 3
+        val settings = Settings().apply {
+            useSystemSending = true   // let the OS MMS stack handle APN/connectivity
+            group            = addresses.size > 1
+            sendLongAsMms    = true
+            sendLongAsMmsAfter = 3
+        }
 
         val transaction = Transaction(context, settings)
         val message = Message(body, addresses.toTypedArray())
-        
+
         if (imageBytes != null && mimeType != null) {
             message.addMedia(imageBytes, mimeType)
         }

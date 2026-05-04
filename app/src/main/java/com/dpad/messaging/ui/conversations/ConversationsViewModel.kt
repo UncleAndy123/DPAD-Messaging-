@@ -40,7 +40,7 @@ class ConversationsViewModel(application: Application) : AndroidViewModel(applic
     fun loadThreads() {
         viewModelScope.launch {
             _isLoading.value = true
-            val smsThreads = repository.getThreads(includeArchived = showArchived)
+            val smsThreads = repository.getThreads(archivedMode = showArchived)
             _threads.value = smsThreads
             _isLoading.value = false
             // Refresh drafts map alongside threads

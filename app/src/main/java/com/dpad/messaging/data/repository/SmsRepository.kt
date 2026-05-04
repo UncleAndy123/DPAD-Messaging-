@@ -23,7 +23,10 @@ class SmsRepository(
 
     // ── Threads ──────────────────────────────────────────────────────────────
 
-    suspend fun getThreads(includeArchived: Boolean = false): List<SmsThread> = withContext(Dispatchers.IO) {
+    /**
+     * @param archivedMode  false = inbox (skip archived), true = archive view (only archived)
+     */
+    suspend fun getThreads(archivedMode: Boolean = false): List<SmsThread> = withContext(Dispatchers.IO) {
         val threads = mutableListOf<SmsThread>()
         val uri = Telephony.Threads.CONTENT_URI.buildUpon()
             .appendQueryParameter("simple", "true").build()
@@ -74,8 +77,9 @@ class SmsRepository(
 
                 val finalContactName = customTitle ?: baseContactName
 
-                // Skip archived threads unless caller requested them explicitly
-                if (!includeArchived && isArchived) continue
+                // Inbox mode: skip archived. Archive mode: skip non-archived.
+                if (!archivedMode && isArchived) continue
+                if (archivedMode && !isArchived) continue
 
                 threads.add(
                     SmsThread(

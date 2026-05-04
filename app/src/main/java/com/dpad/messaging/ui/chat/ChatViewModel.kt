@@ -39,6 +39,12 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
     private val _isSending = MutableStateFlow(false)
     val isSending: StateFlow<Boolean> = _isSending
 
+    /** One-shot error message for send failures (null = no error). */
+    private val _sendError = MutableStateFlow<String?>(null)
+    val sendError: StateFlow<String?> = _sendError
+
+    fun clearSendError() { _sendError.value = null }
+
     /** Persisted draft text for this thread. Exposed so ChatScreen can seed inputText. */
     private val _draftText = MutableStateFlow("")
     val draftText: StateFlow<String> = _draftText
@@ -172,7 +178,15 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
                         cr.openInputStream(imageUri)?.use { stream -> imageBytes = stream.readBytes() }
                     }
                     sender.sendMms(addresses, text, imageBytes, mimeType)
-                    // MMS: ContentObserver will fire when provider updates; scheduleReload handles it
+                    // MMS provider update may be delayed; schedule a reload after a short wait
+                    // so the sent bubble resolves. ContentObserver will also fire when it arrives.
+                    delay(3000)
+                    val tid = threadId
+                    if (tid > 0) {
+                        val fetched = repo.getMessages(tid, messageLimit)
+                        _messages.value = fetched
+                        updateHasMore(fetched.size)
+                    }
                 } else {
                     // sendSms writes to the provider and returns the inserted Uri
                     val insertedUri = sender.sendSms(addresses.first(), text)
@@ -200,6 +214,7 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
                 Log.e("ChatVM", "send error", e)
                 // Remove optimistic bubble on failure
                 _messages.value = _messages.value.filter { it.state != DeliveryState.SENDING }
+                _sendError.value = "Failed to send: ${e.message ?: "unknown error"}"
             } finally {
                 _isSending.value = false
             }
