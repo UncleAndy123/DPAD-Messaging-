@@ -44,7 +44,9 @@ fun ConversationsScreen(
     val threads by viewModel.threads.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    LaunchedEffect(Unit) { viewModel.loadThreads() }
+    // Do NOT call loadThreads() here — the ViewModel loads on init and survives
+    // back-navigation. Calling it here causes a full reload every time the screen
+    // is recomposed (e.g. when returning from a chat), showing the spinner again.
 
     var showArchived by remember { mutableStateOf(false) }
     val fabFocus = remember { FocusRequester() }
@@ -101,7 +103,7 @@ fun ConversationsScreen(
         contentWindowInsets = WindowInsets(0.dp)
     ) { padding ->
         when {
-            isLoading -> Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
+            isLoading && threads.isEmpty() -> Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(modifier = Modifier.size(32.dp))
             }
             threads.isEmpty() -> Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {

@@ -39,6 +39,12 @@ class SmsRepository(
             cr.query(uri, projection, null, null, "${Telephony.Threads.DATE} DESC")
         } catch (e: Exception) { null }
 
+        // Batch fetch all unread counts in one query (GROUP BY thread_id)
+        val unreadByThread = fetchAllUnreadCounts()
+
+        // In-memory contact name cache for this call — avoids N repeated PhoneLookup queries
+        val contactCache = mutableMapOf<String, String?>()
+
         cursor?.use { c ->
             while (c.moveToNext()) {
                 val threadId = c.getLong(c.getColumnIndexOrThrow(Telephony.Threads._ID))
@@ -50,12 +56,13 @@ class SmsRepository(
                 val addresses = resolveAddresses(recipientIds)
                 val address = addresses.joinToString(", ")
                 val baseContactName = if (addresses.size == 1)
-                    resolveContactName(addresses[0]) ?: addresses[0]
+                    contactCache.getOrPut(addresses[0]) { resolveContactName(addresses[0]) } ?: addresses[0]
                 else
-                    addresses.mapNotNull { resolveContactName(it) ?: it }.joinToString(", ")
+                    addresses.joinToString(", ") { addr ->
+                        contactCache.getOrPut(addr) { resolveContactName(addr) } ?: addr
+                    }
 
-                // Count unread
-                val unread = countUnread(threadId)
+                val unread = unreadByThread[threadId] ?: 0
 
                 // Get metadata
                 val metadata = metadataDao.getMetadataSync(threadId)
@@ -88,9 +95,37 @@ class SmsRepository(
                 )
             }
         }
-        
+
         // Sort: Pinned first, then by date
         threads.sortedWith(compareByDescending<SmsThread> { it.isPinned }.thenByDescending { it.date })
+    }
+
+    /** Fetch unread SMS counts for all threads in a single GROUP BY query. */
+    private fun fetchAllUnreadCounts(): Map<Long, Int> {
+        val map = mutableMapOf<Long, Int>()
+        val cursor = try {
+            cr.query(
+                Telephony.Sms.CONTENT_URI,
+                arrayOf(Telephony.Sms.THREAD_ID, "COUNT(*) as unread_count"),
+                "${Telephony.Sms.READ} = 0",
+                null,
+                "${Telephony.Sms.THREAD_ID} ASC"
+            )
+        } catch (e: Exception) { null }
+        cursor?.use { c ->
+            val tidIdx = c.getColumnIndex(Telephony.Sms.THREAD_ID)
+            val cntIdx = c.getColumnIndex("unread_count")
+            if (tidIdx < 0 || cntIdx < 0) {
+                // Fallback: some providers don't support column aliases in projection
+                return@use
+            }
+            while (c.moveToNext()) {
+                val tid = c.getLong(tidIdx)
+                val cnt = c.getInt(cntIdx)
+                map[tid] = cnt
+            }
+        }
+        return map
     }
 
     // ── Messages in thread ────────────────────────────────────────────────────
@@ -273,18 +308,6 @@ class SmsRepository(
         return cursor?.use { c ->
             if (c.moveToFirst()) c.getString(0) else null
         }
-    }
-
-    private fun countUnread(threadId: Long): Int {
-        val cursor = try {
-            cr.query(
-                Telephony.Sms.CONTENT_URI,
-                arrayOf("COUNT(*)"),
-                "${Telephony.Sms.THREAD_ID} = ? AND ${Telephony.Sms.READ} = 0",
-                arrayOf(threadId.toString()), null
-            )
-        } catch (e: Exception) { null }
-        return cursor?.use { c -> if (c.moveToFirst()) c.getInt(0) else 0 } ?: 0
     }
 
     private fun getMmsAddress(mmsId: Long): String {
