@@ -5,6 +5,17 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+import java.util.Properties
+import java.io.FileInputStream
+
+// Load keystore properties (not checked into VCS). If absent, fall back to
+// the user's debug keystore at ~/.android/debug.keystore for local/CI testing.
+val keystorePropsFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+if (keystorePropsFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropsFile))
+}
+
 android {
     namespace = "com.dpad.messaging"
     compileSdk = 34
@@ -17,6 +28,25 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        create("release") {
+            val storeFileProp = keystoreProperties.getProperty("storeFile")
+            if (!storeFileProp.isNullOrBlank()) {
+                storeFile = file(storeFileProp)
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            } else {
+                // Fallback to debug keystore
+                val debugKs = file(System.getProperty("user.home") + "/.android/debug.keystore")
+                storeFile = debugKs
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -25,6 +55,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Use signing config loaded from keystore.properties when available,
+            // otherwise fall back to debug keystore for local debugging.
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 

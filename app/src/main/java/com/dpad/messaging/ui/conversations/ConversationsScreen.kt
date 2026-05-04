@@ -152,6 +152,8 @@ private fun ThreadItem(
     onDelete: () -> Unit
 ) {
     var showOptionsDialog by remember { mutableStateOf(false) }
+    // Separate focus requester for the three-dot button so D-pad right moves to it.
+    val menuFocusRequester = remember { FocusRequester() }
 
     if (showOptionsDialog) {
         AlertDialog(
@@ -167,95 +169,119 @@ private fun ThreadItem(
                 }
             },
             confirmButton = {
-                TextButton(onClick = { showOptionsDialog = false }) { Text("Close", style = MaterialTheme.typography.labelMedium) }
+                TextButton(onClick = { showOptionsDialog = false }) {
+                    Text("Close", style = MaterialTheme.typography.labelMedium)
+                }
             }
         )
     }
 
+    // The row itself is NOT clickable — only the two child zones are, so that D-pad
+    // focus can move independently between the thread body and the menu button.
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
-            .dpadFocusableItem(
-                onClick = onClick,
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(6.dp),
-                borderWidth = 3.dp,
-                padding = 2.dp
-            )
-            .padding(horizontal = 8.dp, vertical = 6.dp), // tighter than original 12/10
+            .padding(vertical = 2.dp), // outer spacing only; no click here
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Avatar — 36dp instead of 48dp
-        val initials = thread.contactName.split(" ").mapNotNull { it.firstOrNull()?.uppercaseChar() }.take(2).joinToString("")
-        Box(
+        // ── Left zone: avatar + text — takes all remaining width ─────────────
+        Row(
             modifier = Modifier
-                .size(36.dp)
-                .background(avatarColor(thread.contactName), shape = androidx.compose.foundation.shape.CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                initials.ifBlank { "?" },
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp
-            )
-        }
-
-        Spacer(Modifier.width(8.dp))
-
-        Column(Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = thread.contactName,
-                    style = MaterialTheme.typography.bodyMedium, // down from titleMedium
-                    fontWeight = if (thread.unreadCount > 0) FontWeight.Bold else FontWeight.Normal,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                .weight(1f)
+                .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
+                .dpadFocusableItem(
+                    onClick = onClick,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(6.dp),
+                    borderWidth = 3.dp,
+                    padding = 2.dp
                 )
-                // Status icons — 12dp instead of 16dp
-                if (thread.isPinned) Icon(Icons.Default.PushPin, "Pinned", modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.primary)
-                if (thread.isMuted) Icon(Icons.Default.NotificationsOff, "Muted", modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                if (thread.isBlocked) Icon(Icons.Default.Block, "Blocked", modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.error)
-                Spacer(Modifier.width(4.dp))
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Avatar — 36dp
+            val initials = thread.contactName
+                .split(" ")
+                .mapNotNull { it.firstOrNull()?.uppercaseChar() }
+                .take(2)
+                .joinToString("")
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(
+                        avatarColor(thread.contactName),
+                        shape = androidx.compose.foundation.shape.CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(
-                    text = formatDate(thread.date),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontSize = 10.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    initials.ifBlank { "?" },
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp
                 )
             }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = thread.snippet,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodySmall, // down from bodyMedium
-                    fontWeight = if (thread.unreadCount > 0) FontWeight.Medium else FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.weight(1f)
-                )
-                if (thread.unreadCount > 0) {
+
+            Spacer(Modifier.width(8.dp))
+
+            Column(Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = thread.contactName,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = if (thread.unreadCount > 0) FontWeight.Bold else FontWeight.Normal,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    if (thread.isPinned) Icon(Icons.Default.PushPin, "Pinned", modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.primary)
+                    if (thread.isMuted) Icon(Icons.Default.NotificationsOff, "Muted", modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    if (thread.isBlocked) Icon(Icons.Default.Block, "Blocked", modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.error)
                     Spacer(Modifier.width(4.dp))
-                    Badge(modifier = Modifier.padding(0.dp)) {
-                        Text(thread.unreadCount.toString(), fontSize = 9.sp)
+                    Text(
+                        text = formatDate(thread.date),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontSize = 10.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = thread.snippet,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = if (thread.unreadCount > 0) FontWeight.Medium else FontWeight.Normal,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.weight(1f)
+                    )
+                    if (thread.unreadCount > 0) {
+                        Spacer(Modifier.width(4.dp))
+                        Badge(modifier = Modifier.padding(0.dp)) {
+                            Text(thread.unreadCount.toString(), fontSize = 9.sp)
+                        }
                     }
                 }
             }
         }
 
-        // Options button — 32dp touch target instead of default 48dp
-        IconButton(
-            onClick = { showOptionsDialog = true },
+        // ── Right zone: three-dot menu button — independent focusable target ──
+        Box(
             modifier = Modifier
-                .size(32.dp)
+                .size(36.dp)
+                .focusRequester(menuFocusRequester)
                 .dpadFocusableItem(
                     onClick = { showOptionsDialog = true },
                     shape = androidx.compose.foundation.shape.CircleShape,
                     borderWidth = 2.dp
-                )
+                ),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Default.MoreVert, "Options", modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            Icon(
+                Icons.Default.MoreVert,
+                contentDescription = "Options",
+                modifier = Modifier.size(16.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 

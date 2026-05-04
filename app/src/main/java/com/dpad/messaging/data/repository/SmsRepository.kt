@@ -95,10 +95,17 @@ class SmsRepository(
 
     // ── Messages in thread ────────────────────────────────────────────────────
 
-    suspend fun getMessages(threadId: Long): List<SmsMessage> = withContext(Dispatchers.IO) {
+    /**
+     * Load messages for a thread.
+     *
+     * @param threadId  The thread to load from.
+     * @param limit     Max number of most-recent combined messages to return (default 50).
+     *                  Pass [Int.MAX_VALUE] to load all.
+     */
+    suspend fun getMessages(threadId: Long, limit: Int = 50): List<SmsMessage> = withContext(Dispatchers.IO) {
         val messages = mutableListOf<SmsMessage>()
 
-        // SMS
+        // SMS — fetch all rows for this thread; we'll trim to `limit` after combining with MMS
         val smsCursor: Cursor? = try {
             cr.query(
                 Telephony.Sms.CONTENT_URI,
@@ -106,7 +113,7 @@ class SmsRepository(
                     Telephony.Sms.DATE, Telephony.Sms.TYPE),
                 "${Telephony.Sms.THREAD_ID} = ?",
                 arrayOf(threadId.toString()),
-                "${Telephony.Sms.DATE} ASC"
+                "${Telephony.Sms.DATE} DESC"  // DESC so we can early-exit after `limit` rows
             )
         } catch (e: Exception) { null }
 
@@ -120,6 +127,8 @@ class SmsRepository(
                 val msgType = if (type == Telephony.Sms.MESSAGE_TYPE_SENT) MsgType.SMS_OUT else MsgType.SMS_IN
                 val state = if (msgType == com.dpad.messaging.data.model.MsgType.SMS_OUT) com.dpad.messaging.data.model.DeliveryState.SENT else com.dpad.messaging.data.model.DeliveryState.UNKNOWN
                 messages.add(SmsMessage(id, threadId, address, body, date, msgType, emptyList(), state))
+                // Stop reading SMS once we already have enough candidates
+                if (limit != Int.MAX_VALUE && messages.size >= limit * 2) break
             }
         }
 
@@ -130,7 +139,7 @@ class SmsRepository(
                 arrayOf(Telephony.Mms._ID, Telephony.Mms.DATE, Telephony.Mms.MESSAGE_BOX),
                 "${Telephony.Mms.THREAD_ID} = ?",
                 arrayOf(threadId.toString()),
-                "${Telephony.Mms.DATE} ASC"
+                "${Telephony.Mms.DATE} DESC"
             )
         } catch (e: Exception) { null }
 
@@ -148,7 +157,10 @@ class SmsRepository(
             }
         }
 
-        messages.sortedBy { it.date }
+        // Sort DESC, take the `limit` most-recent, then re-sort ASC for display
+        val sorted = messages.sortedByDescending { it.date }
+        val trimmed = if (limit == Int.MAX_VALUE) sorted else sorted.take(limit)
+        trimmed.sortedBy { it.date }
     }
 
     /** Read the thread_id for a given inserted SMS Uri (e.g. content://sms/2). */

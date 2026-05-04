@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import androidx.compose.ui.platform.LocalContext
 import com.dpad.messaging.data.model.MsgType
 import com.dpad.messaging.data.model.SmsMessage
 import com.dpad.messaging.util.dpadFocusableItem
@@ -51,6 +53,7 @@ fun ChatScreen(
 ) {
     val messages by viewModel.messages.collectAsState()
     val isSending by viewModel.isSending.collectAsState()
+    val hasMore by viewModel.hasMore.collectAsState()
     var inputText by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var showEmojiDialog by remember { mutableStateOf(false) }
@@ -229,6 +232,26 @@ fun ChatScreen(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             contentPadding = PaddingValues(vertical = 6.dp)
         ) {
+            if (hasMore) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        TextButton(
+                            onClick = { viewModel.loadEarlier() },
+                            modifier = Modifier.dpadFocusableItem(
+                                onClick = { viewModel.loadEarlier() },
+                                shape = RoundedCornerShape(6.dp)
+                            )
+                        ) {
+                            Text("Load earlier", style = MaterialTheme.typography.labelSmall)
+                        }
+                    }
+                }
+            }
             items(messages, key = { it.id }) { msg ->
                 MessageBubble(msg, onDeleteMessage = { viewModel.deleteMessage(it) })
             }
@@ -328,6 +351,7 @@ private fun MessageBubble(msg: SmsMessage, onDeleteMessage: (SmsMessage) -> Unit
     val bubbleColor = if (isOwn) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
     val textColor = if (isOwn) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
     var showMsgOptions by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     if (showMsgOptions) {
         AlertDialog(
@@ -364,7 +388,10 @@ private fun MessageBubble(msg: SmsMessage, onDeleteMessage: (SmsMessage) -> Unit
             Column {
                 msg.mmsPartUris.forEach { uri ->
                     AsyncImage(
-                        model = uri,
+                        model = ImageRequest.Builder(context)
+                            .data(uri)
+                            .size(330, 210) // 220dp×140dp at 240dpi ≈ 330×210px — avoids loading full-res into memory
+                            .build(),
                         contentDescription = "MMS image",
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier.fillMaxWidth().heightIn(max = 140.dp)

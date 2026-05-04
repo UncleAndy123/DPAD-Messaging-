@@ -22,6 +22,10 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel(app: Application) : AndroidViewModel(app) {
 
+    companion object {
+        private const val PAGE_SIZE = 50
+    }
+
     private val db = AppDatabase.getDatabase(app)
     private val repo = SmsRepository(app, db.threadMetadataDao())
     private val sender = SmsSender(app)
@@ -31,6 +35,11 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
 
     private val _isSending = MutableStateFlow(false)
     val isSending: StateFlow<Boolean> = _isSending
+
+    /** How many messages are currently loaded. Incremented by PAGE_SIZE on each "Load Earlier". */
+    private var messageLimit = PAGE_SIZE
+    private val _hasMore = MutableStateFlow(false)
+    val hasMore: StateFlow<Boolean> = _hasMore
 
     private var threadId: Long = -1
     private var address: String = ""
@@ -53,7 +62,7 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
             val tid = threadId
             Log.d("ChatVM", "scheduleReload tid=$tid currentMessages=${_messages.value.size}")
             if (tid <= 0) return@launch
-            val fetched = repo.getMessages(tid)
+            val fetched = repo.getMessages(tid, messageLimit)
             Log.d("ChatVM", "scheduleReload fetched=${fetched.size} for tid=$tid")
             // Keep any optimistic SENDING bubbles not yet confirmed in provider
             val now = System.currentTimeMillis()
@@ -63,6 +72,7 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
                 fetched.none { p -> p.type == opt.type && p.body == opt.body && kotlin.math.abs(p.date - now) <= windowMs }
             }
             _messages.value = if (stillPending.isEmpty()) fetched else fetched + stillPending
+            updateHasMore(fetched.size)
         }
     }
 
@@ -84,11 +94,23 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
             val tid = threadId
             Log.d("ChatVM", "load() tid=$tid")
             if (tid > 0) {
-                val msgs = repo.getMessages(tid)
+                val msgs = repo.getMessages(tid, messageLimit)
                 Log.d("ChatVM", "load() got ${msgs.size} messages")
                 _messages.value = msgs
+                updateHasMore(msgs.size)
             }
         }
+    }
+
+    /** Load an additional page of older messages. */
+    fun loadEarlier() {
+        messageLimit += PAGE_SIZE
+        load()
+    }
+
+    private fun updateHasMore(loadedCount: Int) {
+        // If we got exactly `messageLimit` messages back, there are likely more older ones
+        _hasMore.value = loadedCount >= messageLimit
     }
 
     fun send(text: String, imageUri: Uri? = null) {
@@ -131,9 +153,10 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
                         // Fetch fresh list from provider which now includes the sent message
                         val tid = threadId
                         if (tid > 0) {
-                            val fetched = repo.getMessages(tid)
+                            val fetched = repo.getMessages(tid, messageLimit)
                             Log.d("ChatVM", "post-send fetched=${fetched.size}")
                             _messages.value = fetched
+                            updateHasMore(fetched.size)
                         }
                     }
                     // If insert failed for some reason, ContentObserver will still reload eventually
@@ -152,7 +175,7 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             repo.deleteMessage(message)
             val tid = threadId
-            if (tid > 0) _messages.value = repo.getMessages(tid)
+            if (tid > 0) _messages.value = repo.getMessages(tid, messageLimit)
         }
     }
 
