@@ -1,155 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest package="org.example.dpadmessaging"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_MMS" />
-    <uses-permission android:name="android.permission.WRITE_MMS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
 
-    <uses-feature android:name="android.software.leanback" android:required="false" />
-    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
-
-        <application
-        android:name=".DpadMessagingApp"
+    <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.DpadMessaging"
-        tools:targetApi="31">
-
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize">
+        android:label="DPAD Messaging"
+        android:theme="@style/Theme.App">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-            <!-- Handle "Send to" intents from other apps -->
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <action android:name="android.intent.action.SENDTO" />
-                <data android:scheme="sms" />
-                <data android:scheme="smsto" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
-
-        <receiver
-            android:name=".receiver.SmsReceiver"
-            android:exported="true"
-            android:permission="android.permission.BROADCAST_SMS">
-            <intent-filter android:priority="999">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Required to become the default SMS app -->
-        <receiver
-            android:name=".receiver.SmsDeliverReceiver"
-            android:exported="true"
-            android:permission="android.permission.BROADCAST_SMS">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_DELIVER" />
-            </intent-filter>
-        </receiver>
-
-        <!--
-            WAP push entry point — use Klinker's own PushReceiver (inside mmslib).
-            This is the correct class for WAP_PUSH_DELIVER: it parses the notification
-            PDU, persists the M-Notification.ind, and starts TransactionService to
-            download the actual MMS from the MMSC. Our old MmsPushDeliverReceiver used
-            the wrong base class (MmsReceivedReceiver) which is only for post-download
-            callbacks, so the download pipeline never ran.
-        -->
-        <receiver
-            android:name="com.android.mms.transaction.PushReceiver"
-            android:exported="true"
-            android:permission="android.permission.BROADCAST_WAP_PUSH">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
-                <data android:mimeType="application/vnd.wap.mms-message" />
-                <data android:mimeType="application/vnd.wap.sic" />
-            </intent-filter>
-        </receiver>
-
-        <!--
-            Our own WAP push receiver — coexists with PushReceiver above.
-            Android delivers WAP_PUSH_DELIVER to all matching receivers.
-            This one waits for the MMS row to land in the provider (whether downloaded
-            by the system MmsService or by TransactionService) then posts the notification.
-        -->
-        <receiver
-            android:name=".receiver.MmsPushReceiver"
-            android:exported="true"
-            android:permission="android.permission.BROADCAST_WAP_PUSH">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
-                <data android:mimeType="application/vnd.wap.mms-message" />
-            </intent-filter>
-        </receiver>
-
-        <!--
-            Post-download callback: Fossify mmslib's NotificationTransaction calls
-            BroadcastUtils.sendExplicitBroadcast(context, intent, "com.klinker.android.messaging.NEW_MMS_DOWNLOADED").
-            BroadcastUtils resolves the target receiver by iterating PackageInfo.receivers[]
-            and matching ActivityInfo.taskAffinity to that action string — so taskAffinity
-            here must equal NEW_MMS_DOWNLOADED exactly.
-            MmsReceivedReceiver.onReceive() does not filter on action; it processes any
-            broadcast it receives, then calls isAddressBlocked() / onMessageReceived() / onError().
-        -->
-        <receiver
-            android:name=".receiver.MmsReceiver"
-            android:exported="true"
-            android:taskAffinity="com.klinker.android.messaging.NEW_MMS_DOWNLOADED" />
-
-        <service
-            android:name=".service.MmsNotificationService"
-            android:exported="false" />
-
-        <!--
-            TransactionService handles the actual MMS download (M-Retrieve.conf HTTP fetch
-            from the MMSC URL). Must be declared so PushReceiver can start it.
-        -->
-        <service
-            android:name="com.android.mms.transaction.TransactionService"
-            android:exported="false" />
-
-        <!-- Required to become the default SMS app (Quick responses) -->
-        <service
-            android:name=".service.HeadlessSmsSendService"
-            android:exported="true"
-            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
-            <intent-filter>
-                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="sms" />
-                <data android:scheme="smsto" />
-                <data android:scheme="mms" />
-                <data android:scheme="mmsto" />
-            </intent-filter>
-        </service>
-
     </application>
 
 </manifest>

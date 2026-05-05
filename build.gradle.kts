@@ -1,7 +1,1 @@
-// Top-level build file
-plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.kotlin.compose) apply false
-    alias(libs.plugins.ksp) apply false
-}
+// Top-level build file intentionally empty. Plugin versions are resolved via settings.pluginManagement

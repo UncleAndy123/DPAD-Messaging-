@@ -1,3 +1,0 @@
-apply plugin: 'java'
-repositories { mavenCentral(); google() }
-dependencies { implementation 'com.klinkerapps:android-smsmms:4.0.2' }

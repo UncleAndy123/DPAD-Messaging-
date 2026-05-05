@@ -1,6 +1,0 @@
-<resources>
-    <!-- Base application theme. The Compose theme overrides this at runtime. -->
-    <style name="Theme.DpadMessaging" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowBackground">@android:color/white</item>
-    </style>
-</resources>

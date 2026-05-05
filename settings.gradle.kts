@@ -1,26 +1,15 @@
 pluginManagement {
     repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
-        mavenCentral()
         gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
         mavenCentral()
-        maven { setUrl("https://www.jitpack.io") }
-        mavenLocal()
+        google()
+    }
+    plugins {
+        id("com.android.application") version "9.0.0"
+        id("org.jetbrains.kotlin.android") version "1.9.0"
+        id("org.jetbrains.kotlin.kapt") version "1.9.0"
     }
 }
 
-rootProject.name = "DPAD Messaging"
+rootProject.name = "dpad-messaging"
 include(":app")
-
