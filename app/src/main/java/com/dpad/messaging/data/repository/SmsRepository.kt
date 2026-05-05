@@ -9,6 +9,10 @@ import android.provider.ContactsContract
 import android.provider.Telephony
 import android.util.Log
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 import com.dpad.messaging.data.db.ThreadMetadataDao
 import com.dpad.messaging.data.model.MsgType
 import com.dpad.messaging.data.model.SmsMessage
@@ -105,6 +109,74 @@ class SmsRepository(
 
         // Sort: Pinned first, then by date
         threads.sortedWith(compareByDescending<SmsThread> { it.isPinned }.thenByDescending { it.date })
+    }
+
+    /**
+     * Try to read the part content via the provider content URI and copy to our
+     * app cache. Returns a file:// URI string on success or null on failure.
+     */
+    private fun recoverPart(partId: Long, partUri: Uri, name: String?, contentType: String): String? {
+        try {
+            val cacheDir = File(context.cacheDir, "mms_recovered")
+            if (!cacheDir.exists()) cacheDir.mkdirs()
+            val ext = when {
+                contentType.startsWith("image/") -> contentType.substringAfter("image/", "jpg")
+                contentType.startsWith("video/") -> contentType.substringAfter("video/", "mp4")
+                else -> "bin"
+            }
+            val safeName = name?.replace(Regex("[^A-Za-z0-9_.-]"), "_")
+            val outFile = File(cacheDir, "part_${partId}_${safeName ?: partId}.$ext")
+            // If file already exists, return it
+            if (outFile.exists() && outFile.canRead()) return Uri.fromFile(outFile).toString()
+
+            // Try openInputStream first
+            var input: InputStream? = null
+            try {
+                input = try {
+                    context.contentResolver.openInputStream(partUri)
+                } catch (e: Exception) {
+                    null
+                }
+            } catch (_: Exception) { input = null }
+
+            // If openInputStream failed, try openFileDescriptor
+            var pfd: android.os.ParcelFileDescriptor? = null
+            if (input == null) {
+                try {
+                    pfd = context.contentResolver.openFileDescriptor(partUri, "r")
+                    if (pfd != null) {
+                        input = FileInputStream(pfd.fileDescriptor)
+                    }
+                } catch (e: Exception) {
+                    pfd = null
+                    input = null
+                }
+            }
+
+            input ?: return null
+
+            FileOutputStream(outFile).use { out ->
+                input.use { inp ->
+                    val buf = ByteArray(8192)
+                    var read: Int
+                    while (true) {
+                        read = inp.read(buf)
+                        if (read <= 0) break
+                        out.write(buf, 0, read)
+                    }
+                    out.flush()
+                }
+            }
+
+            // Verify file is readable
+            return if (outFile.exists() && outFile.canRead()) Uri.fromFile(outFile).toString() else null
+        } catch (e: FileNotFoundException) {
+            Log.e("SmsRepo", "recoverPart file not found", e)
+            return null
+        } catch (e: Exception) {
+            Log.e("SmsRepo", "recoverPart failed", e)
+            return null
+        }
     }
 
     /** Fetch unread counts for all threads — SMS + MMS combined (BUG 10 fix). */
@@ -435,6 +507,20 @@ class SmsRepository(
                                     Log.e("SmsRepo", "  part id=$partId using _data file path=$dataCol")
                                 } else {
                                     Log.e("SmsRepo", "  part id=$partId _data present but file not readable: $dataCol")
+                                    // Attempt programmatic recovery: try to copy part bytes from
+                                    // the provider content URI into our app cache and use that
+                                    // file if successful.
+                                    try {
+                                        val recovered = recoverPart(partId, Uri.withAppendedPath(partUri, partId.toString()), name, ct)
+                                        if (recovered != null) {
+                                            uriStr = recovered
+                                            Log.i("SmsRepo", "  part id=$partId recovered to $recovered")
+                                        } else {
+                                            Log.i("SmsRepo", "  part id=$partId recovery failed")
+                                        }
+                                    } catch (e: Exception) {
+                                        Log.e("SmsRepo", "  part id=$partId recovery threw", e)
+                                    }
                                 }
                             } catch (e: Exception) {
                                 Log.e("SmsRepo", "  part id=$partId failed to use _data path $dataCol", e)
