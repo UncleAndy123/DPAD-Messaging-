@@ -14,6 +14,7 @@ import android.os.HandlerThread
 import android.os.IBinder
 import android.provider.Telephony
 import android.telephony.SmsManager
+import com.dpad.messaging.util.SmsHelper
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.dpad.messaging.MainActivity
@@ -230,14 +231,17 @@ class MmsNotificationService : Service() {
                 val stubUri = ContentUris.withAppendedId(Telephony.Mms.CONTENT_URI, id)
                 try {
                     @Suppress("DEPRECATION")
-                    SmsManager.getDefault().downloadMultimediaMessage(
+                    val smsManager = SmsHelper.getSmsManager(applicationContext)
+                    val usedSubId = SmsHelper.getDefaultSmsSubId(applicationContext)
+                    Log.d(TAG, "triggerPendingDownloads: using subId=$usedSubId manager=$smsManager for stub id=$id")
+                    smsManager.downloadMultimediaMessage(
                         applicationContext,
                         location,
                         stubUri,
                         null,  // no config overrides
                         null   // no callback intent — ContentObserver handles completion
                     )
-                    Log.e(TAG, "triggerPendingDownloads: download triggered for stub id=$id")
+                    Log.d(TAG, "triggerPendingDownloads: download triggered for stub id=$id")
                 } catch (e: Exception) {
                     Log.e(TAG, "triggerPendingDownloads: failed for stub id=$id", e)
                 }

@@ -497,9 +497,23 @@ private fun MessageBubble(msg: SmsMessage, onDeleteMessage: (SmsMessage) -> Unit
                             try {
                                 val resolver = context.contentResolver
                                 val uri = android.net.Uri.parse(part.uri)
-                                resolver.openInputStream(uri)?.use { stream ->
-                                    fallbackBytes.value = stream.readBytes()
-                                } ?: android.util.Log.e("MmsFallback", "openInputStream returned null for ${part.uri}")
+                                // If this is a file:// URI (provider exposed _data path), read directly
+                                if (uri.scheme == "file") {
+                                    try {
+                                        val f = java.io.File(uri.path ?: "")
+                                        if (f.exists() && f.canRead()) {
+                                            fallbackBytes.value = f.readBytes()
+                                        } else {
+                                            android.util.Log.e("MmsFallback", "file URI not readable ${part.uri}")
+                                        }
+                                    } catch (e: Exception) {
+                                        android.util.Log.e("MmsFallback", "Failed to read file URI ${part.uri}", e)
+                                    }
+                                } else {
+                                    resolver.openInputStream(uri)?.use { stream ->
+                                        fallbackBytes.value = stream.readBytes()
+                                    } ?: android.util.Log.e("MmsFallback", "openInputStream returned null for ${part.uri}")
+                                }
                             } catch (e: Exception) {
                                 android.util.Log.e("MmsFallback", "Fallback failed to read ${part.uri}", e)
                             }

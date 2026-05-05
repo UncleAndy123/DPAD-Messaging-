@@ -8,6 +8,7 @@ import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.Telephony
 import android.util.Log
+import java.io.File
 import com.dpad.messaging.data.db.ThreadMetadataDao
 import com.dpad.messaging.data.model.MsgType
 import com.dpad.messaging.data.model.SmsMessage
@@ -422,7 +423,23 @@ class SmsRepository(
                         }
                     }
                     ct.startsWith("image") || ct.startsWith("video") -> {
-                        val uriStr = Uri.withAppendedPath(partUri, partId.toString()).toString()
+                        // If the provider exposed an internal file path in _data, prefer a file:// URI
+                        // when the file exists and is readable. This mirrors behavior in other
+                        // messaging apps and helps image loaders that can read file URIs directly.
+                        var uriStr = Uri.withAppendedPath(partUri, partId.toString()).toString()
+                        if (!dataCol.isNullOrBlank()) {
+                            try {
+                                val f = File(dataCol)
+                                if (f.exists() && f.canRead()) {
+                                    uriStr = Uri.fromFile(f).toString()
+                                    Log.e("SmsRepo", "  part id=$partId using _data file path=$dataCol")
+                                } else {
+                                    Log.e("SmsRepo", "  part id=$partId _data present but file not readable: $dataCol")
+                                }
+                            } catch (e: Exception) {
+                                Log.e("SmsRepo", "  part id=$partId failed to use _data path $dataCol", e)
+                            }
+                        }
                         parts.add(MmsPart(partId, uriStr, ct, name, hasData))
                     }
                     // application/smil and other types ignored here (SMIL handled elsewhere)

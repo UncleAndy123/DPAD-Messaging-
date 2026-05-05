@@ -7,6 +7,8 @@ import android.os.Build
 import android.provider.Telephony
 import android.telephony.SmsManager
 import android.telephony.SubscriptionManager
+import android.util.Log
+import com.dpad.messaging.util.SmsHelper
 import com.klinker.android.send_message.Message
 import com.klinker.android.send_message.Settings
 import com.klinker.android.send_message.Transaction
@@ -14,6 +16,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class SmsSender(private val context: Context) {
+
+    companion object {
+        private const val TAG = "SmsSender"
+    }
 
     /**
      * Sends an SMS and writes it to the Telephony sent-items provider (required when we
@@ -88,21 +94,19 @@ class SmsSender(private val context: Context) {
             message.addMedia(imageBytes, mimeType)
         }
 
-        Transaction(context, settings).sendNewMessage(message)
+        Log.d(TAG, "sendMms addresses=${addresses.joinToString()} subId=$subId threadId=$threadId imageBytes=${imageBytes?.size ?: 0} mimeType=$mimeType")
+        try {
+            Transaction(context, settings).sendNewMessage(message)
+            Log.d(TAG, "sendMms succeeded for subId=$subId")
+        } catch (e: Exception) {
+            Log.e(TAG, "sendMms failed for subId=$subId", e)
+            throw e
+        }
     }
 
     @Suppress("DEPRECATION")
     private fun getSmsManager(): SmsManager {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val subId = getDefaultSmsSubId()
-            val base = context.getSystemService(SmsManager::class.java)
-            if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID)
-                base.createForSubscriptionId(subId)
-            else
-                base
-        } else {
-            SmsManager.getDefault()
-        }
+        return SmsHelper.getSmsManager(context)
     }
 
     @Suppress("MissingPermission")

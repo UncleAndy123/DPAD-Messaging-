@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
 import android.telephony.SmsManager
+import com.dpad.messaging.util.SmsHelper
 import android.util.Log
 import com.dpad.messaging.service.MmsNotificationService
 
@@ -68,7 +69,10 @@ class MmsPushReceiver : BroadcastReceiver() {
                             val stubUri = ContentUris.withAppendedId(Telephony.Mms.CONTENT_URI, id)
                             try {
                                 @Suppress("DEPRECATION")
-                                SmsManager.getDefault().downloadMultimediaMessage(
+                                val smsManager = SmsHelper.getSmsManager(context)
+                                val usedSubId = SmsHelper.getDefaultSmsSubId(context)
+                                Log.d(TAG, "download trigger: using subId=$usedSubId manager=$smsManager for stub id=$id (attempt=$attempt)")
+                                smsManager.downloadMultimediaMessage(
                                     context,
                                     location,
                                     stubUri,
