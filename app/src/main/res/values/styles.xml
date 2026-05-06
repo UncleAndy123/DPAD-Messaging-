@@ -1,5 +1,0 @@
-<resources>
-    <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Minimal theme -->
-    </style>
-</resources>

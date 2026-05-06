@@ -1,21 +1,280 @@
-<manifest package="org.example.dpadmessaging"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-sdk tools:overrideLibrary="com.klinker.android.send_message" />
+
+    <!-- ─── SMS/MMS Permissions ─── -->
+    <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+    <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+
+    <!-- ─── Contact / People Permissions ─── -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <!-- ─── Storage (MMS attachments) ─── -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+
+    <!-- ─── Notifications ─── -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- ─── Network (MMS APN) ─── -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- ─── Scheduling ─── -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
+    <!-- ─── Wake lock (MMS download in background) ─── -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- ─── Hardware features ─── -->
+    <!-- Touchscreen is NOT required — runs on dumbphones with no touch -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <!-- Telephony IS required — this is an SMS/MMS app -->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="true" />
+    <!-- Optional: appear in Android TV launcher if device supports leanback -->
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
-        android:label="DPAD Messaging"
-        android:theme="@style/Theme.App">
-        <activity android:name=".MainActivity">
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.DpadMessaging"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+
+        <!-- ─── Activities ─── -->
+        <activity
+            android:name=".activities.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DpadMessaging.Splash"
+            android:banner="@drawable/app_banner">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <activity
+            android:name=".activities.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Required intent filters for the default SMS app role -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sms" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="mms" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="smsto" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="mmsto" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.ThreadActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".activities.NewConversationActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity"
+            android:windowSoftInputMode="adjustPan">
+            <!-- Share targets -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity"
+            android:label="@string/settings" />
+
+        <activity
+            android:name=".activities.ArchivedConversationsActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity"
+            android:label="@string/archived" />
+
+        <activity
+            android:name=".activities.RecycleBinActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity"
+            android:label="@string/recycle_bin" />
+
+        <activity
+            android:name=".activities.ConversationDetailsActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.ThreadActivity"
+            android:label="@string/conversation_details" />
+
+        <activity
+            android:name=".activities.BlockedKeywordsActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.SettingsActivity"
+            android:label="@string/manage_blocked_keywords" />
+
+        <!-- Headless reply (RESPOND_VIA_MESSAGE) -->
+        <service
+            android:name=".services.HeadlessSmsSendService"
+            android:exported="true"
+            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
+            </intent-filter>
+        </service>
+
+        <!-- ─── SMS/MMS Receivers ─── -->
+        <receiver
+            android:name=".receivers.SmsReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="500">
+                <action android:name="android.provider.Telephony.SMS_DELIVER" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Debug-only deleter activity; only available in debug builds and requires
+             a secret token extra. Removed in release builds by ProGuard/R8 if
+             BuildConfig.DEBUG is false. -->
+        <activity
+            android:name=".debug.DebugDeleterActivity"
+            android:exported="true"
+            android:permission="android.permission.WRITE_SMS"
+            tools:ignore="ExportedActivity">
+            <intent-filter>
+                <action android:name="com.dpad.messaging.debug.CLEAR_ALL_MESSAGES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".receivers.MmsReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_WAP_PUSH">
+            <intent-filter android:priority="500">
+                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+                <data android:mimeType="application/vnd.wap.mms-message" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receivers.SmsStatusSentReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receivers.SmsStatusDeliveredReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receivers.MmsSentReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receivers.MmsDownloadReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.dpad.messaging.MMS_DOWNLOADED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Notification action receivers -->
+        <receiver
+            android:name=".receivers.DirectReplyReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receivers.MarkAsReadReceiver"
+            android:exported="false" />
+
+        <!-- Scheduling -->
+        <receiver
+            android:name=".receivers.ScheduledMessageReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receivers.RescheduleAlarmsReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
+
+        <!-- MMS Transaction Service (from mmslib) — wired in Phase 3 -->
+        <!-- <service android:name="com.android.mms.transaction.TransactionService" ... /> -->
+
+        <!-- FileProvider for sharing PDU cache files with SmsManager.sendMultimediaMessage() -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
 </manifest>

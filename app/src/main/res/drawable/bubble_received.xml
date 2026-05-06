@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Received message bubble: rounded on all corners except bottom-left -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bubbleReceivedBg"/>
+            <stroke android:width="@dimen/focus_border_width" android:color="@color/focus_border"/>
+            <corners
+                android:topLeftRadius="@dimen/bubble_corner_radius"
+                android:topRightRadius="@dimen/bubble_corner_radius"
+                android:bottomLeftRadius="2dp"
+                android:bottomRightRadius="@dimen/bubble_corner_radius"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bubbleReceivedBg"/>
+            <corners
+                android:topLeftRadius="@dimen/bubble_corner_radius"
+                android:topRightRadius="@dimen/bubble_corner_radius"
+                android:bottomLeftRadius="2dp"
+                android:bottomRightRadius="@dimen/bubble_corner_radius"/>
+        </shape>
+    </item>
+</selector>

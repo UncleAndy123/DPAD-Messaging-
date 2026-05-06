@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    New conversation screen.
+
+    D-Pad flow:
+      Toolbar (Back) → DOWN → et_recipient
+      et_recipient   → DOWN → et_message
+      et_message     → DOWN → btn_send  (or SEND action key)
+      et_recipient   → UP   → Toolbar
+      et_message     → UP   → et_recipient
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
+
+    <!-- Toolbar -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/toolbarBg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/toolbar_padding_h"
+        android:paddingEnd="@dimen/toolbar_padding_h">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="@dimen/toolbar_button_width"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@drawable/button_focusable_bg"
+            android:contentDescription="@string/back"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:nextFocusDown="@id/et_recipient"
+            android:scaleType="center"
+            android:src="@drawable/ic_back"
+            android:tint="@color/toolbarIcon" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:paddingStart="@dimen/padding_small"
+            android:text="@string/new_conversation"
+            android:textColor="@color/toolbarText"
+            android:textSize="@dimen/text_size_title"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- To: field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSurface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/padding_medium"
+        android:paddingEnd="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_small">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:text="To: "
+            android:textColor="@color/conversationDate"
+            android:textSize="@dimen/text_size_normal" />
+
+        <EditText
+            android:id="@+id/et_recipient"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="@string/enter_name"
+            android:imeOptions="actionNext"
+            android:inputType="phone"
+            android:maxLines="1"
+            android:nextFocusDown="@id/et_message"
+            android:nextFocusUp="@id/btn_back"
+            android:singleLine="true"
+            android:textColor="@color/colorOnBackground"
+            android:textColorHint="@color/composeHint"
+            android:textSize="@dimen/text_size_normal" />
+
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/divider" />
+
+    <!-- Message body -->
+    <EditText
+        android:id="@+id/et_message"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorBackground"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="top|start"
+        android:hint="@string/type_message"
+        android:nextFocusDown="@id/btn_send"
+        android:nextFocusUp="@id/et_recipient"
+        android:padding="@dimen/padding_medium"
+        android:textColor="@color/colorOnBackground"
+        android:textColorHint="@color/composeHint"
+        android:textSize="@dimen/text_size_normal" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/divider" />
+
+    <!-- Send bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/compose_bar_height"
+        android:background="@color/composeBg"
+        android:gravity="center_vertical|end"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/compose_padding">
+
+        <ImageButton
+            android:id="@+id/btn_send"
+            android:layout_width="@dimen/compose_button_size"
+            android:layout_height="@dimen/compose_button_size"
+            android:background="@drawable/button_focusable_bg"
+            android:contentDescription="@string/send"
+            android:enabled="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:nextFocusUp="@id/et_message"
+            android:scaleType="center"
+            android:src="@drawable/ic_send"
+            android:tint="@color/sendButtonDisabled" />
+
+    </LinearLayout>
+
+</LinearLayout>

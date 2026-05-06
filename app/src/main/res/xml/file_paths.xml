@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Used by FileProvider to share MMS PDU cache files with SmsManager -->
+    <cache-path name="mms_pdu" path="mms_pdu/" />
+</paths>

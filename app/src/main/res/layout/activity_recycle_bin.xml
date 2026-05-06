@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
+
+    <!-- Toolbar -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/toolbarBg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/toolbar_padding_h"
+        android:paddingEnd="@dimen/toolbar_padding_h">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="@dimen/toolbar_button_width"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@drawable/button_focusable_bg"
+            android:contentDescription="@string/back"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_back"
+            android:tint="@color/toolbarIcon" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:paddingStart="@dimen/padding_small"
+            android:text="@string/recycle_bin"
+            android:textColor="@color/toolbarText"
+            android:textSize="@dimen/text_size_title"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Message list -->
+    <com.dpad.messaging.views.DpadRecyclerView
+        android:id="@+id/rv_messages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:focusable="false"
+        android:gravity="center"
+        android:text="@string/no_recycle_bin"
+        android:textColor="@color/emptyText"
+        android:textSize="@dimen/text_size_normal"
+        android:visibility="gone" />
+
+</LinearLayout>

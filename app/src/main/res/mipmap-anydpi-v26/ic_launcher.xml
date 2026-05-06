@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorPrimary"/>
+        </shape>
+    </background>
+    <foreground>
+        <vector
+            android:width="108dp"
+            android:height="108dp"
+            android:viewportWidth="108"
+            android:viewportHeight="108">
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M81,27H27C23.69,27 21,29.69 21,33v54l12,-12h48c3.31,0 6,-2.69 6,-6V33C87,29.69 84.31,27 81,27z"/>
+        </vector>
+    </foreground>
+</adaptive-icon>

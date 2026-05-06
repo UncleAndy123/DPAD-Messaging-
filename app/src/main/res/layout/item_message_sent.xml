@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Sent message bubble (right-aligned).
+    The entire bubble is the focusable unit — focus ring appears via bubble_sent.xml selector.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:gravity="end"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/bubble_margin_v"
+    android:paddingBottom="@dimen/bubble_margin_v">
+
+    <LinearLayout
+        android:id="@+id/bubble_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/bubble_margin_h"
+        android:background="@drawable/bubble_sent"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/bubble_padding_h"
+        android:paddingEnd="@dimen/bubble_padding_h"
+        android:paddingTop="@dimen/bubble_padding_v"
+        android:paddingBottom="@dimen/bubble_padding_v">
+
+        <TextView
+            android:id="@+id/tv_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:textColor="@color/bubbleSentText"
+            android:textIsSelectable="false"
+            android:textSize="@dimen/text_size_normal" />
+
+        <!-- MMS image attachment -->
+        <ImageView
+            android:id="@+id/iv_attachment"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="@dimen/padding_tiny"
+            android:focusable="false"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+        <!-- Status + timestamp row -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:textColor="#AAFFFFFF"
+                android:textSize="@dimen/text_size_small" />
+
+            <!-- Delivery status indicator -->
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_tiny"
+                android:focusable="false"
+                android:textColor="@color/statusDelivered"
+                android:textSize="@dimen/text_size_small"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

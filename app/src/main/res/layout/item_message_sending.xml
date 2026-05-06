@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    "Sending…" indicator row — shown while a message is in the outbox.
+    Focusable but no actions available until send completes.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:gravity="end"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/bubble_margin_v"
+    android:paddingBottom="@dimen/bubble_margin_v">
+
+    <LinearLayout
+        android:id="@+id/bubble_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/bubble_margin_h"
+        android:background="@drawable/bubble_sent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/bubble_padding_h"
+        android:paddingEnd="@dimen/bubble_padding_h"
+        android:paddingTop="@dimen/bubble_padding_v"
+        android:paddingBottom="@dimen/bubble_padding_v"
+        android:alpha="0.6">
+
+        <TextView
+            android:id="@+id/tv_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:textColor="@color/bubbleSentText"
+            android:textSize="@dimen/text_size_normal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_small"
+            android:focusable="false"
+            android:text="@string/sending"
+            android:textColor="#AAFFFFFF"
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+</LinearLayout>

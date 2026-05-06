@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ────────────────────────────────────────────────────────────────────────
+         Dimensions optimized for ~240×320 and 320×480 dumbphone screens.
+         All sizes are deliberately compact — no 48dp touch targets needed
+         since the device is fully D-Pad navigated.
+         ──────────────────────────────────────────────────────────────────────── -->
+
+    <!-- ─── Toolbar / Action Bar ─── -->
+    <dimen name="toolbar_height">36dp</dimen>
+    <dimen name="toolbar_icon_size">18dp</dimen>
+    <dimen name="toolbar_button_width">32dp</dimen>
+    <dimen name="toolbar_padding_h">4dp</dimen>
+
+    <!-- ─── Conversation List Items ─── -->
+    <dimen name="conversation_item_height">48dp</dimen>
+    <dimen name="avatar_size">36dp</dimen>
+    <dimen name="avatar_text_size">14sp</dimen>
+    <dimen name="conversation_padding_h">6dp</dimen>
+    <dimen name="conversation_padding_v">4dp</dimen>
+    <dimen name="unread_badge_size">16dp</dimen>
+    <dimen name="unread_badge_text_size">9sp</dimen>
+
+    <!-- ─── Message Bubbles ─── -->
+    <dimen name="bubble_padding_h">8dp</dimen>
+    <dimen name="bubble_padding_v">5dp</dimen>
+    <dimen name="bubble_corner_radius">10dp</dimen>
+    <dimen name="bubble_max_width_fraction">0.78</dimen>  <!-- 78% of screen width -->
+    <dimen name="bubble_margin_h">4dp</dimen>
+    <dimen name="bubble_margin_v">2dp</dimen>
+    <dimen name="bubble_sender_margin_top">2dp</dimen>
+
+    <!-- ─── Compose Bar ─── -->
+    <dimen name="compose_bar_height">40dp</dimen>
+    <dimen name="compose_button_size">32dp</dimen>
+    <dimen name="compose_input_padding_h">6dp</dimen>
+    <dimen name="compose_input_padding_v">4dp</dimen>
+    <dimen name="compose_padding">4dp</dimen>
+
+    <!-- ─── Date Headers ─── -->
+    <dimen name="date_header_height">24dp</dimen>
+    <dimen name="date_header_text_size">10sp</dimen>
+
+    <!-- ─── Typography ─── -->
+    <dimen name="text_size_small">11sp</dimen>
+    <dimen name="text_size_normal">13sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">15sp</dimen>
+    <dimen name="text_size_title">16sp</dimen>
+
+    <!-- ─── Focus Ring (D-Pad visual feedback) ─── -->
+    <dimen name="focus_border_width">2dp</dimen>
+    <dimen name="focus_corner_radius">4dp</dimen>
+
+    <!-- ─── Spacing ─── -->
+    <dimen name="padding_tiny">2dp</dimen>
+    <dimen name="padding_small">4dp</dimen>
+    <dimen name="padding_medium">8dp</dimen>
+    <dimen name="padding_large">12dp</dimen>
+
+    <!-- ─── Divider ─── -->
+    <dimen name="divider_height">0.5dp</dimen>
+</resources>

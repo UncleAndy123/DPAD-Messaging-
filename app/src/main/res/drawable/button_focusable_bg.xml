@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Universal D-Pad focus state selector.
+    Apply as android:background on ANY focusable view that needs
+    the standard teal focus ring (buttons, list items, etc.)
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- FOCUSED: teal fill + bright cyan border -->
+    <item android:state_focused="true" android:state_pressed="false">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/focus_highlight"/>
+            <!-- Thicker, higher-contrast border for tiny dumbphone screens -->
+            <stroke android:width="@dimen/focus_border_width" android:color="@color/focus_border"/>
+            <corners android:radius="@dimen/focus_corner_radius"/>
+        </shape>
+    </item>
+    <!-- PRESSED (touch fallback) -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#2A03DAC5"/>
+            <stroke android:width="@dimen/focus_border_width" android:color="@color/focus_border"/>
+            <corners android:radius="@dimen/focus_corner_radius"/>
+        </shape>
+    </item>
+    <!-- DEFAULT: fully transparent -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent"/>
+            <corners android:radius="@dimen/focus_corner_radius"/>
+        </shape>
+    </item>
+</selector>

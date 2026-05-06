@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme: dark, no action bar (we use custom toolbars) -->
+    <style name="Theme.DpadMessaging" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="android:statusBarColor">@color/toolbarBg</item>
+        <item name="android:navigationBarColor">@color/colorBackground</item>
+        <item name="android:textColor">@color/colorOnBackground</item>
+        <item name="android:textColorPrimary">@color/colorOnBackground</item>
+        <!-- Disable activity transition animations for snappy dumbphone feel -->
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <!-- Splash screen: identical background so there's no flash -->
+    <style name="Theme.DpadMessaging.Splash" parent="Theme.DpadMessaging">
+        <item name="android:windowBackground">@color/colorBackground</item>
+    </style>
+
+    <!-- ─── Popup Menu (context menus, overflow) ─── -->
+    <style name="DpadPopupMenu" parent="Widget.MaterialComponents.PopupMenu">
+        <item name="android:textColor">@color/colorOnBackground</item>
+        <item name="android:background">@color/colorSurface</item>
+    </style>
+
+    <!-- ─── AlertDialog ─── -->
+    <style name="DpadAlertDialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:background">@color/colorSurface</item>
+        <item name="android:textColor">@color/colorOnSurface</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+    </style>
+
+    <!-- ─── EditText (compose field, search) ─── -->
+    <style name="ComposeEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textColor">@color/composeInputText</item>
+        <item name="android:textColorHint">@color/composeHint</item>
+        <item name="android:background">@drawable/compose_input_bg</item>
+        <item name="android:paddingStart">@dimen/compose_input_padding_h</item>
+        <item name="android:paddingEnd">@dimen/compose_input_padding_h</item>
+        <item name="android:paddingTop">@dimen/compose_input_padding_v</item>
+        <item name="android:paddingBottom">@dimen/compose_input_padding_v</item>
+    </style>
+
+    <!-- ─── Toolbar buttons ─── -->
+    <style name="ToolbarButton">
+        <item name="android:layout_width">@dimen/toolbar_button_width</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="android:background">@drawable/button_focusable_bg</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:padding">@dimen/padding_small</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <!-- ─── Unread badge ─── -->
+    <style name="UnreadBadge">
+        <item name="android:background">@drawable/unread_badge_bg</item>
+        <item name="android:textColor">@color/unreadBadgeText</item>
+        <item name="android:textSize">@dimen/unread_badge_text_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minWidth">@dimen/unread_badge_size</item>
+        <item name="android:minHeight">@dimen/unread_badge_size</item>
+        <item name="android:paddingStart">@dimen/padding_tiny</item>
+        <item name="android:paddingEnd">@dimen/padding_tiny</item>
+    </style>
+</resources>

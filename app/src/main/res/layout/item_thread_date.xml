@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Date separator displayed between messages on different days.
+    Not focusable — purely informational.
+-->
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_date"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/date_header_height"
+    android:focusable="false"
+    android:gravity="center"
+    android:textColor="@color/dateHeaderText"
+    android:textSize="@dimen/date_header_text_size" />

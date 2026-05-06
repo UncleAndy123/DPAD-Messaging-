@@ -1,42 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<!--
+    Main conversation list screen.
+
+    Focus zones (D-Pad traversal order, top → bottom):
+      1. Toolbar buttons (btn_new, btn_search, btn_overflow)
+      2. DpadRecyclerView (conversation items)
+
+    Focus enters the list via D-Pad DOWN from the toolbar.
+    D-Pad UP from the first conversation item returns to the toolbar.
+    Search overlay slides in over the list when activated.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp">
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/thread_list"
+    <!-- ─── Toolbar ─────────────────────────────────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/toolbarBg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/toolbar_padding_h"
+        android:paddingEnd="@dimen/toolbar_padding_h">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:paddingStart="@dimen/padding_small"
+            android:text="@string/app_name"
+            android:textColor="@color/toolbarText"
+            android:textSize="@dimen/text_size_title"
+            android:textStyle="bold" />
+
+        <!-- New Conversation -->
+        <ImageButton
+            android:id="@+id/btn_new_conversation"
+            style="@style/ToolbarButton"
+            android:contentDescription="@string/new_conversation"
+            android:src="@drawable/ic_new_message"
+            android:nextFocusLeft="@id/btn_overflow"
+            android:nextFocusRight="@id/btn_search"
+            android:nextFocusDown="@id/rv_conversations" />
+
+        <!-- Search -->
+        <ImageButton
+            android:id="@+id/btn_search"
+            style="@style/ToolbarButton"
+            android:contentDescription="@string/search"
+            android:src="@drawable/ic_search"
+            android:nextFocusLeft="@id/btn_new_conversation"
+            android:nextFocusRight="@id/btn_overflow"
+            android:nextFocusDown="@id/rv_conversations" />
+
+        <!-- Overflow / More -->
+        <ImageButton
+            android:id="@+id/btn_overflow"
+            style="@style/ToolbarButton"
+            android:contentDescription="@string/more"
+            android:src="@drawable/ic_more_vert"
+            android:nextFocusLeft="@id/btn_search"
+            android:nextFocusRight="@id/btn_new_conversation"
+            android:nextFocusDown="@id/rv_conversations" />
+
+    </LinearLayout>
+
+    <!-- ─── Search Overlay (GONE by default) ───────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/toolbarBg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/toolbar_padding_h"
+        android:paddingEnd="@dimen/toolbar_padding_h"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/btn_search_close"
+            style="@style/ToolbarButton"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back"
+            android:nextFocusRight="@id/et_search" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionSearch|flagNoExtractUi"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_small"
+            android:singleLine="true"
+            android:textColor="@color/colorOnBackground"
+            android:textColorHint="@color/composeHint"
+            android:textSize="@dimen/text_size_normal"
+            android:nextFocusLeft="@id/btn_search_close"
+            android:nextFocusDown="@id/rv_conversations" />
+
+    </LinearLayout>
+
+    <!-- ─── Conversation List ────────────────────────────────────────────── -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
+        android:layout_weight="1">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        <com.dpad.messaging.views.DpadRecyclerView
+            android:id="@+id/rv_conversations"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:descendantFocusability="afterDescendants"
+            android:focusable="false"
+            android:scrollbars="vertical" />
 
-        <EditText
-            android:id="@+id/to_field"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:hint="To" />
+        <!-- Empty state -->
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:gravity="center"
+            android:padding="@dimen/padding_large"
+            android:text="@string/no_conversations"
+            android:textColor="@color/emptyText"
+            android:textSize="@dimen/text_size_normal"
+            android:visibility="gone" />
 
-        <EditText
-            android:id="@+id/msg_field"
-            android:layout_width="0dp"
-            android:layout_weight="3"
-            android:layout_height="wrap_content"
-            android:hint="Message" />
-
-        <Button
-            android:id="@+id/send_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send" />
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

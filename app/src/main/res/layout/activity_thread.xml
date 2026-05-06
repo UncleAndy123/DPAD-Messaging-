@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Message thread screen.
+
+    Focus zones (D-Pad traversal order, top → bottom):
+      1. Toolbar (btn_back, tv_contact_name [not focusable], btn_call, btn_details)
+      2. DpadRecyclerView (message bubbles — selectable for copy/forward in Phase 4)
+      3. Compose bar (btn_attach, et_message, btn_send)
+
+    Key D-Pad behaviours:
+      • D-Pad DOWN from toolbar → message list (first visible item)
+      • D-Pad DOWN from last message → compose bar (et_message gets focus)
+      • D-Pad UP from compose bar → message list (last item)
+      • D-Pad UP from first message → toolbar
+      • ENTER in et_message (when sendOnEnter = true) → sends message
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
+
+    <!-- ─── Toolbar ─────────────────────────────────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/toolbarBg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/toolbar_padding_h"
+        android:paddingEnd="@dimen/toolbar_padding_h">
+
+        <!-- Back button -->
+        <ImageButton
+            android:id="@+id/btn_back"
+            style="@style/ToolbarButton"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back"
+            android:nextFocusLeft="@id/btn_details"
+            android:nextFocusRight="@id/btn_call"
+            android:nextFocusDown="@id/rv_messages" />
+
+        <!-- Contact name / thread title (not focusable — informational only) -->
+        <TextView
+            android:id="@+id/tv_contact_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:focusable="false"
+            android:maxLines="1"
+            android:paddingStart="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_small"
+            android:textColor="@color/toolbarText"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold" />
+
+        <!-- Call button -->
+        <ImageButton
+            android:id="@+id/btn_call"
+            style="@style/ToolbarButton"
+            android:contentDescription="@string/call"
+            android:src="@drawable/ic_call"
+            android:nextFocusLeft="@id/btn_back"
+            android:nextFocusRight="@id/btn_details"
+            android:nextFocusDown="@id/rv_messages" />
+
+        <!-- Details button -->
+        <ImageButton
+            android:id="@+id/btn_details"
+            style="@style/ToolbarButton"
+            android:contentDescription="@string/details"
+            android:src="@drawable/ic_info"
+            android:nextFocusLeft="@id/btn_call"
+            android:nextFocusRight="@id/btn_back"
+            android:nextFocusDown="@id/rv_messages" />
+
+    </LinearLayout>
+
+    <!-- ─── Message List ─────────────────────────────────────────────────── -->
+    <com.dpad.messaging.views.DpadRecyclerView
+        android:id="@+id/rv_messages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:descendantFocusability="afterDescendants"
+        android:focusable="false"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_small"
+        android:scrollbars="vertical" />
+
+    <!-- ─── Attachment Preview Bar (GONE until an image is selected) ──────── -->
+    <!--
+        Layout order: rv_messages → attachment_preview_bar → compose_bar.
+        When visible, D-Pad DOWN from the last message in rv_messages will
+        naturally land on btn_remove_attachment before reaching the compose bar.
+    -->
+    <LinearLayout
+        android:id="@+id/attachment_preview_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/composeBg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/compose_padding"
+        android:paddingEnd="@dimen/compose_padding"
+        android:paddingTop="@dimen/padding_tiny"
+        android:paddingBottom="@dimen/padding_tiny"
+        android:visibility="gone">
+
+        <!-- Thumbnail of the pending attachment -->
+        <ImageView
+            android:id="@+id/iv_attachment_preview"
+            android:layout_width="60dp"
+            android:layout_height="45dp"
+            android:contentDescription="@string/image_attached"
+            android:focusable="false"
+            android:scaleType="centerCrop" />
+
+        <!-- Remove-attachment button -->
+        <ImageButton
+            android:id="@+id/btn_remove_attachment"
+            android:layout_width="@dimen/compose_button_size"
+            android:layout_height="@dimen/compose_button_size"
+            android:layout_marginStart="@dimen/padding_small"
+            android:background="@drawable/button_focusable_bg"
+            android:contentDescription="@string/remove_attachment"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:src="@drawable/ic_close"
+            android:nextFocusUp="@id/rv_messages"
+            android:nextFocusDown="@id/btn_attach"
+            android:nextFocusLeft="@id/btn_remove_attachment"
+            android:nextFocusRight="@id/btn_remove_attachment" />
+
+    </LinearLayout>
+
+    <!-- ─── Compose Bar ───────────────────────────────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/compose_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/composeBg"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/compose_bar_height"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/compose_padding"
+        android:paddingEnd="@dimen/compose_padding"
+        android:paddingTop="@dimen/padding_tiny"
+        android:paddingBottom="@dimen/padding_tiny">
+
+        <!-- Attach button -->
+        <ImageButton
+            android:id="@+id/btn_attach"
+            android:layout_width="@dimen/compose_button_size"
+            android:layout_height="@dimen/compose_button_size"
+            android:background="@drawable/button_focusable_bg"
+            android:contentDescription="@string/attach"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:src="@drawable/ic_attach"
+            android:nextFocusLeft="@id/btn_send"
+            android:nextFocusRight="@id/et_message"
+            android:nextFocusUp="@id/rv_messages" />
+
+        <!-- Message compose field -->
+        <EditText
+            android:id="@+id/et_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_weight="1"
+            android:background="@drawable/compose_input_bg"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="@string/type_message"
+            android:imeOptions="actionSend|flagNoExtractUi"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="4"
+            android:minLines="1"
+            android:paddingStart="@dimen/compose_input_padding_h"
+            android:paddingEnd="@dimen/compose_input_padding_h"
+            android:paddingTop="@dimen/compose_input_padding_v"
+            android:paddingBottom="@dimen/compose_input_padding_v"
+            android:textColor="@color/composeInputText"
+            android:textColorHint="@color/composeHint"
+            android:textSize="@dimen/text_size_normal"
+            android:nextFocusLeft="@id/btn_attach"
+            android:nextFocusRight="@id/btn_send"
+            android:nextFocusUp="@id/rv_messages" />
+
+        <!-- Character counter (shown when enabled in settings) -->
+        <TextView
+            android:id="@+id/tv_char_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:textColor="@color/conversationDate"
+            android:textSize="@dimen/text_size_small"
+            android:visibility="gone" />
+
+        <!-- Send button -->
+        <ImageButton
+            android:id="@+id/btn_send"
+            android:layout_width="@dimen/compose_button_size"
+            android:layout_height="@dimen/compose_button_size"
+            android:background="@drawable/button_focusable_bg"
+            android:contentDescription="@string/send"
+            android:enabled="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:src="@drawable/ic_send"
+            android:tint="@color/sendButtonDisabled"
+            android:nextFocusLeft="@id/et_message"
+            android:nextFocusRight="@id/btn_sim"
+            android:nextFocusUp="@id/rv_messages" />
+
+        <!-- SIM picker button (hidden on single-SIM devices) -->
+        <TextView
+            android:id="@+id/btn_sim"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/compose_button_size"
+            android:layout_marginStart="@dimen/padding_tiny"
+            android:background="@drawable/button_focusable_bg"
+            android:contentDescription="@string/select_sim"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:paddingStart="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_small"
+            android:textColor="@color/toolbarText"
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:nextFocusLeft="@id/btn_send"
+            android:nextFocusRight="@id/btn_attach"
+            android:nextFocusUp="@id/rv_messages" />
+
+    </LinearLayout>
+
+</LinearLayout>
