@@ -7,6 +7,7 @@ import android.os.Build
 import com.dpad.messaging.databases.MessagesDatabase
 import com.dpad.messaging.helpers.ContactHelper
 import com.dpad.messaging.helpers.Prefs
+import com.dpad.messaging.helpers.ThemeManager
 
 class App : Application() {
 
@@ -22,6 +23,7 @@ class App : Application() {
         database = MessagesDatabase.getInstance(this)
         contactHelper = ContactHelper(this)
         Prefs.init(this)
+        ThemeManager.applyThemeMode(Prefs.get().appThemeMode)
         createNotificationChannels()
     }
 

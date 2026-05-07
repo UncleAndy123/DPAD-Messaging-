@@ -1,14 +1,21 @@
 package com.dpad.messaging.activities
 
+import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
+import android.os.Build
 import android.provider.Telephony
 import android.provider.ContactsContract
+import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,6 +29,7 @@ import com.dpad.messaging.helpers.Prefs
 import com.dpad.messaging.helpers.SendingMode
 import com.dpad.messaging.helpers.SendingRouter
 import com.dpad.messaging.helpers.SmsSender
+import com.dpad.messaging.helpers.ThemeManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,8 +46,11 @@ class NewConversationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNewConversationBinding
     private var pendingAttachmentUri: Uri? = null
+    private val selectedRecipients = mutableListOf<String>()
+    private val suggestions = mutableListOf<com.dpad.messaging.helpers.ContactHelper.ContactSuggestion>()
+    private lateinit var suggestionsAdapter: ArrayAdapter<String>
 
-    private lateinit var contactPickerLauncher: ActivityResultLauncher<Void?>
+    private lateinit var contactPickerLauncher: ActivityResultLauncher<Intent>
     private lateinit var attachmentPickerLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,10 +59,10 @@ class NewConversationActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         contactPickerLauncher = registerForActivityResult(
-            ActivityResultContracts.PickContact()
-        ) { uri ->
-            if (uri != null) {
-                addPickedContact(uri)
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.let { addPickedContact(it) }
             }
         }
 
@@ -77,6 +88,11 @@ class NewConversationActivity : AppCompatActivity() {
         handleIncomingIntent(intent)
     }
 
+    override fun onResume() {
+        super.onResume()
+        applyAccent()
+    }
+
     private fun setupToolbar() {
         binding.btnBack.setOnClickListener { finish() }
 
@@ -87,20 +103,62 @@ class NewConversationActivity : AppCompatActivity() {
                 true
             } else false
         }
+
+        applyAccent()
+    }
+
+    private fun applyAccent() {
+        val accent = ThemeManager.accentColor(this)
+        val tint = ColorStateList.valueOf(accent)
+
+        binding.btnBack.imageTintList = tint
+        binding.btnAttach.imageTintList = tint
+
+        binding.btnBack.backgroundTintList = tint
+        binding.btnAttach.backgroundTintList = tint
+        binding.btnSend.backgroundTintList = tint
+        binding.btnAddRecipient.backgroundTintList = tint
+        binding.btnAddRecipient.setTextColor(accent)
+        updateSendButton()
     }
 
     private fun setupInputs() {
         // Enable send button only when both fields have content
         val watcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) { updateSendButton() }
+            override fun afterTextChanged(s: Editable?) {
+                updateSendButton()
+                updateSuggestions(s?.toString().orEmpty())
+            }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         }
         binding.etRecipient.addTextChangedListener(watcher)
-        binding.etMessage.addTextChangedListener(watcher)
+        binding.etMessage.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) { updateSendButton() }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        binding.etRecipient.setOnKeyListener { _, keyCode, event ->
+            if (event.action != KeyEvent.ACTION_DOWN) return@setOnKeyListener false
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (addRecipientFromInput()) {
+                    return@setOnKeyListener true
+                }
+            }
+            if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN &&
+                binding.lvSuggestions.visibility == View.VISIBLE) {
+                binding.lvSuggestions.requestFocus()
+                binding.lvSuggestions.setSelection(0)
+                return@setOnKeyListener true
+            }
+            false
+        }
 
         binding.btnAddRecipient.setOnClickListener {
-            contactPickerLauncher.launch(null)
+            contactPickerLauncher.launch(
+                Intent(Intent.ACTION_PICK, Phone.CONTENT_URI)
+            )
         }
 
         binding.btnAttach.setOnClickListener {
@@ -128,22 +186,56 @@ class NewConversationActivity : AppCompatActivity() {
         }
 
         binding.etRecipient.requestFocus()
+
+        // Suggestions list
+        suggestionsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_2,
+            android.R.id.text1, mutableListOf<String>())
+        binding.lvSuggestions.adapter = suggestionsAdapter
+        binding.lvSuggestions.setOnItemClickListener { _, _, position, _ ->
+            if (position < suggestions.size) {
+                val s = suggestions[position]
+                addRecipient(s.phoneNumber)
+                binding.etRecipient.text?.clear()
+                hideSuggestions()
+            }
+        }
+        binding.lvSuggestions.setOnKeyListener { _, keyCode, event ->
+            if (event.action != KeyEvent.ACTION_DOWN) return@setOnKeyListener false
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP &&
+                binding.lvSuggestions.selectedItemPosition == 0) {
+                binding.etRecipient.requestFocus()
+                return@setOnKeyListener true
+            }
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                val pos = binding.lvSuggestions.selectedItemPosition
+                if (pos >= 0 && pos < suggestions.size) {
+                    val s = suggestions[pos]
+                    addRecipient(s.phoneNumber)
+                    binding.etRecipient.text?.clear()
+                    hideSuggestions()
+                    return@setOnKeyListener true
+                }
+            }
+            false
+        }
     }
 
     private fun updateSendButton() {
-        val hasRecipients = parseRecipients(binding.etRecipient.text?.toString().orEmpty()).isNotEmpty()
+        val hasRecipients = selectedRecipients.isNotEmpty() || parseRecipients(binding.etRecipient.text?.toString().orEmpty()).isNotEmpty()
         val hasBody = binding.etMessage.text?.isNotBlank() == true
         val hasAttachment = pendingAttachmentUri != null
         val ready = hasRecipients && (hasBody || hasAttachment)
+        val accentColor = ThemeManager.accentColor(this)
         binding.btnSend.isEnabled = ready
         binding.btnSend.setColorFilter(
-            if (ready) getColor(R.color.sendButtonEnabled)
+            if (ready) accentColor
             else getColor(R.color.sendButtonDisabled)
         )
     }
 
     private fun sendAndOpen() {
-        val recipients = parseRecipients(binding.etRecipient.text?.toString().orEmpty())
+        addRecipientFromInput()
+        val recipients = selectedRecipients.toList()
         val body = binding.etMessage.text?.toString()?.trim().orEmpty()
         val attachment = pendingAttachmentUri
         if (recipients.isEmpty() || (body.isBlank() && attachment == null)) return
@@ -205,9 +297,6 @@ class NewConversationActivity : AppCompatActivity() {
                                 threadId = threadId
                             )
                         }
-                        else -> {
-                            // Should not occur for text-only
-                        }
                     }
                 }
                 val intent = Intent(this@NewConversationActivity, ThreadActivity::class.java).apply {
@@ -248,6 +337,28 @@ class NewConversationActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateSuggestions(query: String) {
+        if (query.length < 2) { hideSuggestions(); return }
+        lifecycleScope.launch {
+            val results = withContext(Dispatchers.IO) {
+                App.get().contactHelper.search(query)
+            }
+            suggestions.clear()
+            suggestions.addAll(results)
+            suggestionsAdapter.clear()
+            suggestionsAdapter.addAll(results.map { "${it.displayName}\n${it.phoneNumber}" })
+            suggestionsAdapter.notifyDataSetChanged()
+            binding.lvSuggestions.visibility =
+                if (results.isEmpty()) View.GONE else View.VISIBLE
+        }
+    }
+
+    private fun hideSuggestions() {
+        suggestions.clear()
+        suggestionsAdapter.clear()
+        binding.lvSuggestions.visibility = View.GONE
+    }
+
     private fun parseRecipients(raw: String): List<String> {
         return raw.split(',', ';', '\n')
             .map { it.trim() }
@@ -255,11 +366,70 @@ class NewConversationActivity : AppCompatActivity() {
             .distinct()
     }
 
+    private fun addRecipient(recipient: String): Boolean {
+        val normalized = recipient.trim()
+        if (normalized.isBlank() || selectedRecipients.contains(normalized)) return false
+        selectedRecipients.add(normalized)
+        renderRecipientChips()
+        updateSendButton()
+        return true
+    }
+
+    private fun addRecipientFromInput(): Boolean {
+        val rawInput = binding.etRecipient.text?.toString().orEmpty()
+        val typedRecipients = parseRecipients(rawInput)
+        if (typedRecipients.isEmpty()) return false
+        var addedAny = false
+        for (recipient in typedRecipients) {
+            if (addRecipient(recipient)) {
+                addedAny = true
+            }
+        }
+        binding.etRecipient.text?.clear()
+        hideSuggestions()
+        return addedAny
+    }
+
+    private fun renderRecipientChips() {
+        binding.recipientChipsContainer.removeAllViews()
+        if (selectedRecipients.isEmpty()) {
+            binding.recipientChipsScroll.visibility = View.GONE
+            return
+        }
+
+        binding.recipientChipsScroll.visibility = View.VISIBLE
+        selectedRecipients.forEach { recipient ->
+            val label = App.get().contactHelper.getDisplayName(recipient)
+            val chip = TextView(this).apply {
+                text = "$label  ×"
+                contentDescription = getString(R.string.remove_recipient)
+                setTextColor(getColor(R.color.colorOnBackground))
+                textSize = 14f
+                setBackgroundResource(R.drawable.button_focusable_bg)
+                isFocusable = true
+                isFocusableInTouchMode = true
+                setPadding(24, 12, 24, 12)
+                setOnClickListener {
+                    selectedRecipients.remove(recipient)
+                    renderRecipientChips()
+                    updateSendButton()
+                }
+            }
+            val params = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                marginEnd = 12
+            }
+            binding.recipientChipsContainer.addView(chip, params)
+        }
+    }
+
     private fun addPickedContact(contactUri: Uri) {
-        val projection = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
+        val projection = arrayOf(Phone.NUMBER, Phone.DISPLAY_NAME)
         val phoneNumber = try {
             contentResolver.query(contactUri, projection, null, null, null)?.use { cursor ->
-                val idx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                val idx = cursor.getColumnIndex(Phone.NUMBER)
                 if (idx >= 0 && cursor.moveToFirst()) cursor.getString(idx) else null
             }
         } catch (e: Exception) {
@@ -272,13 +442,7 @@ class NewConversationActivity : AppCompatActivity() {
             return
         }
 
-        val current = parseRecipients(binding.etRecipient.text?.toString().orEmpty()).toMutableList()
-        if (!current.contains(phoneNumber)) {
-            current.add(phoneNumber)
-            binding.etRecipient.setText(current.joinToString(", "))
-            binding.etRecipient.setSelection(binding.etRecipient.text?.length ?: 0)
-            updateSendButton()
-        }
+        addRecipient(phoneNumber)
     }
 
     // Handles text/plain and image-type ACTION_SEND shares, or forward-message pre-fills.
@@ -291,7 +455,12 @@ class NewConversationActivity : AppCompatActivity() {
                     binding.etMessage.setText(text)
                     binding.etMessage.setSelection(text.length)
                 }
-                val stream = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                val stream = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                }
                 if (stream != null) {
                     pendingAttachmentUri = stream
                     updateSendButton()
@@ -309,7 +478,7 @@ class NewConversationActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) { finish(); return true }
+        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_STAR) { finish(); return true }
         return super.onKeyDown(keyCode, event)
     }
 

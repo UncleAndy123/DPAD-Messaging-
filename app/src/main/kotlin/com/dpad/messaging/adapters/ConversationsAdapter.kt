@@ -1,5 +1,6 @@
 package com.dpad.messaging.adapters
 
+import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.net.Uri
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dpad.messaging.R
 import com.dpad.messaging.databinding.ItemConversationBinding
+import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.Conversation
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -41,6 +43,7 @@ class ConversationsAdapter(
 
         fun bind(conversation: Conversation) {
             val bold = if (!conversation.read) Typeface.BOLD else Typeface.NORMAL
+            val accent = ThemeManager.accentColor(binding.root.context)
 
             // Title
             binding.tvName.text = conversation.title
@@ -63,6 +66,7 @@ class ConversationsAdapter(
             if (!conversation.read && conversation.unreadCount > 0) {
                 binding.tvUnreadCount.visibility = View.VISIBLE
                 binding.tvUnreadCount.text = conversation.unreadCount.coerceAtMost(99).toString()
+                binding.tvUnreadCount.background?.mutate()?.setTint(accent)
             } else {
                 binding.tvUnreadCount.visibility = View.GONE
             }
@@ -70,6 +74,11 @@ class ConversationsAdapter(
             // Pin indicator
             binding.ivPinned.visibility =
                 if (conversation.pinned) View.VISIBLE else View.GONE
+            binding.ivPinned.setColorFilter(accent)
+            val tint = ColorStateList.valueOf(accent)
+            binding.btnConversationMenu.imageTintList = tint
+            binding.btnConversationMenu.backgroundTintList = tint
+            binding.conversationClickArea.backgroundTintList = tint
 
             // Avatar
             bindAvatar(conversation)

@@ -33,6 +33,8 @@ object NotificationHelper {
         phoneNumber: String,
         body: String
     ) {
+        if (Prefs.get().isThreadMuted(threadId)) return
+
         val notifId = threadId.toInt()
 
         // ── Tap → ThreadActivity ──────────────────────────────────────────────

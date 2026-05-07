@@ -15,6 +15,7 @@ import com.dpad.messaging.BuildConfig
 import com.dpad.messaging.R
 import com.dpad.messaging.databinding.ActivitySettingsBinding
 import com.dpad.messaging.helpers.Prefs
+import com.dpad.messaging.helpers.ThemeManager
 
 /**
  * Settings screen — Phase 3.
@@ -58,7 +59,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) { finish(); return true }
+        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_STAR) { finish(); return true }
         return super.onKeyDown(keyCode, event)
     }
 
@@ -66,6 +67,49 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun buildSettingsRows() {
         val c = binding.settingsContainer
+
+        // ── General ──────────────────────────────────────────────────────────
+        sectionHeader(c, getString(R.string.general))
+
+        valueRow(
+            container    = c,
+            label        = getString(R.string.app_theme),
+            summary      = getString(R.string.app_theme_summary),
+            getValue     = { prefs.appThemeMode },
+            optionValues = listOf(Prefs.THEME_SYSTEM, Prefs.THEME_LIGHT, Prefs.THEME_DARK),
+            optionLabels = listOf(
+                getString(R.string.theme_system),
+                getString(R.string.theme_light),
+                getString(R.string.theme_dark)
+            ),
+            setValue     = {
+                prefs.appThemeMode = it
+                ThemeManager.applyThemeMode(it)
+                recreate()
+            }
+        )
+        valueRow(
+            container    = c,
+            label        = getString(R.string.accent_color),
+            summary      = getString(R.string.accent_color_summary),
+            getValue     = { prefs.appAccent },
+            optionValues = listOf(
+                Prefs.ACCENT_BLUE,
+                Prefs.ACCENT_GREEN,
+                Prefs.ACCENT_ORANGE,
+                Prefs.ACCENT_ROSE
+            ),
+            optionLabels = listOf(
+                getString(R.string.accent_blue),
+                getString(R.string.accent_green),
+                getString(R.string.accent_orange),
+                getString(R.string.accent_rose)
+            ),
+            setValue     = {
+                prefs.appAccent = it
+                recreate()
+            }
+        )
 
         // ── Messaging ────────────────────────────────────────────────────────
         sectionHeader(c, getString(R.string.messaging))

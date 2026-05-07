@@ -23,9 +23,19 @@ class Prefs private constructor(context: Context) {
         private const val KEY_SEND_GROUP_MESSAGE_MMS = "send_group_message_mms"
         private const val KEY_LOCK_SCREEN_PRIVACY = "lock_screen_privacy"
         private const val KEY_RECYCLE_BIN_ENABLED = "recycle_bin_enabled"
+        private const val KEY_MUTED_THREADS       = "muted_threads"
+        private const val KEY_APP_THEME_MODE      = "app_theme_mode"
+        private const val KEY_APP_ACCENT          = "app_accent"
 
         const val PRIVACY_FULL        = "full"
         const val PRIVACY_SENDER_ONLY = "sender_only"
+        const val THEME_SYSTEM        = "system"
+        const val THEME_LIGHT         = "light"
+        const val THEME_DARK          = "dark"
+        const val ACCENT_BLUE         = "blue"
+        const val ACCENT_GREEN        = "green"
+        const val ACCENT_ORANGE       = "orange"
+        const val ACCENT_ROSE         = "rose"
 
         @Volatile private var instance: Prefs? = null
 
@@ -77,4 +87,29 @@ class Prefs private constructor(context: Context) {
     var recycleBinEnabled: Boolean
         get() = prefs.getBoolean(KEY_RECYCLE_BIN_ENABLED, false)
         set(v) = prefs.edit().putBoolean(KEY_RECYCLE_BIN_ENABLED, v).apply()
+
+    /** App-wide theme mode: system/light/dark. Default: system. */
+    var appThemeMode: String
+        get() = prefs.getString(KEY_APP_THEME_MODE, THEME_SYSTEM) ?: THEME_SYSTEM
+        set(v) = prefs.edit().putString(KEY_APP_THEME_MODE, v).apply()
+
+    /** App-wide accent color choice. Default: blue. */
+    var appAccent: String
+        get() = prefs.getString(KEY_APP_ACCENT, ACCENT_BLUE) ?: ACCENT_BLUE
+        set(v) = prefs.edit().putString(KEY_APP_ACCENT, v).apply()
+
+    /** Returns true when notifications are muted for [threadId]. */
+    fun isThreadMuted(threadId: Long): Boolean {
+        val muted = prefs.getStringSet(KEY_MUTED_THREADS, emptySet()) ?: emptySet()
+        return muted.contains(threadId.toString())
+    }
+
+    /** Enables or disables notifications for [threadId]. */
+    fun setThreadMuted(threadId: Long, muted: Boolean) {
+        val current = prefs.getStringSet(KEY_MUTED_THREADS, emptySet())?.toMutableSet()
+            ?: mutableSetOf()
+        val key = threadId.toString()
+        if (muted) current.add(key) else current.remove(key)
+        prefs.edit().putStringSet(KEY_MUTED_THREADS, current).apply()
+    }
 }

@@ -3,6 +3,7 @@ package com.dpad.messaging.helpers
 import android.content.Context
 import android.net.Uri
 import android.provider.ContactsContract
+import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.util.LruCache
 
 /**
@@ -54,5 +55,41 @@ class ContactHelper(private val context: Context) {
 
     fun clearCache() {
         cache.evictAll()
+    }
+
+    data class ContactSuggestion(
+        val displayName: String,
+        val phoneNumber: String
+    )
+
+    /**
+     * Returns up to [limit] contacts whose name or number contains [query].
+     * Intended for type-ahead suggestions; does NOT cache results.
+     */
+    fun search(query: String, limit: Int = 5): List<ContactSuggestion> {
+        if (query.isBlank()) return emptyList()
+        val likeQuery = "%$query%"
+        val projection = arrayOf(Phone.DISPLAY_NAME, Phone.NUMBER)
+        val selection = "${Phone.DISPLAY_NAME} LIKE ? OR ${Phone.NUMBER} LIKE ?"
+        val selectionArgs = arrayOf(likeQuery, likeQuery)
+        val sortOrder = "${Phone.DISPLAY_NAME} ASC"
+        return try {
+            context.contentResolver.query(
+                Phone.CONTENT_URI, projection, selection, selectionArgs, sortOrder
+            )?.use { cursor ->
+                val results = mutableListOf<ContactSuggestion>()
+                val seenNumbers = mutableSetOf<String>()
+                while (cursor.moveToNext() && results.size < limit) {
+                    val name = cursor.getString(0) ?: continue
+                    val number = cursor.getString(1)?.replace("\\s".toRegex(), "") ?: continue
+                    if (seenNumbers.add(number)) {
+                        results.add(ContactSuggestion(name, number))
+                    }
+                }
+                results
+            } ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 }

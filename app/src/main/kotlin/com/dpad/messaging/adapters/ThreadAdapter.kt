@@ -1,5 +1,6 @@
 package com.dpad.messaging.adapters
 
+import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +10,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dpad.messaging.R
+import com.dpad.messaging.activities.ImageViewerActivity
 import com.dpad.messaging.databinding.ItemMessageFailedBinding
 import com.dpad.messaging.databinding.ItemMessageReceivedBinding
 import com.dpad.messaging.databinding.ItemMessageSendingBinding
 import com.dpad.messaging.databinding.ItemMessageSentBinding
 import com.dpad.messaging.databinding.ItemThreadDateBinding
+import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.Message
 import com.dpad.messaging.models.ThreadItem
 import java.text.SimpleDateFormat
@@ -106,9 +109,11 @@ class ThreadAdapter(
         private val binding: ItemMessageSentBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(message: Message) {
+            val accent = ThemeManager.accentColor(binding.root.context)
             binding.tvBody.text = message.body
             binding.tvBody.visibility = if (message.body.isBlank()) View.GONE else View.VISIBLE
             binding.tvTime.text = formatTime(message.date)
+            binding.bubbleContainer.background?.mutate()?.setTint(accent)
             if (message.status == Message.STATUS_COMPLETE) {
                 binding.tvStatus.text = binding.root.context.getString(R.string.delivered)
                 binding.tvStatus.visibility = View.VISIBLE
@@ -118,11 +123,18 @@ class ThreadAdapter(
             // MMS image attachment
             if (message.isMms && message.attachmentsJson.startsWith("content://")) {
                 binding.ivAttachment.visibility = View.VISIBLE
+                val attachmentUri = message.attachmentsJson
                 Glide.with(binding.root.context)
-                    .load(Uri.parse(message.attachmentsJson))
+                    .load(Uri.parse(attachmentUri))
                     .into(binding.ivAttachment)
+                binding.ivAttachment.setOnClickListener {
+                    val intent = Intent(binding.root.context, ImageViewerActivity::class.java)
+                        .putExtra(ImageViewerActivity.EXTRA_IMAGE_URI, attachmentUri)
+                    binding.root.context.startActivity(intent)
+                }
             } else {
                 binding.ivAttachment.visibility = View.GONE
+                binding.ivAttachment.setOnClickListener(null)
             }
             binding.bubbleContainer.setOnLongClickListener {
                 onMessageLongClick(message)
@@ -147,11 +159,18 @@ class ThreadAdapter(
             // MMS image attachment
             if (message.isMms && message.attachmentsJson.startsWith("content://")) {
                 binding.ivAttachment.visibility = View.VISIBLE
+                val attachmentUri = message.attachmentsJson
                 Glide.with(binding.root.context)
-                    .load(Uri.parse(message.attachmentsJson))
+                    .load(Uri.parse(attachmentUri))
                     .into(binding.ivAttachment)
+                binding.ivAttachment.setOnClickListener {
+                    val intent = Intent(binding.root.context, ImageViewerActivity::class.java)
+                        .putExtra(ImageViewerActivity.EXTRA_IMAGE_URI, attachmentUri)
+                    binding.root.context.startActivity(intent)
+                }
             } else {
                 binding.ivAttachment.visibility = View.GONE
+                binding.ivAttachment.setOnClickListener(null)
             }
             binding.bubbleContainer.setOnLongClickListener {
                 onMessageLongClick(message)
@@ -164,8 +183,31 @@ class ThreadAdapter(
         private val binding: ItemMessageSendingBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(message: Message) {
-            binding.tvBody.text = message.body
-            binding.tvBody.visibility = if (message.body.isBlank()) View.GONE else View.VISIBLE
+            val accent = ThemeManager.accentColor(binding.root.context)
+            val bodyText = when {
+                message.body.isNotBlank() -> message.body
+                message.isMms -> binding.root.context.getString(R.string.attach)
+                else -> ""
+            }
+            binding.tvBody.text = bodyText
+            binding.tvBody.visibility = if (bodyText.isBlank()) View.GONE else View.VISIBLE
+            binding.bubbleContainer.background?.mutate()?.setTint(accent)
+
+            if (message.isMms && message.attachmentsJson.startsWith("content://")) {
+                binding.ivAttachment.visibility = View.VISIBLE
+                val attachmentUri = message.attachmentsJson
+                Glide.with(binding.root.context)
+                    .load(Uri.parse(attachmentUri))
+                    .into(binding.ivAttachment)
+                binding.ivAttachment.setOnClickListener {
+                    val intent = Intent(binding.root.context, ImageViewerActivity::class.java)
+                        .putExtra(ImageViewerActivity.EXTRA_IMAGE_URI, attachmentUri)
+                    binding.root.context.startActivity(intent)
+                }
+            } else {
+                binding.ivAttachment.visibility = View.GONE
+                binding.ivAttachment.setOnClickListener(null)
+            }
         }
     }
 

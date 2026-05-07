@@ -46,6 +46,8 @@
     <string name="unpin">Unpin</string>
     <string name="block">Block</string>
     <string name="copy_number">Copy Number</string>
+    <string name="mute_conversation">Mute Conversation</string>
+    <string name="unmute_conversation">Unmute Conversation</string>
     <string name="move_to_recycle_bin">Move to Recycle Bin</string>
     <string name="restore">Restore</string>
     <string name="forward">Forward</string>
@@ -61,6 +63,7 @@
     <string name="enter_name">Enter name…</string>
     <string name="enter_recipients_hint">Add recipients with + or type a number</string>
     <string name="add_recipient">Add recipient</string>
+    <string name="remove_recipient">Remove recipient</string>
 
     <!-- ─── Permissions ─── -->
     <string name="permission_sms_title">SMS Permission Needed</string>
@@ -82,6 +85,17 @@
 
     <!-- ─── Settings ─── -->
     <string name="general">General</string>
+    <string name="app_theme">Theme</string>
+    <string name="app_theme_summary">Choose Light, Dark, or follow System</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="accent_color">Accent Color</string>
+    <string name="accent_color_summary">Customize highlight color across the app</string>
+    <string name="accent_blue">Blue</string>
+    <string name="accent_green">Green</string>
+    <string name="accent_orange">Orange</string>
+    <string name="accent_rose">Rose</string>
     <string name="messaging">Messaging</string>
     <string name="privacy">Privacy</string>
     <string name="storage">Storage</string>

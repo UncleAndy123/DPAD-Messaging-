@@ -177,6 +177,12 @@
             android:label="@string/conversation_details" />
 
         <activity
+            android:name=".activities.ImageViewerActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.ThreadActivity"
+            android:theme="@style/Theme.DpadMessaging" />
+
+        <activity
             android:name=".activities.BlockedKeywordsActivity"
             android:exported="false"
             android:parentActivityName=".activities.SettingsActivity"

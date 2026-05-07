@@ -111,6 +111,36 @@
 
     </LinearLayout>
 
+    <HorizontalScrollView
+        android:id="@+id/recipient_chips_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSurface"
+        android:fillViewport="true"
+        android:paddingStart="@dimen/padding_medium"
+        android:paddingEnd="@dimen/padding_medium"
+        android:paddingBottom="@dimen/padding_small"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/recipient_chips_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+    <!-- Contact type-ahead suggestions -->
+    <ListView
+        android:id="@+id/lv_suggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSurface"
+        android:divider="@color/divider"
+        android:dividerHeight="@dimen/divider_height"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone" />
+
     <!-- Divider -->
     <View
         android:layout_width="match_parent"
@@ -129,7 +159,7 @@
         android:gravity="top|start"
         android:hint="@string/type_message"
         android:nextFocusDown="@id/btn_send"
-        android:nextFocusUp="@id/et_recipient"
+        android:nextFocusUp="@id/btn_add_recipient"
         android:padding="@dimen/padding_medium"
         android:textColor="@color/colorOnBackground"
         android:textColorHint="@color/composeHint"

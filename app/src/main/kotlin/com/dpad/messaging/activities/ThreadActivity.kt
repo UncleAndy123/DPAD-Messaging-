@@ -7,6 +7,7 @@ import android.content.ClipboardManager
 import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Telephony
@@ -36,6 +37,7 @@ import com.dpad.messaging.helpers.Prefs
 import com.dpad.messaging.helpers.SendingMode
 import com.dpad.messaging.helpers.SendingRouter
 import com.dpad.messaging.helpers.SmsSender
+import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.Message
 import com.dpad.messaging.models.RecycleBinMessage
 import com.dpad.messaging.models.ThreadItem
@@ -115,6 +117,7 @@ class ThreadActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
+        applyAccent()
         markThreadRead()
         loadMessages()   // Bug #1 fix: refresh thread when returning from background
     }
@@ -164,6 +167,30 @@ class ThreadActivity : AppCompatActivity() {
         binding.btnBack.setOnKeyListener(goToMessages)
         binding.btnCall.setOnKeyListener(goToMessages)
         binding.btnDetails.setOnKeyListener(goToMessages)
+
+        applyAccent()
+    }
+
+    private fun applyAccent() {
+        val accent = ThemeManager.accentColor(this)
+        val tint = ColorStateList.valueOf(accent)
+
+        binding.btnBack.imageTintList = tint
+        binding.btnCall.imageTintList = tint
+        binding.btnDetails.imageTintList = tint
+        binding.btnAttach.imageTintList = tint
+        binding.btnSim.setTextColor(accent)
+        binding.btnRemoveAttachment.imageTintList = tint
+
+        binding.btnBack.backgroundTintList = tint
+        binding.btnCall.backgroundTintList = tint
+        binding.btnDetails.backgroundTintList = tint
+        binding.btnAttach.backgroundTintList = tint
+        binding.btnSend.backgroundTintList = tint
+        binding.btnRemoveAttachment.backgroundTintList = tint
+        binding.btnSim.backgroundTintList = tint
+
+        updateSendButtonState()
     }
 
     private fun setupMessageList() {
@@ -305,10 +332,11 @@ class ThreadActivity : AppCompatActivity() {
         val hasText       = binding.etMessage.text?.isNotBlank() == true
         val hasAttachment = pendingAttachmentUri != null
         val enabled       = hasText || hasAttachment
+        val accentColor   = ThemeManager.accentColor(this)
 
         binding.btnSend.isEnabled = enabled
         binding.btnSend.setColorFilter(
-            if (enabled) getColor(R.color.sendButtonEnabled)
+            if (enabled) accentColor
             else         getColor(R.color.sendButtonDisabled)
         )
 
@@ -615,7 +643,8 @@ class ThreadActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
-            KeyEvent.KEYCODE_BACK -> { finish(); true }
+            KeyEvent.KEYCODE_BACK,
+            KeyEvent.KEYCODE_STAR -> { finish(); true }
             else -> super.onKeyDown(keyCode, event)
         }
     }

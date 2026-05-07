@@ -2,6 +2,7 @@ package com.dpad.messaging.activities
 
 import android.Manifest
 import android.app.role.RoleManager
+import android.content.res.ColorStateList
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -24,6 +25,8 @@ import com.dpad.messaging.adapters.ConversationsAdapter
 import com.dpad.messaging.databinding.ActivityMainBinding
 import com.dpad.messaging.events.RefreshConversations
 import com.dpad.messaging.extensions.getConversationsFromTelephony
+import com.dpad.messaging.helpers.Prefs
+import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.Conversation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,6 +82,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
+        applyAccent()
         loadConversations()
         checkDefaultSmsApp()
     }
@@ -124,6 +128,23 @@ class MainActivity : AppCompatActivity() {
         binding.btnNewConversation.setOnKeyListener(enterList)
         binding.btnSearch.setOnKeyListener(enterList)
         binding.btnOverflow.setOnKeyListener(enterList)
+
+        applyAccent()
+    }
+
+    private fun applyAccent() {
+        val accent = ThemeManager.accentColor(this)
+        val tint = ColorStateList.valueOf(accent)
+
+        binding.btnNewConversation.imageTintList = tint
+        binding.btnSearch.imageTintList = tint
+        binding.btnOverflow.imageTintList = tint
+        binding.btnSearchClose.imageTintList = tint
+
+        binding.btnNewConversation.backgroundTintList = tint
+        binding.btnSearch.backgroundTintList = tint
+        binding.btnOverflow.backgroundTintList = tint
+        binding.btnSearchClose.backgroundTintList = tint
     }
 
     private fun setupSearch() {
@@ -221,12 +242,15 @@ class MainActivity : AppCompatActivity() {
     // ─── Context menus ──────────────────────────────────────────────────────
 
     private fun showConversationContextMenu(conversation: Conversation) {
+        val isMuted = Prefs.get().isThreadMuted(conversation.threadId)
         val options = arrayOf(
             if (conversation.read) getString(R.string.mark_as_unread)
             else getString(R.string.mark_as_read),
             if (conversation.pinned) getString(R.string.unpin) else getString(R.string.pin),
             if (conversation.archived) getString(R.string.unarchive)
             else getString(R.string.archive),
+            if (isMuted) getString(R.string.unmute_conversation)
+            else getString(R.string.mute_conversation),
             getString(R.string.copy_number),
             getString(R.string.move_to_recycle_bin)
         )
@@ -238,8 +262,9 @@ class MainActivity : AppCompatActivity() {
                     0 -> toggleReadState(conversation)
                     1 -> togglePin(conversation)
                     2 -> toggleArchive(conversation)
-                    3 -> copyNumber(conversation.phoneNumber)
-                    4 -> moveToRecycleBin(conversation)
+                    3 -> toggleMute(conversation)
+                    4 -> copyNumber(conversation.phoneNumber)
+                    5 -> moveToRecycleBin(conversation)
                 }
             }
             .create()
@@ -290,6 +315,11 @@ class MainActivity : AppCompatActivity() {
             )
         }
         loadConversations()
+    }
+
+    private fun toggleMute(conversation: Conversation) {
+        val currentlyMuted = Prefs.get().isThreadMuted(conversation.threadId)
+        Prefs.get().setThreadMuted(conversation.threadId, !currentlyMuted)
     }
 
     private fun copyNumber(phoneNumber: String) {

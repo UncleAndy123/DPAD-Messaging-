@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ─── Brand / Accent ─── -->
+    <color name="colorPrimary">#1A73E8</color>
+    <color name="colorPrimaryDark">#1557B0</color>
+    <color name="colorPrimaryVariant">#0D47A1</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#03DAC5</color>
+    <color name="colorOnSecondary">#000000</color>
+
+    <color name="accent_blue">#1A73E8</color>
+    <color name="accent_green">#20B26B</color>
+    <color name="accent_orange">#F39C3D</color>
+    <color name="accent_rose">#E1608E</color>
+
+    <!-- ─── Surface / Background ─── -->
+    <color name="colorBackground">#121212</color>
+    <color name="colorSurface">#1E1E1E</color>
+    <color name="colorOnBackground">#FFFFFF</color>
+    <color name="colorOnSurface">#FFFFFF</color>
+
+    <!-- ─── D-Pad Focus ─── -->
+    <color name="focus_highlight">#4D03DAC5</color>
+    <color name="focus_border">#00FFFF</color>
+    <color name="focus_border_sent">#03DAC5</color>
+
+    <!-- ─── Message Bubbles ─── -->
+    <color name="bubbleSentBg">#1A73E8</color>
+    <color name="bubbleSentText">#FFFFFF</color>
+    <color name="bubbleReceivedBg">#2A2A2A</color>
+    <color name="bubbleReceivedText">#E0E0E0</color>
+
+    <!-- ─── Conversation List ─── -->
+    <color name="conversationTitle">#FFFFFF</color>
+    <color name="conversationSnippet">#AAAAAA</color>
+    <color name="conversationDate">#888888</color>
+    <color name="unreadBadgeBg">#1A73E8</color>
+    <color name="unreadBadgeText">#FFFFFF</color>
+    <color name="unreadTitleBold">#FFFFFF</color>
+    <color name="divider">#2A2A2A</color>
+
+    <!-- ─── Toolbar ─── -->
+    <color name="toolbarBg">#1A1A1A</color>
+    <color name="toolbarText">#FFFFFF</color>
+    <color name="toolbarIcon">#CCCCCC</color>
+
+    <!-- ─── Date header ─── -->
+    <color name="dateHeaderText">#888888</color>
+
+    <!-- ─── Input / Compose ─── -->
+    <color name="composeBg">#1E1E1E</color>
+    <color name="composeInputBg">#2A2A2A</color>
+    <color name="composeInputText">#FFFFFF</color>
+    <color name="composeHint">#666666</color>
+    <color name="sendButtonEnabled">#1A73E8</color>
+    <color name="sendButtonDisabled">#444444</color>
+
+    <!-- ─── Status ─── -->
+    <color name="statusDelivered">#03DAC5</color>
+    <color name="statusFailed">#CF6679</color>
+    <color name="statusPending">#888888</color>
+
+    <!-- ─── Empty state ─── -->
+    <color name="emptyText">#666666</color>
+
+    <!-- Legacy names kept for Material theme compatibility -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
