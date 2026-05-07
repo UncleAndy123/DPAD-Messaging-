@@ -36,7 +36,7 @@ data class RecycledItem(
 class RecycleBinAdapter(
     private val onItemClick: (RecycledItem) -> Unit,
     private val onItemLongClick: (RecycledItem) -> Unit,
-    private val onItemMenuClick: (RecycledItem) -> Unit
+    private val onItemMenuClick: (View, RecycledItem) -> Unit
 ) : ListAdapter<RecycledItem, RecycleBinAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -88,7 +88,7 @@ class RecycleBinAdapter(
 
             binding.conversationClickArea.setOnClickListener { onItemClick(item) }
             binding.conversationClickArea.setOnLongClickListener { onItemLongClick(item); true }
-            binding.btnConversationMenu.setOnClickListener { onItemMenuClick(item) }
+            binding.btnConversationMenu.setOnClickListener { onItemMenuClick(it, item) }
         }
 
         private fun avatarColor(seed: String): Int {

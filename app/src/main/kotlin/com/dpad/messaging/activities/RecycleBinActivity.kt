@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.provider.Telephony
 import android.view.KeyEvent
 import android.view.View
-import androidx.appcompat.app.AlertDialog
+import android.widget.PopupMenu
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dpad.messaging.App
@@ -32,9 +32,9 @@ class RecycleBinActivity : BaseActivity() {
         binding.btnBack.setOnClickListener { finish() }
 
         adapter = RecycleBinAdapter(
-            onItemClick     = { showItemMenu(it) },
-            onItemLongClick = { showItemMenu(it) },
-            onItemMenuClick = { showItemMenu(it) }
+            onItemClick     = { showItemMenu(binding.root, it) },
+            onItemLongClick = { showItemMenu(binding.root, it) },
+            onItemMenuClick = { view, item -> showItemMenu(view, item) }
         )
         binding.rvMessages.apply {
             this.adapter = this@RecycleBinActivity.adapter
@@ -80,16 +80,18 @@ class RecycleBinActivity : BaseActivity() {
 
     // ─── Context menu ─────────────────────────────────────────────────────────
 
-    private fun showItemMenu(item: RecycledItem) {
-        AlertDialog.Builder(this)
-            .setTitle(item.senderName)
-            .setItems(arrayOf(getString(R.string.restore), getString(R.string.delete))) { _, which ->
-                when (which) {
-                    0 -> restoreItem(item)
-                    1 -> permanentlyDeleteItem(item)
-                }
+    private fun showItemMenu(anchor: View, item: RecycledItem) {
+        val popup = PopupMenu(this, anchor)
+        popup.menu.add(0, 0, 0, getString(R.string.restore))
+        popup.menu.add(0, 1, 1, getString(R.string.delete))
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                0 -> restoreItem(item)
+                1 -> permanentlyDeleteItem(item)
             }
-            .show()
+            true
+        }
+        popup.show()
     }
 
     /**
