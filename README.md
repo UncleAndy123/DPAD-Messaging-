@@ -1,5 +1,7 @@
 # DPAD SMS
 
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-jbriones95-orange?logo=buy-me-a-coffee)](https://buymeacoffee.com/jbriones95)
+
 A messaging app designed for dumbphones with D-pad navigation.
 
 ## Features
@@ -78,6 +80,12 @@ Handles MMS message composition and sending via system MmsService.
 
 ### SmsSender
 Handles SMS message sending via SmsManager.
+
+## Support
+
+If you find this app useful, consider supporting its development:
+
+[![Buy Me a Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/jbriones95)
 
 ## License
 
