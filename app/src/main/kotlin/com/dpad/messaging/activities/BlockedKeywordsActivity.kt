@@ -1,5 +1,6 @@
 package com.dpad.messaging.activities
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
@@ -13,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.dpad.messaging.App
 import com.dpad.messaging.R
 import com.dpad.messaging.databinding.ActivityBlockedKeywordsBinding
+import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.BlockedKeyword
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,6 +37,7 @@ class BlockedKeywordsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.applyAccentColor(this)
         binding = ActivityBlockedKeywordsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -44,6 +47,17 @@ class BlockedKeywordsActivity : AppCompatActivity() {
 
         binding.btnBack.setOnClickListener { finish() }
         loadKeywords()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        applyAccent()
+    }
+
+    private fun applyAccent() {
+        val tint = ColorStateList.valueOf(ThemeManager.accentColor(this))
+        binding.btnBack.imageTintList = tint
+        binding.btnBack.backgroundTintList = tint
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -130,7 +144,7 @@ class BlockedKeywordsActivity : AppCompatActivity() {
         // Build a delete icon on the right (an "×" text label)
         val tvDelete = TextView(this).apply {
             text = "×"
-            setTextColor(getColor(R.color.colorSecondary))
+            setTextColor(ThemeManager.accentColor(this@BlockedKeywordsActivity))
             setTextSize(
                 android.util.TypedValue.COMPLEX_UNIT_PX,
                 resources.getDimension(R.dimen.text_size_large)
@@ -226,6 +240,7 @@ class BlockedKeywordsActivity : AppCompatActivity() {
         isFocusableInTouchMode = true
         isClickable = true
         setBackgroundResource(R.drawable.item_focusable_bg)
+        backgroundTintList = ColorStateList.valueOf(ThemeManager.accentColor(this@BlockedKeywordsActivity))
         setPadding(paddingH, paddingV, paddingH, paddingV)
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,

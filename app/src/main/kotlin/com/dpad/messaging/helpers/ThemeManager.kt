@@ -1,8 +1,13 @@
 package com.dpad.messaging.helpers
 
+import android.app.Activity
 import android.content.Context
+import android.os.Build
+import android.view.View
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import com.dpad.messaging.R
 
 object ThemeManager {
@@ -16,6 +21,20 @@ object ThemeManager {
         AppCompatDelegate.setDefaultNightMode(nightMode)
     }
 
+    fun applyAccentColor(activity: Activity) {
+        val accentColor = accentColor(activity)
+        val colorOnPrimary = ContextCompat.getColor(activity, R.color.colorOnPrimary)
+
+        activity.window.apply {
+            statusBarColor = accentColor
+            navigationBarColor = accentColor
+        }
+
+        activity.findViewById<View>(android.R.id.content)?.apply {
+            setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackground))
+        }
+    }
+
     @ColorInt
     fun accentColor(context: Context): Int {
         val colorRes = when (Prefs.get().appAccent) {
@@ -24,6 +43,6 @@ object ThemeManager {
             Prefs.ACCENT_ROSE -> R.color.accent_rose
             else -> R.color.accent_blue
         }
-        return context.getColor(colorRes)
+        return ContextCompat.getColor(context, colorRes)
     }
 }

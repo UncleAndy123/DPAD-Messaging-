@@ -1,5 +1,6 @@
 package com.dpad.messaging.activities
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.dpad.messaging.App
 import com.dpad.messaging.R
 import com.dpad.messaging.databinding.ActivityConversationDetailsBinding
+import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.BlockedKeyword
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +28,7 @@ class ConversationDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.applyAccentColor(this)
         binding = ActivityConversationDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -56,6 +59,19 @@ class ConversationDetailsActivity : AppCompatActivity() {
         binding.btnRename.setOnClickListener { showRenameDialog() }
         val blockTarget = participants.firstOrNull() ?: phoneNumber
         binding.btnBlock.setOnClickListener  { showBlockConfirmation(blockTarget) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        applyAccent()
+    }
+
+    private fun applyAccent() {
+        val tint = ColorStateList.valueOf(ThemeManager.accentColor(this))
+        binding.btnBack.imageTintList = tint
+        binding.btnBack.backgroundTintList = tint
+        binding.btnRename.backgroundTintList = tint
+        binding.btnBlock.backgroundTintList = tint
     }
 
     private fun showRenameDialog() {

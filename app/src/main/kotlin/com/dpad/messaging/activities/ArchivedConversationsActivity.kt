@@ -1,5 +1,6 @@
 package com.dpad.messaging.activities
 
+import android.content.res.ColorStateList
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
@@ -11,6 +12,7 @@ import com.dpad.messaging.App
 import com.dpad.messaging.adapters.ConversationsAdapter
 import com.dpad.messaging.databinding.ActivityArchivedBinding
 import com.dpad.messaging.extensions.getConversationsFromTelephony
+import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.Conversation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +25,7 @@ class ArchivedConversationsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.applyAccentColor(this)
         binding = ActivityArchivedBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -40,6 +43,17 @@ class ArchivedConversationsActivity : AppCompatActivity() {
         }
 
         loadArchivedConversations()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        applyAccent()
+    }
+
+    private fun applyAccent() {
+        val tint = ColorStateList.valueOf(ThemeManager.accentColor(this))
+        binding.btnBack.imageTintList = tint
+        binding.btnBack.backgroundTintList = tint
     }
 
     private fun openThread(conversation: Conversation) {

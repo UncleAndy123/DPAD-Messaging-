@@ -1,5 +1,6 @@
 package com.dpad.messaging.activities
 
+import android.content.res.ColorStateList
 import android.content.ContentUris
 import android.os.Bundle
 import android.provider.Telephony
@@ -15,6 +16,7 @@ import com.dpad.messaging.adapters.RecycleBinAdapter
 import com.dpad.messaging.adapters.RecycledItem
 import com.dpad.messaging.databinding.ActivityRecycleBinBinding
 import com.dpad.messaging.extensions.getSmsMessageById
+import com.dpad.messaging.helpers.ThemeManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,6 +28,7 @@ class RecycleBinActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.applyAccentColor(this)
         binding = ActivityRecycleBinBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -42,6 +45,17 @@ class RecycleBinActivity : AppCompatActivity() {
         }
 
         loadRecycleBin()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        applyAccent()
+    }
+
+    private fun applyAccent() {
+        val tint = ColorStateList.valueOf(ThemeManager.accentColor(this))
+        binding.btnBack.imageTintList = tint
+        binding.btnBack.backgroundTintList = tint
     }
 
     // ─── Data ─────────────────────────────────────────────────────────────────

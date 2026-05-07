@@ -55,6 +55,7 @@ class NewConversationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.applyAccentColor(this)
         binding = ActivityNewConversationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

@@ -1,6 +1,7 @@
 package com.dpad.messaging.activities
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
@@ -45,6 +46,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.applyAccentColor(this)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -54,8 +56,20 @@ class SettingsActivity : AppCompatActivity() {
         rowMinH  = resources.getDimensionPixelSize(R.dimen.conversation_item_height)
 
         binding.btnBack.setOnClickListener { finish() }
+        applyAccent()
 
         buildSettingsRows()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        applyAccent()
+    }
+
+    private fun applyAccent() {
+        val tint = ColorStateList.valueOf(ThemeManager.accentColor(this))
+        binding.btnBack.imageTintList = tint
+        binding.btnBack.backgroundTintList = tint
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -214,7 +228,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun sectionHeader(container: LinearLayout, text: String) {
         val tv = TextView(this).apply {
             this.text = text.uppercase()
-            setTextColor(getColor(R.color.colorSecondary))
+            setTextColor(ThemeManager.accentColor(this@SettingsActivity))
             setTextSize(
                 android.util.TypedValue.COMPLEX_UNIT_PX,
                 resources.getDimension(R.dimen.text_size_small)
@@ -233,11 +247,14 @@ class SettingsActivity : AppCompatActivity() {
         getValue: () -> Boolean,
         setValue: (Boolean) -> Unit
     ) {
+        val accent = ThemeManager.accentColor(this)
         val sw = SwitchCompat(this).apply {
             isChecked = getValue()
             isFocusable = false
             isFocusableInTouchMode = false
             isClickable = false
+            thumbTintList = ColorStateList.valueOf(accent)
+            trackTintList = ColorStateList.valueOf(accent)
         }
 
         val textCol = buildTextColumn(label, summary)
@@ -267,9 +284,10 @@ class SettingsActivity : AppCompatActivity() {
         optionLabels: List<String>,
         setValue: (String) -> Unit
     ) {
+        val accent = ThemeManager.accentColor(this)
         val tvValue = TextView(this).apply {
             text = labelFor(getValue(), optionValues, optionLabels)
-            setTextColor(getColor(R.color.colorSecondary))
+            setTextColor(accent)
             setTextSize(
                 android.util.TypedValue.COMPLEX_UNIT_PX,
                 resources.getDimension(R.dimen.text_size_small)
@@ -377,6 +395,7 @@ class SettingsActivity : AppCompatActivity() {
         isFocusableInTouchMode = true
         isClickable = true
         setBackgroundResource(R.drawable.item_focusable_bg)
+        backgroundTintList = ColorStateList.valueOf(ThemeManager.accentColor(this@SettingsActivity))
         setPadding(paddingH, paddingV, paddingH, paddingV)
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,

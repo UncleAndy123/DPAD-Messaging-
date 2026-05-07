@@ -77,6 +77,7 @@ class ThreadActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.applyAccentColor(this)
         binding = ActivityThreadBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
