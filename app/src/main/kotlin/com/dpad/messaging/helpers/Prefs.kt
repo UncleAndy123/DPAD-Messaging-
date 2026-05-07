@@ -24,8 +24,11 @@ class Prefs private constructor(context: Context) {
         private const val KEY_LOCK_SCREEN_PRIVACY = "lock_screen_privacy"
         private const val KEY_RECYCLE_BIN_ENABLED = "recycle_bin_enabled"
         private const val KEY_MUTED_THREADS       = "muted_threads"
+        private const val KEY_PINNED_THREADS      = "pinned_threads"
         private const val KEY_APP_THEME_MODE      = "app_theme_mode"
         private const val KEY_APP_ACCENT          = "app_accent"
+        private const val KEY_DATE_FORMAT         = "date_format"
+        private const val KEY_TIME_FORMAT         = "time_format"
 
         const val PRIVACY_FULL        = "full"
         const val PRIVACY_SENDER_ONLY = "sender_only"
@@ -36,6 +39,10 @@ class Prefs private constructor(context: Context) {
         const val ACCENT_GREEN        = "green"
         const val ACCENT_ORANGE       = "orange"
         const val ACCENT_ROSE         = "rose"
+        const val DATE_FORMAT_MDY     = "MDY"   // MM/dd/yy  (American)
+        const val DATE_FORMAT_DMY     = "DMY"   // dd/MM/yy  (European)
+        const val TIME_FORMAT_12H     = "12h"   // h:mm a
+        const val TIME_FORMAT_24H     = "24h"   // HH:mm
 
         @Volatile private var instance: Prefs? = null
 
@@ -98,6 +105,16 @@ class Prefs private constructor(context: Context) {
         get() = prefs.getString(KEY_APP_ACCENT, ACCENT_BLUE) ?: ACCENT_BLUE
         set(v) = prefs.edit().putString(KEY_APP_ACCENT, v).apply()
 
+    /** Date display format. [DATE_FORMAT_MDY] = MM/dd/yy; [DATE_FORMAT_DMY] = dd/MM/yy. Default: MDY (American). */
+    var dateFormat: String
+        get() = prefs.getString(KEY_DATE_FORMAT, DATE_FORMAT_MDY) ?: DATE_FORMAT_MDY
+        set(v) = prefs.edit().putString(KEY_DATE_FORMAT, v).apply()
+
+    /** Time display format. [TIME_FORMAT_12H] = 12-hour; [TIME_FORMAT_24H] = 24-hour. Default: 12h. */
+    var timeFormat: String
+        get() = prefs.getString(KEY_TIME_FORMAT, TIME_FORMAT_12H) ?: TIME_FORMAT_12H
+        set(v) = prefs.edit().putString(KEY_TIME_FORMAT, v).apply()
+
     /** Returns true when notifications are muted for [threadId]. */
     fun isThreadMuted(threadId: Long): Boolean {
         val muted = prefs.getStringSet(KEY_MUTED_THREADS, emptySet()) ?: emptySet()
@@ -111,5 +128,26 @@ class Prefs private constructor(context: Context) {
         val key = threadId.toString()
         if (muted) current.add(key) else current.remove(key)
         prefs.edit().putStringSet(KEY_MUTED_THREADS, current).apply()
+    }
+
+    /** Returns true when [threadId] is pinned to the top of the conversation list. */
+    fun isThreadPinned(threadId: Long): Boolean {
+        val pinned = prefs.getStringSet(KEY_PINNED_THREADS, emptySet()) ?: emptySet()
+        return pinned.contains(threadId.toString())
+    }
+
+    /** Pins or unpins [threadId]. */
+    fun setThreadPinned(threadId: Long, pinned: Boolean) {
+        val current = prefs.getStringSet(KEY_PINNED_THREADS, emptySet())?.toMutableSet()
+            ?: mutableSetOf()
+        val key = threadId.toString()
+        if (pinned) current.add(key) else current.remove(key)
+        prefs.edit().putStringSet(KEY_PINNED_THREADS, current).apply()
+    }
+
+    /** Returns the full set of pinned thread IDs. */
+    fun getPinnedThreadIds(): Set<Long> {
+        return (prefs.getStringSet(KEY_PINNED_THREADS, emptySet()) ?: emptySet())
+            .mapNotNull { it.toLongOrNull() }.toSet()
     }
 }

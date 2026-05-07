@@ -10,7 +10,9 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.provider.Telephony
+import android.widget.PopupMenu
 import android.telephony.SubscriptionManager
 import android.text.Editable
 import android.text.TextWatcher
@@ -72,6 +74,7 @@ class ThreadActivity : AppCompatActivity() {
     private var pendingAttachmentUri: Uri? = null
 
     private lateinit var attachmentPickerLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var contactPickerLauncher: ActivityResultLauncher<Void?>
 
     // ─── Lifecycle ─────────────────────────────────────────────────────────
 
@@ -105,6 +108,30 @@ class ThreadActivity : AppCompatActivity() {
                 }
                 pendingAttachmentUri = uri
                 showAttachmentPreview(uri)
+            }
+        }
+
+        // Dedicated contact picker — contacts are not files so OpenDocument can't reach them.
+        contactPickerLauncher = registerForActivityResult(
+            ActivityResultContracts.PickContact()
+        ) { contactUri ->
+            if (contactUri != null) {
+                // Build a vCard URI from the lookup key so openInputStream() works.
+                contentResolver.query(
+                    contactUri,
+                    arrayOf(ContactsContract.Contacts.LOOKUP_KEY),
+                    null, null, null
+                )?.use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val lookupKey = cursor.getString(0)
+                        val vCardUri = Uri.withAppendedPath(
+                            ContactsContract.Contacts.CONTENT_VCARD_URI,
+                            Uri.encode(lookupKey)
+                        )
+                        pendingAttachmentUri = vCardUri
+                        showAttachmentPreview(vCardUri)
+                    }
+                }
             }
         }
 
@@ -182,14 +209,13 @@ class ThreadActivity : AppCompatActivity() {
         binding.btnDetails.imageTintList = tint
         binding.btnAttach.imageTintList = tint
         binding.btnSim.setTextColor(accent)
-        binding.btnRemoveAttachment.imageTintList = tint
+        // btnRemoveAttachment uses its XML fill color — no tinting needed, keeps icon always visible.
 
         binding.btnBack.backgroundTintList = tint
         binding.btnCall.backgroundTintList = tint
         binding.btnDetails.backgroundTintList = tint
         binding.btnAttach.backgroundTintList = tint
         binding.btnSend.backgroundTintList = tint
-        binding.btnRemoveAttachment.backgroundTintList = tint
         binding.btnSim.backgroundTintList = tint
 
         updateSendButtonState()
@@ -279,11 +305,19 @@ class ThreadActivity : AppCompatActivity() {
 
         binding.btnSend.setOnClickListener { sendMessage() }
 
-        // Open image picker
-        binding.btnAttach.setOnClickListener {
-            attachmentPickerLauncher.launch(
-                arrayOf("image/*", "audio/*", "text/x-vcard", "text/vcard", "application/vcard")
-            )
+        // Attach button — show menu to choose between media or contact.
+        binding.btnAttach.setOnClickListener { anchor ->
+            val popup = PopupMenu(this, anchor)
+            popup.menu.add(0, 1, 0, getString(R.string.attach_image_audio))
+            popup.menu.add(0, 2, 0, getString(R.string.attach_contact))
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    1 -> attachmentPickerLauncher.launch(arrayOf("image/*", "audio/*"))
+                    2 -> contactPickerLauncher.launch(null)
+                }
+                true
+            }
+            popup.show()
         }
 
         // Restore any saved draft

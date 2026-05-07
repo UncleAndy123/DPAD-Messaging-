@@ -124,6 +124,30 @@ class SettingsActivity : AppCompatActivity() {
                 recreate()
             }
         )
+        valueRow(
+            container    = c,
+            label        = getString(R.string.date_format),
+            summary      = getString(R.string.date_format_summary),
+            getValue     = { prefs.dateFormat },
+            optionValues = listOf(Prefs.DATE_FORMAT_MDY, Prefs.DATE_FORMAT_DMY),
+            optionLabels = listOf(
+                getString(R.string.date_mdy),
+                getString(R.string.date_dmy)
+            ),
+            setValue     = { prefs.dateFormat = it }
+        )
+        valueRow(
+            container    = c,
+            label        = getString(R.string.time_format),
+            summary      = getString(R.string.time_format_summary),
+            getValue     = { prefs.timeFormat },
+            optionValues = listOf(Prefs.TIME_FORMAT_12H, Prefs.TIME_FORMAT_24H),
+            optionLabels = listOf(
+                getString(R.string.time_12h),
+                getString(R.string.time_24h)
+            ),
+            setValue     = { prefs.timeFormat = it }
+        )
 
         // ── Messaging ────────────────────────────────────────────────────────
         sectionHeader(c, getString(R.string.messaging))
@@ -248,13 +272,21 @@ class SettingsActivity : AppCompatActivity() {
         setValue: (Boolean) -> Unit
     ) {
         val accent = ThemeManager.accentColor(this)
+        val gray = 0xFFAAAAAA.toInt()
+        val grayTrack = 0xFF666666.toInt()
         val sw = SwitchCompat(this).apply {
             isChecked = getValue()
             isFocusable = false
             isFocusableInTouchMode = false
             isClickable = false
-            thumbTintList = ColorStateList.valueOf(accent)
-            trackTintList = ColorStateList.valueOf(accent)
+            thumbTintList = ColorStateList(
+                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                intArrayOf(accent, gray)
+            )
+            trackTintList = ColorStateList(
+                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                intArrayOf((accent and 0x00FFFFFF) or 0x80000000.toInt(), grayTrack)
+            )
         }
 
         val textCol = buildTextColumn(label, summary)

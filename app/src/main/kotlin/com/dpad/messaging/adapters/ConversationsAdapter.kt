@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dpad.messaging.R
 import com.dpad.messaging.databinding.ItemConversationBinding
+import com.dpad.messaging.helpers.Prefs
 import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.Conversation
 import java.text.SimpleDateFormat
@@ -74,7 +75,13 @@ class ConversationsAdapter(
             // Pin indicator
             binding.ivPinned.visibility =
                 if (conversation.pinned) View.VISIBLE else View.GONE
-            binding.ivPinned.setColorFilter(accent)
+            binding.ivPinned.imageTintList = ColorStateList.valueOf(accent)
+
+            // Mute indicator
+            val muted = Prefs.get().isThreadMuted(conversation.threadId)
+            binding.ivMuted.visibility = if (muted) View.VISIBLE else View.GONE
+            binding.ivMuted.imageTintList = ColorStateList.valueOf(accent)
+
             val tint = ColorStateList.valueOf(accent)
             binding.btnConversationMenu.imageTintList = tint
             binding.btnConversationMenu.backgroundTintList = tint
@@ -125,13 +132,18 @@ class ConversationsAdapter(
             if (timestamp == 0L) return ""
             val now = Calendar.getInstance()
             val msg = Calendar.getInstance().apply { timeInMillis = timestamp }
+            val prefs = Prefs.get()
             return when {
-                isSameDay(now, msg) ->
-                    SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(timestamp))
+                isSameDay(now, msg) -> {
+                    val pattern = if (prefs.timeFormat == Prefs.TIME_FORMAT_24H) "HH:mm" else "h:mm a"
+                    SimpleDateFormat(pattern, Locale.getDefault()).format(Date(timestamp))
+                }
                 diffDays(now, msg) < 7 ->
                     SimpleDateFormat("EEE", Locale.getDefault()).format(Date(timestamp))
-                else ->
-                    SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(Date(timestamp))
+                else -> {
+                    val pattern = if (prefs.dateFormat == Prefs.DATE_FORMAT_DMY) "dd/MM/yy" else "MM/dd/yy"
+                    SimpleDateFormat(pattern, Locale.getDefault()).format(Date(timestamp))
+                }
             }
         }
 

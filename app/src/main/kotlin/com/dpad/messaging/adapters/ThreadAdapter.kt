@@ -16,6 +16,7 @@ import com.dpad.messaging.databinding.ItemMessageReceivedBinding
 import com.dpad.messaging.databinding.ItemMessageSendingBinding
 import com.dpad.messaging.databinding.ItemMessageSentBinding
 import com.dpad.messaging.databinding.ItemThreadDateBinding
+import com.dpad.messaging.helpers.Prefs
 import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.Message
 import com.dpad.messaging.models.ThreadItem
@@ -228,7 +229,8 @@ class ThreadAdapter(
 
     private fun formatTime(timestamp: Long): String {
         if (timestamp == 0L) return ""
-        return SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(timestamp))
+        val pattern = if (Prefs.get().timeFormat == Prefs.TIME_FORMAT_24H) "HH:mm" else "h:mm a"
+        return SimpleDateFormat(pattern, Locale.getDefault()).format(Date(timestamp))
     }
 
     private fun formatHeaderDate(timestamp: Long): String {

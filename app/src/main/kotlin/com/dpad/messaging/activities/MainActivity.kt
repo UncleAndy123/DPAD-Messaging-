@@ -176,7 +176,8 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val conversations = withContext(Dispatchers.IO) {
-                getConversationsFromTelephony(App.get().contactHelper)
+                val pinnedIds = Prefs.get().getPinnedThreadIds()
+                getConversationsFromTelephony(App.get().contactHelper, pinnedIds)
             }
             displayConversations(conversations)
         }
@@ -311,11 +312,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun togglePin(conversation: Conversation) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            App.get().database.conversationsDao().setPinned(
-                conversation.threadId, !conversation.pinned
-            )
-        }
+        Prefs.get().setThreadPinned(conversation.threadId, !conversation.pinned)
         loadConversations()
     }
 
@@ -331,6 +328,7 @@ class MainActivity : AppCompatActivity() {
     private fun toggleMute(conversation: Conversation) {
         val currentlyMuted = Prefs.get().isThreadMuted(conversation.threadId)
         Prefs.get().setThreadMuted(conversation.threadId, !currentlyMuted)
+        loadConversations()
     }
 
     private fun copyNumber(phoneNumber: String) {

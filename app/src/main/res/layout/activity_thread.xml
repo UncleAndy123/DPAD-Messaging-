@@ -166,7 +166,7 @@
             android:src="@drawable/ic_attach"
             android:nextFocusLeft="@id/btn_send"
             android:nextFocusRight="@id/et_message"
-            android:nextFocusUp="@id/rv_messages" />
+            android:nextFocusUp="@id/btn_remove_attachment" />
 
         <!-- Message compose field -->
         <EditText
@@ -193,7 +193,7 @@
             android:textSize="@dimen/text_size_normal"
             android:nextFocusLeft="@id/btn_attach"
             android:nextFocusRight="@id/btn_send"
-            android:nextFocusUp="@id/rv_messages" />
+            android:nextFocusUp="@id/btn_remove_attachment" />
 
         <!-- Character counter (shown when enabled in settings) -->
         <TextView
@@ -219,7 +219,7 @@
             android:tint="@color/sendButtonDisabled"
             android:nextFocusLeft="@id/et_message"
             android:nextFocusRight="@id/btn_sim"
-            android:nextFocusUp="@id/rv_messages" />
+            android:nextFocusUp="@id/btn_remove_attachment" />
 
         <!-- SIM picker button (hidden on single-SIM devices) -->
         <TextView
@@ -240,7 +240,7 @@
             android:visibility="gone"
             android:nextFocusLeft="@id/btn_send"
             android:nextFocusRight="@id/btn_attach"
-            android:nextFocusUp="@id/rv_messages" />
+            android:nextFocusUp="@id/btn_remove_attachment" />
 
     </LinearLayout>
 
