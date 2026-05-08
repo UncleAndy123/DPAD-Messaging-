@@ -244,10 +244,17 @@ class ThreadActivity : BaseActivity() {
     }
 
     private fun setupComposeBar() {
-        // D-Pad UP from compose → message list (or back button when list is empty)
+        // D-Pad UP from compose:
+        // 1) If an attachment is visible, go to the remove-attachment button first.
+        // 2) Otherwise go to the message list (or back button when list is empty).
         val goUpFromCompose = { ->
-            if ((threadAdapter.itemCount) > 0) binding.rvMessages.focusLastItem()
-            else binding.btnBack.requestFocus()
+            if (binding.attachmentPreviewBar.visibility == View.VISIBLE) {
+                binding.btnRemoveAttachment.requestFocus()
+            } else if (threadAdapter.itemCount > 0) {
+                binding.rvMessages.focusLastItem()
+            } else {
+                binding.btnBack.requestFocus()
+            }
         }
         binding.etMessage.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP && event.action == KeyEvent.ACTION_DOWN) {
@@ -281,6 +288,12 @@ class ThreadActivity : BaseActivity() {
 
         // Attachment preview strip
         binding.btnRemoveAttachment.setOnClickListener { clearAttachment() }
+        binding.btnRemoveAttachment.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN && event.action == KeyEvent.ACTION_DOWN) {
+                binding.etMessage.requestFocus()
+                true
+            } else false
+        }
 
         // Enable/disable send button and update character counter based on text
         binding.etMessage.addTextChangedListener(object : TextWatcher {
@@ -350,6 +363,7 @@ class ThreadActivity : BaseActivity() {
         } else {
             binding.ivAttachmentPreview.setImageResource(R.drawable.ic_attach)
         }
+        binding.btnRemoveAttachment.requestFocus()
         updateSendButtonState()
     }
 
