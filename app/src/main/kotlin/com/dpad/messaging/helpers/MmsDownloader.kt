@@ -10,6 +10,9 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Telephony
 import android.util.Log
+import java.net.InetSocketAddress
+import java.net.Proxy
+import java.io.IOException
 import com.dpad.messaging.App
 import com.dpad.messaging.events.RefreshConversations
 import com.dpad.messaging.events.RefreshMessages
@@ -73,7 +76,7 @@ object MmsDownloader {
             Log.d(TAG, "MmsDownloader: acquired MMS network $network")
 
             // 2. Download PDU
-            val pduBytes = downloadPdu(network, contentLocation)
+            val pduBytes = downloadPdu(context, network, contentLocation)
             Log.d(TAG, "MmsDownloader: PDU size=${pduBytes.size}")
 
             // 3. Parse PDU
@@ -137,27 +140,83 @@ object MmsDownloader {
 
     // ── PDU download ──────────────────────────────────────────────────────────
 
-    private fun downloadPdu(network: Network, urlString: String): ByteArray {
-        val url        = URL(urlString)
-        val connection = network.openConnection(url) as HttpURLConnection
+    private fun downloadPdu(context: Context, network: Network?, urlString: String): ByteArray {
+        // Best-effort: read APN MMS proxy from Telephony.Carriers (may fail on some ROMs)
+        var proxyHost: String? = null
+        var proxyPort: Int? = null
         try {
+            val projection = arrayOf(
+                Telephony.Carriers.MMSPROXY,
+                Telephony.Carriers.MMSPORT,
+                Telephony.Carriers.MMSC,
+                Telephony.Carriers.TYPE
+            )
+            val cursor = context.contentResolver.query(Telephony.Carriers.CONTENT_URI, projection, null, null, null)
+            cursor?.use {
+                while (it.moveToNext()) {
+                    val p = it.getString(0)
+                    val portStr = it.getString(1)
+                    val mmsc = it.getString(2)
+                    val type = it.getString(3)
+                    if (!p.isNullOrEmpty()) {
+                        proxyHost = p
+                        proxyPort = try { portStr?.toInt() ?: -1 } catch (e: NumberFormatException) { -1 }
+                        break
+                    }
+                    // Otherwise continue scanning for a reasonable row
+                    if (!mmsc.isNullOrEmpty() && proxyHost == null) {
+                        // Keep looking — prefer explicit proxy if present
+                    }
+                }
+            }
+        } catch (e: SecurityException) {
+            Log.w(TAG, "No permission to read APN settings for proxy detection", e)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to read APN settings for proxy detection", e)
+        }
+
+        var connection: HttpURLConnection? = null
+        var bound = false
+        try {
+            // If we have a proxy, prefer using it and bind the process to the MMS network
+            if (!proxyHost.isNullOrEmpty()) {
+                // Temporarily bind process to the acquired network so that socket traffic uses MMS APN
+                if (network != null) {
+                    try {
+                        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            cm.bindProcessToNetwork(network)
+                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            ConnectivityManager.setProcessDefaultNetwork(network)
+                        }
+                        bound = true
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to bind process to MMS network", e)
+                    }
+                }
+
+                val url = URL(urlString)
+                val p = Proxy(Proxy.Type.HTTP, InetSocketAddress(proxyHost, proxyPort ?: 0))
+                connection = url.openConnection(p) as HttpURLConnection
+            } else {
+                // No proxy discovered — use Network.openConnection when possible
+                val url = URL(urlString)
+                connection = if (network != null) {
+                    network.openConnection(url) as HttpURLConnection
+                } else {
+                    url.openConnection() as HttpURLConnection
+                }
+            }
+
             connection.requestMethod  = "GET"
             connection.connectTimeout = HTTP_CONNECT_TIMEOUT
             connection.readTimeout    = HTTP_READ_TIMEOUT
             connection.instanceFollowRedirects = true
-            // Standard MMS user-agent headers — works across carriers (AT&T, Verizon, T-Mobile, etc.)
-            connection.setRequestProperty("User-Agent",
-                "Android-Mms/2.0")
-            // WAP profile — required by most carriers for MMS content negotiation
-            connection.setRequestProperty("x-wap-profile",
-                "http://www.google.com/oha/rdf/ua-profile-20080331.xml")
-            // Standard accept headers for MMS
-            connection.setRequestProperty("Accept",
-                "*/*, application/vnd.wap.mms-message, application/vnd.wap.sic")
-            // Some carriers (Verizon, etc.) require these headers
+            connection.setRequestProperty("User-Agent", "Android-Mms/2.0")
+            connection.setRequestProperty("x-wap-profile", "http://www.google.com/oha/rdf/ua-profile-20080331.xml")
+            connection.setRequestProperty("Accept", "*/*, application/vnd.wap.mms-message, application/vnd.wap.sic")
             connection.setRequestProperty("Accept-Encoding", "gzip")
             connection.setRequestProperty("Accept-Language", "en-US")
-            // Verizon and other carriers may set a proxy that requires specific headers
             connection.setRequestProperty("Cache-Control", "no-cache")
             connection.connect()
 
@@ -168,7 +227,19 @@ object MmsDownloader {
             }
             return connection.inputStream.readBytes()
         } finally {
-            connection.disconnect()
+            try {
+                connection?.disconnect()
+            } catch (_: Exception) {}
+            if (bound) {
+                try {
+                    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        cm.bindProcessToNetwork(null)
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        ConnectivityManager.setProcessDefaultNetwork(null)
+                    }
+                } catch (_: Exception) {}
+            }
         }
     }
 

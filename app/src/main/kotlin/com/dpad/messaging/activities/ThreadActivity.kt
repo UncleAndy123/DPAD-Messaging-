@@ -75,6 +75,7 @@ class ThreadActivity : BaseActivity() {
 
     private lateinit var attachmentPickerLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var contactPickerLauncher: ActivityResultLauncher<Void?>
+    private var hasInitializedList = false
 
     // ─── Lifecycle ─────────────────────────────────────────────────────────
 
@@ -84,12 +85,7 @@ class ThreadActivity : BaseActivity() {
         binding = ActivityThreadBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        threadId = intent.getLongExtra(EXTRA_THREAD_ID, -1L)
-        threadTitle = intent.getStringExtra(EXTRA_THREAD_TITLE) ?: ""
-        phoneNumber = intent.getStringExtra(EXTRA_PHONE_NUMBER) ?: ""
-        participants = intent.getStringExtra(EXTRA_PARTICIPANTS)
-            ?.split(",")?.map { it.trim() }?.filter { it.isNotBlank() }
-            ?: listOf(phoneNumber).filter { it.isNotBlank() }
+        extractThreadExtras(intent)
 
         if (threadId == -1L) { finish(); return }
 
@@ -143,15 +139,25 @@ class ThreadActivity : BaseActivity() {
         loadMessages()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        extractThreadExtras(intent)
+        applyPrefillAttachmentFromIntent(intent)
+        setupToolbar()
+        loadMessages()
+        markThreadRead()
+    }
+
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
         applyAccent()
-        markThreadRead()
         loadMessages()   // Bug #1 fix: refresh thread when returning from background
     }
 
     override fun onPause() {
+        markThreadRead()
         saveDraft()
         EventBus.getDefault().unregister(this)
         super.onPause()
@@ -527,9 +533,21 @@ class ThreadActivity : BaseActivity() {
     private fun displayMessages(messages: List<Message>) {
         val items = ThreadItem.fromMessages(messages)
         threadAdapter.submitList(items) {
-            // After the list is drawn, scroll to bottom
-            binding.rvMessages.scrollToPosition(threadAdapter.itemCount - 1)
+            // Keep initial auto-scroll behavior, but avoid stealing D-pad focus on every refresh
+            if (!hasInitializedList) {
+                binding.rvMessages.scrollToPosition(threadAdapter.itemCount - 1)
+                hasInitializedList = true
+            }
         }
+    }
+
+    private fun extractThreadExtras(intent: Intent?) {
+        threadId = intent?.getLongExtra(EXTRA_THREAD_ID, -1L) ?: -1L
+        threadTitle = intent?.getStringExtra(EXTRA_THREAD_TITLE) ?: ""
+        phoneNumber = intent?.getStringExtra(EXTRA_PHONE_NUMBER) ?: ""
+        participants = intent?.getStringExtra(EXTRA_PARTICIPANTS)
+            ?.split(",")?.map { it.trim() }?.filter { it.isNotBlank() }
+            ?: listOf(phoneNumber).filter { it.isNotBlank() }
     }
 
     private fun markThreadRead() {

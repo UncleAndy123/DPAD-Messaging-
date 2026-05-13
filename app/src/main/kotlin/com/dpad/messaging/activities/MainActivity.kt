@@ -26,6 +26,7 @@ import com.dpad.messaging.adapters.ConversationsAdapter
 import com.dpad.messaging.databinding.ActivityMainBinding
 import com.dpad.messaging.events.RefreshConversations
 import com.dpad.messaging.extensions.getConversationsFromTelephony
+import com.dpad.messaging.extensions.markThreadAsReadInTelephony
 import com.dpad.messaging.helpers.Prefs
 import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.Conversation
@@ -344,6 +345,7 @@ class MainActivity : BaseActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val dao = App.get().database.conversationsDao()
             dao.markAsRead(conversation.threadId)
+            markThreadAsReadInTelephony(conversation.threadId)
         }
         loadConversations()
     }

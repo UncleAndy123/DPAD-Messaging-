@@ -341,6 +341,18 @@ fun Context.markThreadAsReadInTelephony(threadId: Long) {
             "${Telephony.Sms.THREAD_ID} = ? AND ${Telephony.Sms.READ} = 0",
             arrayOf(threadId.toString())
         )
+        // Also mark MMS rows for this thread as read
+        try {
+            val mmsValues = android.content.ContentValues().apply { put("read", 1) }
+            contentResolver.update(
+                android.net.Uri.parse("content://mms"),
+                mmsValues,
+                "thread_id = ? AND read = 0",
+                arrayOf(threadId.toString())
+            )
+        } catch (e: Exception) {
+            // Ignore MMS update failures — best-effort
+        }
     } catch (e: Exception) {
         e.printStackTrace()
     }
