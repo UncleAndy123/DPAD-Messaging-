@@ -436,7 +436,9 @@ class ThreadActivity : BaseActivity() {
                 marginStart = 6.dpToPx()
             }
             background = getDrawable(R.drawable.button_focusable_bg)
-            setTextColor(getColor(R.color.toolbarText))
+            val accent = ThemeManager.accentColor(this@ThreadActivity)
+            backgroundTintList = android.content.res.ColorStateList.valueOf(accent)
+            setTextColor(androidx.core.content.ContextCompat.getColor(this@ThreadActivity, R.color.colorOnPrimary))
             setOnClickListener { removeNumberChip(this, number) }
             isFocusable = true
             isFocusableInTouchMode = true

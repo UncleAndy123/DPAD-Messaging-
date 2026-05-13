@@ -52,6 +52,20 @@
 
     </LinearLayout>
 
+    <!-- Instructional hint for new threads (wraps across lines) -->
+    <TextView
+        android:id="@+id/tv_recipient_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_medium"
+        android:paddingEnd="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_small"
+        android:text="@string/new_thread_hint"
+        android:textColor="@color/composeHint"
+        android:textSize="@dimen/text_size_normal"
+        android:maxLines="2"
+        android:visibility="visible" />
+
     <!-- To: field -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -116,6 +130,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorSurface"
         android:fillViewport="true"
+        android:descendantFocusability="afterDescendants"
         android:paddingStart="@dimen/padding_medium"
         android:paddingEnd="@dimen/padding_medium"
         android:paddingBottom="@dimen/padding_small"

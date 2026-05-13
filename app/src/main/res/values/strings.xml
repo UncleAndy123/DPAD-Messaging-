@@ -63,6 +63,7 @@
     <string name="rename_conversation">Rename Conversation</string>
     <string name="enter_name">Enter name…</string>
     <string name="enter_recipients_hint">Add recipients with + or type a number</string>
+    <string name="new_thread_hint">Type number and click center or use the + to add contacts</string>
     <string name="add_recipient">Add recipient</string>
     <string name="remove_recipient">Remove recipient</string>
 

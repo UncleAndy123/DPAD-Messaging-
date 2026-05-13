@@ -1,10 +1,21 @@
 package com.dpad.messaging.activities
 
 import android.content.res.ColorStateList
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Intent
+import android.provider.ContactsContract
+import android.util.TypedValue
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import android.os.Bundle
 import android.view.KeyEvent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.core.content.ContextCompat
 import com.dpad.messaging.App
 import com.dpad.messaging.R
 import com.dpad.messaging.databinding.ActivityConversationDetailsBinding
@@ -22,6 +33,8 @@ import kotlinx.coroutines.withContext
 class ConversationDetailsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityConversationDetailsBinding
+    private val participantNameViews = mutableListOf<TextView>()
+    private val participantAddViews = mutableListOf<TextView>()
 
     private var threadId: Long = -1L
     private var currentTitle: String = ""
@@ -42,23 +55,146 @@ class ConversationDetailsActivity : BaseActivity() {
             ?: emptyList()
 
         binding.tvContactName.text = currentTitle
-        binding.tvPhoneNumber.text = if (participants.size > 1) {
-            participants.joinToString("\n") { App.get().contactHelper.getDisplayName(it) }
-        } else {
-            phoneNumber
-        }
+        populateParticipants(participants, phoneNumber)
 
         binding.btnBack.setOnClickListener { finish() }
 
-        // D-Pad focus chain: Back → Rename → Block
-        binding.btnBack.nextFocusDownId   = binding.btnRename.id
-        binding.btnRename.nextFocusUpId   = binding.btnBack.id
-        binding.btnRename.nextFocusDownId = binding.btnBlock.id
-        binding.btnBlock.nextFocusUpId    = binding.btnRename.id
+        // D-Pad focus chain: Back → (Participants) → Rename → Block
+        // `populateParticipants` will adjust the exact chain depending on whether participants exist.
 
         binding.btnRename.setOnClickListener { showRenameDialog() }
         val blockTarget = participants.firstOrNull() ?: phoneNumber
         binding.btnBlock.setOnClickListener  { showBlockConfirmation(blockTarget) }
+    }
+
+    private fun populateParticipants(participants: List<String>, phoneNumber: String) {
+        val container = binding.participantList
+        container.removeAllViews()
+        participantNameViews.clear()
+        participantAddViews.clear()
+
+        val numbers = if (participants.isEmpty()) {
+            if (phoneNumber.isNotBlank()) listOf(phoneNumber) else emptyList()
+        } else participants
+
+        if (numbers.isEmpty()) {
+            // No participants — leave behavior to Rename/Block
+            binding.btnBack.nextFocusDownId = binding.btnRename.id
+            binding.btnRename.nextFocusUpId = binding.btnBack.id
+            return
+        }
+
+        val lastIndex = numbers.size - 1
+        var prevTvId: Int? = null
+        numbers.forEachIndexed { index, num ->
+            val info = App.get().contactHelper.resolve(num)
+            val display = info?.displayName ?: num
+
+            val row = LinearLayout(this).apply {
+                id = View.generateViewId()
+                orientation = LinearLayout.HORIZONTAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    resources.getDimensionPixelSize(R.dimen.conversation_item_height)
+                )
+                setBackgroundResource(R.drawable.item_focusable_bg)
+                // Let children receive focus first (so the name and + button are individually reachable)
+                descendantFocusability = ViewGroup.FOCUS_AFTER_DESCENDANTS
+                isFocusable = false
+                gravity = Gravity.CENTER_VERTICAL
+            }
+
+            val tvId = View.generateViewId()
+            val tv = TextView(this).apply {
+                id = tvId
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+                setTextColor(getColor(R.color.colorOnBackground))
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.text_size_normal))
+                text = display
+                setPadding(12, 0, 12, 0)
+                isFocusable = true
+                isFocusableInTouchMode = true
+                setOnClickListener {
+                    val clipboard = getSystemService(ClipboardManager::class.java)
+                    clipboard.setPrimaryClip(ClipData.newPlainText("phone", num))
+                    Toast.makeText(this@ConversationDetailsActivity, getString(R.string.message_copied), Toast.LENGTH_SHORT).show()
+                }
+            }
+            row.addView(tv)
+            participantNameViews.add(tv)
+
+            var addId = -1
+            if (info == null) {
+                // Unknown number — show Add Contact control
+                addId = View.generateViewId()
+                val add = TextView(this).apply {
+                    id = addId
+                    layoutParams = LinearLayout.LayoutParams(
+                        resources.getDimensionPixelSize(R.dimen.compose_button_size),
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                    )
+                    setBackgroundResource(R.drawable.button_focusable_bg)
+                    setTextColor(getColor(R.color.colorOnBackground))
+                    text = "+"
+                    textSize = 18f
+                    gravity = Gravity.CENTER
+                    isFocusable = true
+                    isFocusableInTouchMode = true
+                    contentDescription = getString(R.string.add_recipient)
+                    setOnClickListener {
+                        val intent = Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI).apply {
+                            putExtra(ContactsContract.Intents.Insert.PHONE, num)
+                        }
+                        startActivity(intent)
+                    }
+                }
+                row.addView(add)
+                participantAddViews.add(add)
+                // horizontal navigation between name and add button
+                tv.nextFocusRightId = addId
+                add.nextFocusLeftId = tvId
+                // vertical chaining for add button will mirror the tv below
+                if (prevTvId != null) {
+                    val pid = prevTvId!!
+                    findViewById<TextView>(pid).let { prevTv ->
+                        add.nextFocusUpId = prevTv.nextFocusUpId
+                    }
+                }
+            }
+
+            // Accessibility on name
+            tv.contentDescription = if (info != null) {
+                getString(R.string.participants) + ": " + display
+            } else {
+                getString(R.string.participants) + ": " + num + ", " + getString(R.string.add_recipient)
+            }
+
+            container.addView(row)
+
+            // Vertical chaining between tvs
+            if (prevTvId == null) {
+                binding.btnBack.nextFocusDownId = tvId
+                tv.nextFocusUpId = binding.btnBack.id
+            } else {
+                val prevId = prevTvId!!
+                val prevTv = findViewById<TextView>(prevId)
+                prevTv.nextFocusDownId = tvId
+                tv.nextFocusUpId = prevId
+                // mirror for add button if present
+                if (addId != -1) {
+                    findViewById<TextView>(prevId).nextFocusDownId = tvId
+                }
+            }
+
+            if (index == lastIndex) {
+                tv.nextFocusDownId = binding.btnRename.id
+                binding.btnRename.nextFocusUpId = tvId
+            }
+
+            prevTvId = tvId
+        }
+
+        applyAccent()
     }
 
     override fun onResume() {
@@ -67,11 +203,22 @@ class ConversationDetailsActivity : BaseActivity() {
     }
 
     private fun applyAccent() {
-        val tint = ColorStateList.valueOf(ThemeManager.accentColor(this))
+        val accent = ThemeManager.accentColor(this)
+        val tint = ColorStateList.valueOf(accent)
         binding.btnBack.imageTintList = tint
         binding.btnBack.backgroundTintList = tint
         binding.btnRename.backgroundTintList = tint
         binding.btnBlock.backgroundTintList = tint
+
+        val onPrimary = ContextCompat.getColor(this, R.color.colorOnPrimary)
+        val onBackground = ContextCompat.getColor(this, R.color.colorOnBackground)
+        participantNameViews.forEach { nameView ->
+            nameView.setTextColor(onBackground)
+        }
+        participantAddViews.forEach { addView ->
+            addView.backgroundTintList = tint
+            addView.setTextColor(onPrimary)
+        }
     }
 
     private fun showRenameDialog() {

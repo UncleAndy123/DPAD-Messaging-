@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.dpad.messaging.App
@@ -314,12 +315,15 @@ class NewConversationActivity : BaseActivity() {
         binding.recipientChipsScroll.visibility = View.VISIBLE
         selectedRecipients.forEach { recipient ->
             val label = App.get().contactHelper.getDisplayName(recipient)
+            val accent = ThemeManager.accentColor(this@NewConversationActivity)
             val chip = TextView(this).apply {
                 text = "$label  ×"
                 contentDescription = getString(R.string.remove_recipient)
-                setTextColor(getColor(R.color.colorOnBackground))
-                textSize = 14f
+                val tint = ColorStateList.valueOf(accent)
                 setBackgroundResource(R.drawable.button_focusable_bg)
+                backgroundTintList = tint
+                setTextColor(ContextCompat.getColor(this@NewConversationActivity, R.color.colorOnPrimary))
+                textSize = 14f
                 isFocusable = true
                 isFocusableInTouchMode = true
                 setPadding(24, 12, 24, 12)

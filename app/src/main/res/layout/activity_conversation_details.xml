@@ -64,14 +64,13 @@
                 android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
 
-            <!-- Phone number -->
-            <TextView
-                android:id="@+id/tv_phone_number"
+            <!-- Participants list (populated dynamically) -->
+            <LinearLayout
+                android:id="@+id/participant_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/padding_medium"
-                android:textColor="@color/conversationSnippet"
-                android:textSize="@dimen/text_size_normal" />
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/padding_medium" />
 
             <!-- Action: Rename conversation -->
             <TextView
