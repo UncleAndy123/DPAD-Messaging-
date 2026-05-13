@@ -7,6 +7,8 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import com.dpad.messaging.helpers.MmsDownloader
+import com.google.android.mms.pdu_alt.NotificationInd
+import com.google.android.mms.pdu_alt.PduParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,7 +44,7 @@ class MmsReceiver : BroadcastReceiver() {
         }
 
         // Parse the content-location URL from the M-Notification-Ind PDU.
-        val contentLocation = extractContentLocation(pduData)
+        val contentLocation = extractContentLocationStandard(pduData) ?: extractContentLocationLegacy(pduData)
         Log.d(TAG, "contentLocation=$contentLocation")
 
         if (contentLocation == null) {
@@ -98,7 +100,53 @@ class MmsReceiver : BroadcastReceiver() {
      * ASCII string (typically an HTTP URL). We scan for 0x83 followed by bytes
      * that start with "http" — simple and reliable for all carrier implementations.
      */
-    private fun extractContentLocation(pdu: ByteArray): String? {
+    private fun extractContentLocationStandard(pdu: ByteArray): String? {
+        return try {
+            val generic = PduParser(pdu).parse()
+            val notification = generic as? NotificationInd ?: run {
+                Log.w(TAG, "standard parser produced non-NotificationInd pdu=${generic?.javaClass?.simpleName}")
+                return null
+            }
+            val rawLocation = notification.getContentLocation()
+            val rawTransactionId = notification.getTransactionId()
+            if (rawLocation == null || rawLocation.isEmpty()) {
+                Log.w(TAG, "standard parser returned empty content-location")
+                return null
+            }
+
+            val location = String(rawLocation, Charsets.UTF_8).trim().trim('"')
+            val transactionId = rawTransactionId
+                ?.let { String(it, Charsets.UTF_8).trim().trim('"') }
+                ?.takeIf { it.isNotBlank() }
+            val repairedLocation = repairMissingMessageId(location, transactionId)
+            if (repairedLocation != location) {
+                Log.d(TAG, "repaired content-location using transactionId; before='$location' after='$repairedLocation'")
+            }
+            if (location.isBlank()) {
+                Log.w(TAG, "standard parser content-location blank after trim")
+                null
+            } else {
+                repairedLocation
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "standard parser failed for NotificationInd", e)
+            null
+        }
+    }
+
+    private fun repairMissingMessageId(location: String, transactionId: String?): String {
+        if (transactionId.isNullOrBlank()) return location
+
+        val incompleteMessageId = Regex("(?i)([?&]message-id=)(?:$|&)")
+        val match = incompleteMessageId.find(location) ?: return location
+
+        val encodedTxId = Uri.encode(transactionId)
+        val suffixAmpersand = if (match.value.endsWith("&")) "&" else ""
+        val replacement = "${match.groupValues[1]}$encodedTxId$suffixAmpersand"
+        return location.substring(0, match.range.first) + replacement + location.substring(match.range.last + 1)
+    }
+
+    private fun extractContentLocationLegacy(pdu: ByteArray): String? {
         var i = 0
         while (i < pdu.size) {
             val b = pdu[i].toInt() and 0xFF

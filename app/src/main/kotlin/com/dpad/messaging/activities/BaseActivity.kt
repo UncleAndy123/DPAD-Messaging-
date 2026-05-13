@@ -2,6 +2,7 @@ package com.dpad.messaging.activities
 
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import com.dpad.messaging.helpers.Prefs
 
@@ -19,8 +20,9 @@ abstract class BaseActivity : AppCompatActivity() {
             super.attachBaseContext(newBase)
             return
         }
+        val systemFontScale = Resources.getSystem().configuration.fontScale
         val config = Configuration(newBase.resources.configuration)
-        config.fontScale = newBase.resources.configuration.fontScale * scale
+        config.fontScale = systemFontScale * scale
         val scaledContext = newBase.createConfigurationContext(config)
         super.attachBaseContext(scaledContext)
     }
