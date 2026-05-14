@@ -1,6 +1,7 @@
 package com.dpad.messaging.helpers
 
 import android.content.Context
+import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
 import android.provider.Telephony
@@ -104,6 +105,26 @@ object LegacyUnifiedMessageSender : UnifiedMessageSender {
                 threadId = recipientThreadId,
                 subscriptionId = subscriptionId
             )
+        }
+
+        if (fallbackThreadId > 0 && recipients.isNotEmpty()) {
+            runCatching {
+                context.contentResolver.insert(
+                    Telephony.Sms.CONTENT_URI,
+                    ContentValues().apply {
+                        put("address", recipients.joinToString("|"))
+                        put("body", body)
+                        put("type", Telephony.Sms.MESSAGE_TYPE_SENT)
+                        put("thread_id", fallbackThreadId)
+                        put("date", System.currentTimeMillis())
+                        put("date_sent", System.currentTimeMillis())
+                        put("read", 1)
+                        put("seen", 1)
+                    }
+                )
+            }.onFailure { e ->
+                Log.w("DPAD_MSG", "UnifiedSender: failed to insert group fanout broadcast row", e)
+            }
         }
     }
 }

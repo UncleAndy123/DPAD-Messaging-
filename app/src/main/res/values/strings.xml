@@ -158,6 +158,11 @@
     <string name="error_loading_messages">Error loading messages.</string>
     <string name="error_sending_message">Failed to send message.</string>
     <string name="error_picking_contact">Could not read selected contact.</string>
+    <string name="sms_send_error_generic_failure">SMS failed: generic network error.</string>
+    <string name="sms_send_error_radio_off">SMS failed: cellular radio is off.</string>
+    <string name="sms_send_error_null_pdu">SMS failed: invalid message payload.</string>
+    <string name="sms_send_error_no_service">SMS failed: no cellular service.</string>
+    <string name="sms_send_error_unknown">SMS failed (code %1$d).</string>
 
     <!-- ─── SIM / Dual-SIM ─── -->
     <string name="select_sim">Select SIM</string>

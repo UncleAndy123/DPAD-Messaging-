@@ -257,7 +257,8 @@
 
         <receiver
             android:name=".receivers.MmsSentReceiver"
-            android:exported="false" />
+            android:exported="false"
+            android:taskAffinity="com.klinker.android.messaging.MMS_SENT" />
 
         <receiver
             android:name=".receivers.MmsDownloadReceiver"
@@ -293,8 +294,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- MMS Transaction Service (from mmslib) — wired in Phase 3 -->
-        <!-- <service android:name="com.android.mms.transaction.TransactionService" ... /> -->
+        <service android:name="com.android.mms.transaction.TransactionService" />
 
         <!-- FileProvider for sharing PDU cache files with SmsManager.sendMultimediaMessage() -->
         <provider

@@ -12,6 +12,7 @@ import com.dpad.messaging.events.RefreshConversations
 import com.dpad.messaging.events.RefreshMessages
 import com.dpad.messaging.helpers.MmsSender
 import org.greenrobot.eventbus.EventBus
+import java.io.File
 
 /**
  * Receives the result PendingIntent fired by mmslib Transaction via SmsManager.sendMultimediaMessage().
@@ -25,6 +26,11 @@ import org.greenrobot.eventbus.EventBus
  * This receiver logs the result and posts EventBus events for UI refresh.
  */
 class MmsSentReceiver : BroadcastReceiver() {
+    companion object {
+        private const val EXTRA_FILE_PATH = "file_path"
+        private const val EXTRA_ORIGINAL_RESEND_ID = "original_resent_message_id"
+        private const val EXTRA_ORIGINAL_MESSAGE_ID = "original_message_id"
+    }
 
     override fun onReceive(context: Context, intent: Intent) {
         val threadId = intent.getLongExtra(MmsSender.EXTRA_THREAD_ID, -1L)
@@ -38,6 +44,9 @@ class MmsSentReceiver : BroadcastReceiver() {
         } else if (threadId > 0) {
             updateLatestOutboxForThread(context, threadId, targetMsgBox)
         }
+
+        cleanupTempPduFile(intent)
+        deleteOriginalResentMessage(context, intent)
 
         val extras = intent.extras?.keySet()?.sorted()?.joinToString() ?: "<none>"
         Log.d(
@@ -113,5 +122,31 @@ class MmsSentReceiver : BroadcastReceiver() {
             Log.w("DPAD_MSG", "MmsSentReceiver: failed fallback update for threadId=$threadId", e)
         }
     }
-}
 
+    private fun cleanupTempPduFile(intent: Intent) {
+        val filePath = intent.getStringExtra(EXTRA_FILE_PATH).orEmpty()
+        if (filePath.isBlank()) return
+
+        runCatching {
+            val deleted = File(filePath).delete()
+            Log.d("DPAD_MSG", "MmsSentReceiver: temp file cleanup path=$filePath deleted=$deleted")
+        }.onFailure { e ->
+            Log.w("DPAD_MSG", "MmsSentReceiver: temp file cleanup failed path=$filePath", e)
+        }
+    }
+
+    private fun deleteOriginalResentMessage(context: Context, intent: Intent) {
+        val originalId = when {
+            intent.hasExtra(EXTRA_ORIGINAL_RESEND_ID) -> intent.getLongExtra(EXTRA_ORIGINAL_RESEND_ID, -1L)
+            else -> intent.getLongExtra(EXTRA_ORIGINAL_MESSAGE_ID, -1L)
+        }
+        if (originalId <= 0) return
+
+        runCatching {
+            val deleted = context.contentResolver.delete(Uri.parse("content://mms/$originalId"), null, null)
+            Log.d("DPAD_MSG", "MmsSentReceiver: removed original resent mms id=$originalId deletedRows=$deleted")
+        }.onFailure { e ->
+            Log.w("DPAD_MSG", "MmsSentReceiver: failed removing original resent mms id=$originalId", e)
+        }
+    }
+}

@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.provider.Telephony
+import android.telephony.SmsMessage
 import android.util.Log
 import com.dpad.messaging.events.RefreshMessages
 import com.dpad.messaging.helpers.SmsSender
@@ -56,7 +58,7 @@ class SmsStatusDeliveredReceiver : BroadcastReceiver() {
                     fallbackThreadId = intent.getLongExtra(SmsSender.EXTRA_THREAD_ID, -1L)
                 )
 
-                val status = mapDeliveryStatus(receiverResultCode)
+                val status = parseDeliveryStatusFromPdu(intent) ?: mapDeliveryStatus(receiverResultCode)
                 Log.d(
                     "DPAD_MSG",
                     "SmsStatusDeliveredReceiver.onReceive() msgId=$msgId threadId=$threadId resultCode=$receiverResultCode mappedStatus=$status"
@@ -114,6 +116,37 @@ class SmsStatusDeliveredReceiver : BroadcastReceiver() {
                 Log.w("DPAD_MSG", "SmsStatusDeliveredReceiver: unknown resultCode=$resultCode = no status change")
                 Message.STATUS_NONE
             }
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun parseDeliveryStatusFromPdu(intent: Intent): Int? {
+        val pdu = intent.extras?.get("pdu") as? ByteArray ?: return null
+        val format = intent.getStringExtra("format")
+        val sms = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                SmsMessage.createFromPdu(pdu, format)
+            } else {
+                SmsMessage.createFromPdu(pdu)
+            }
+        }.getOrNull() ?: return null
+
+        val rawStatus = sms.status
+        if (format == "3gpp2") {
+            val errorClass = rawStatus shr 24 and 0x03
+            val statusCode = rawStatus shr 16 and 0x3f
+            return when (errorClass) {
+                0 -> if (statusCode == 0x02) Message.STATUS_COMPLETE else Message.STATUS_PENDING
+                2 -> Message.STATUS_PENDING
+                3 -> Message.STATUS_FAILED
+                else -> Message.STATUS_PENDING
+            }
+        }
+
+        return when {
+            rawStatus == 0 -> Message.STATUS_COMPLETE
+            rawStatus > 0 -> Message.STATUS_FAILED
+            else -> Message.STATUS_NONE
         }
     }
 }

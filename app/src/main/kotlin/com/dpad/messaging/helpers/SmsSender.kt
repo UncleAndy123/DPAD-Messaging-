@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Telephony
+import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
 import com.dpad.messaging.receivers.SmsStatusDeliveredReceiver
 import com.dpad.messaging.receivers.SmsStatusSentReceiver
@@ -38,9 +39,11 @@ object SmsSender {
         threadId: Long,
         subscriptionId: Int = -1
     ) {
+        val destination = PhoneNumberUtils.stripSeparators(phoneNumber).ifBlank { phoneNumber }
+
         // 1. Insert TYPE_OUTBOX so the message appears in the thread immediately.
         val cv = ContentValues().apply {
-            put("address", phoneNumber)
+            put("address", destination)
             put("body", body)
             put("type", Telephony.Sms.MESSAGE_TYPE_OUTBOX)
             put("thread_id", threadId)
@@ -94,7 +97,7 @@ object SmsSender {
 
         try {
             if (parts.size == 1) {
-                smsManager.sendTextMessage(phoneNumber, null, body, sentPI, deliveredPI)
+                smsManager.sendTextMessage(destination, null, body, sentPI, deliveredPI)
             } else {
                 val sentIntents = ArrayList<PendingIntent>(parts.size).also { list ->
                     repeat(parts.size) { list.add(sentPI) }
@@ -106,7 +109,7 @@ object SmsSender {
                     }
                 } else null
                 smsManager.sendMultipartTextMessage(
-                    phoneNumber, null, parts, sentIntents, deliveredIntents
+                    destination, null, parts, sentIntents, deliveredIntents
                 )
             }
         } catch (e: Exception) {

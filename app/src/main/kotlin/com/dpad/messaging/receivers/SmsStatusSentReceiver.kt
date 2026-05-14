@@ -5,7 +5,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
+import android.telephony.SmsManager
 import android.util.Log
+import android.widget.Toast
+import com.dpad.messaging.R
 import com.dpad.messaging.events.RefreshConversations
 import com.dpad.messaging.events.RefreshMessages
 import com.dpad.messaging.helpers.SmsSender
@@ -57,6 +60,7 @@ class SmsStatusSentReceiver : BroadcastReceiver() {
                     Telephony.Sms.MESSAGE_TYPE_SENT
                 } else {
                     Log.w("DPAD_MSG", "SmsStatusSentReceiver: SMS send failed with code=$receiverResultCode")
+                    showFailureToast(context, receiverResultCode)
                     Telephony.Sms.MESSAGE_TYPE_FAILED
                 }
 
@@ -67,6 +71,19 @@ class SmsStatusSentReceiver : BroadcastReceiver() {
             } finally {
                 pendingResult.finish()
             }
+        }
+    }
+
+    private fun showFailureToast(context: Context, resultCode: Int) {
+        val message = when (resultCode) {
+            SmsManager.RESULT_ERROR_GENERIC_FAILURE -> context.getString(R.string.sms_send_error_generic_failure)
+            SmsManager.RESULT_ERROR_RADIO_OFF -> context.getString(R.string.sms_send_error_radio_off)
+            SmsManager.RESULT_ERROR_NULL_PDU -> context.getString(R.string.sms_send_error_null_pdu)
+            SmsManager.RESULT_ERROR_NO_SERVICE -> context.getString(R.string.sms_send_error_no_service)
+            else -> context.getString(R.string.sms_send_error_unknown, resultCode)
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            Toast.makeText(context.applicationContext, message, Toast.LENGTH_SHORT).show()
         }
     }
 }
