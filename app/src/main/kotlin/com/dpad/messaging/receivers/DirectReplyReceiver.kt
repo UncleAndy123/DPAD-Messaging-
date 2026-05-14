@@ -6,8 +6,8 @@ import android.content.Intent
 import androidx.core.app.RemoteInput
 import com.dpad.messaging.events.RefreshConversations
 import com.dpad.messaging.events.RefreshMessages
+import com.dpad.messaging.helpers.MessageSenders
 import com.dpad.messaging.helpers.NotificationHelper
-import com.dpad.messaging.helpers.SmsSender
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,7 +37,12 @@ class DirectReplyReceiver : BroadcastReceiver() {
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                SmsSender.send(context, phoneNumber, replyText, threadId)
+                MessageSenders.unified.sendSms(
+                    context = context,
+                    phoneNumber = phoneNumber,
+                    body = replyText,
+                    threadId = threadId
+                )
                 EventBus.getDefault().post(RefreshMessages(threadId))
                 EventBus.getDefault().post(RefreshConversations())
             } finally {

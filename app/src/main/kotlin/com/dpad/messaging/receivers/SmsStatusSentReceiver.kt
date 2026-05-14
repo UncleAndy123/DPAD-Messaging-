@@ -9,6 +9,9 @@ import android.util.Log
 import com.dpad.messaging.events.RefreshConversations
 import com.dpad.messaging.events.RefreshMessages
 import com.dpad.messaging.helpers.SmsSender
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -31,26 +34,39 @@ import org.greenrobot.eventbus.EventBus
 class SmsStatusSentReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        val msgId   = intent.getLongExtra(SmsSender.EXTRA_MESSAGE_ID, -1L)
-        val threadId = intent.getLongExtra(SmsSender.EXTRA_THREAD_ID, -1L)
-        val success = resultCode == Activity.RESULT_OK
+        val receiverResultCode = resultCode
+        val pendingResult = goAsync()
 
-        Log.d(
-            "DPAD_MSG",
-            "SmsStatusSentReceiver.onReceive() msgId=$msgId threadId=$threadId resultCode=$resultCode success=$success"
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val msgId = SmsSender.resolveMessageId(intent)
+                val threadId = SmsSender.resolveThreadId(
+                    context = context,
+                    msgId = msgId,
+                    fallbackThreadId = intent.getLongExtra(SmsSender.EXTRA_THREAD_ID, -1L)
+                )
+                val success = receiverResultCode == Activity.RESULT_OK
 
-        val messageType = if (success) {
-            Log.d("DPAD_MSG", "SmsStatusSentReceiver: SMS sent successfully")
-            Telephony.Sms.MESSAGE_TYPE_SENT
-        } else {
-            Log.w("DPAD_MSG", "SmsStatusSentReceiver: SMS send failed with code=$resultCode")
-            Telephony.Sms.MESSAGE_TYPE_FAILED
+                Log.d(
+                    "DPAD_MSG",
+                    "SmsStatusSentReceiver.onReceive() msgId=$msgId threadId=$threadId resultCode=$receiverResultCode success=$success"
+                )
+
+                val messageType = if (success) {
+                    Log.d("DPAD_MSG", "SmsStatusSentReceiver: SMS sent successfully")
+                    Telephony.Sms.MESSAGE_TYPE_SENT
+                } else {
+                    Log.w("DPAD_MSG", "SmsStatusSentReceiver: SMS send failed with code=$receiverResultCode")
+                    Telephony.Sms.MESSAGE_TYPE_FAILED
+                }
+
+                SmsSender.updateMessageType(context, msgId, messageType)
+
+                EventBus.getDefault().post(RefreshConversations())
+                if (threadId > 0) EventBus.getDefault().post(RefreshMessages(threadId))
+            } finally {
+                pendingResult.finish()
+            }
         }
-
-        SmsSender.updateMessageType(context, msgId, messageType)
-
-        EventBus.getDefault().post(RefreshConversations())
-        if (threadId != -1L) EventBus.getDefault().post(RefreshMessages(threadId))
     }
 }

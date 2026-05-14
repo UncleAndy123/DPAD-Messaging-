@@ -39,8 +39,8 @@ import com.dpad.messaging.helpers.MmsSender
 import com.dpad.messaging.helpers.Prefs
 import com.dpad.messaging.helpers.SendingMode
 import com.dpad.messaging.helpers.SendingRouter
-import com.dpad.messaging.helpers.SmsSender
 import com.dpad.messaging.helpers.ThemeManager
+import com.dpad.messaging.helpers.MessageSenders
 import com.dpad.messaging.models.Message
 import com.dpad.messaging.models.RecycleBinMessage
 import com.dpad.messaging.models.ThreadItem
@@ -685,7 +685,7 @@ class ThreadActivity : BaseActivity() {
             when (mode) {
                 SendingMode.MMS_GROUP -> {
                     Log.d("DPAD_MSG", "ThreadActivity.sendMessage() routing: MMS_GROUP")
-                    MmsSender.send(
+                    MessageSenders.unified.sendMms(
                         context        = this@ThreadActivity,
                         recipients     = participants,
                         body           = body,
@@ -696,7 +696,7 @@ class ThreadActivity : BaseActivity() {
                 }
                 SendingMode.MMS_SINGLE -> {
                     Log.d("DPAD_MSG", "ThreadActivity.sendMessage() routing: MMS_SINGLE")
-                    MmsSender.send(
+                    MessageSenders.unified.sendMms(
                         context        = this@ThreadActivity,
                         recipients     = listOf(phoneNumber),
                         body           = body,
@@ -707,25 +707,17 @@ class ThreadActivity : BaseActivity() {
                 }
                 SendingMode.SMS_FANOUT_GROUP -> {
                     Log.d("DPAD_MSG", "ThreadActivity.sendMessage() routing: SMS_FANOUT_GROUP to ${participants.size} recipients")
-                    for (recipient in participants) {
-                        val recipientThreadId = try {
-                            Telephony.Threads.getOrCreateThreadId(this@ThreadActivity, recipient)
-                        } catch (e: Exception) {
-                            Log.w("DPAD_MSG", "ThreadActivity: failed to resolve threadId for $recipient", e)
-                            threadId  // fallback to group threadId
-                        }
-                        SmsSender.send(
-                            context        = this@ThreadActivity,
-                            phoneNumber    = recipient,
-                            body           = body,
-                            threadId       = recipientThreadId,
-                            subscriptionId = selectedSubId
-                        )
-                    }
+                    MessageSenders.unified.sendGroupSmsFanout(
+                        context = this@ThreadActivity,
+                        recipients = participants,
+                        body = body,
+                        fallbackThreadId = threadId,
+                        subscriptionId = selectedSubId
+                    )
                 }
                 SendingMode.SMS_SINGLE -> {
                     Log.d("DPAD_MSG", "ThreadActivity.sendMessage() routing: SMS_SINGLE")
-                    SmsSender.send(
+                    MessageSenders.unified.sendSms(
                         context        = this@ThreadActivity,
                         phoneNumber    = phoneNumber,
                         body           = body,
@@ -812,7 +804,7 @@ class ThreadActivity : BaseActivity() {
                 e.printStackTrace()
             }
             // Re-send
-            SmsSender.send(
+            MessageSenders.unified.sendSms(
                 context        = this@ThreadActivity,
                 phoneNumber    = phoneNumber,
                 body           = message.body,

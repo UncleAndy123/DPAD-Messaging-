@@ -21,6 +21,7 @@ class Prefs private constructor(context: Context) {
         private const val KEY_SEND_ON_ENTER       = "send_on_enter"
         private const val KEY_CHARACTER_COUNTER   = "character_counter"
         private const val KEY_SEND_GROUP_MESSAGE_MMS = "send_group_message_mms"
+        private const val KEY_USE_LIBRARY_SMS_SENDING = "use_library_sms_sending"
         private const val KEY_LOCK_SCREEN_PRIVACY = "lock_screen_privacy"
         private const val KEY_RECYCLE_BIN_ENABLED = "recycle_bin_enabled"
         private const val KEY_MUTED_THREADS       = "muted_threads"
@@ -85,6 +86,15 @@ class Prefs private constructor(context: Context) {
     var sendGroupMessageMms: Boolean
         get() = prefs.getBoolean(KEY_SEND_GROUP_MESSAGE_MMS, true)
         set(v) = prefs.edit().putBoolean(KEY_SEND_GROUP_MESSAGE_MMS, v).apply()
+
+    /**
+     * Phase 2 rollout flag for library-backed SMS sending.
+     * true = route SMS_SINGLE through mmslib transaction path.
+     * false = use legacy SmsManager sender.
+     */
+    var useLibrarySmsSending: Boolean
+        get() = prefs.getBoolean(KEY_USE_LIBRARY_SMS_SENDING, true)
+        set(v) = prefs.edit().putBoolean(KEY_USE_LIBRARY_SMS_SENDING, v).apply()
 
     /**
      * Controls what is shown on the lock screen notification.

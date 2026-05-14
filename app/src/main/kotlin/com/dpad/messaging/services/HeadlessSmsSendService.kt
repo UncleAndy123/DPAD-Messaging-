@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.net.Uri
 import android.os.IBinder
-import com.dpad.messaging.helpers.SmsSender
+import com.dpad.messaging.helpers.MessageSenders
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,7 +50,7 @@ class HeadlessSmsSendService : Service() {
         // Resolve (or create) a thread ID for this recipient
         val threadId = resolveThreadId(phoneNumber) ?: return
 
-        SmsSender.send(
+        MessageSenders.unified.sendSms(
             context        = this,
             phoneNumber    = phoneNumber,
             body           = body,

@@ -5,6 +5,7 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.provider.Telephony
 import android.telephony.SmsManager
@@ -28,6 +29,7 @@ object SmsSender {
     const val ACTION_SMS_DELIVERED = "com.dpad.messaging.SMS_DELIVERED"
     const val EXTRA_MESSAGE_ID = "extra_message_id"
     const val EXTRA_THREAD_ID = "extra_thread_id"
+    private const val EXTRA_MESSAGE_URI = "message_uri"
 
     fun send(
         context: Context,
@@ -66,6 +68,7 @@ object SmsSender {
             Intent(ACTION_SMS_SENT, null, context, SmsStatusSentReceiver::class.java).apply {
                 putExtra(EXTRA_MESSAGE_ID, msgId)
                 putExtra(EXTRA_THREAD_ID, threadId)
+                putExtra(EXTRA_MESSAGE_URI, msgUri?.toString().orEmpty())
             },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -77,6 +80,7 @@ object SmsSender {
                 Intent(ACTION_SMS_DELIVERED, null, context, SmsStatusDeliveredReceiver::class.java).apply {
                     putExtra(EXTRA_MESSAGE_ID, msgId)
                     putExtra(EXTRA_THREAD_ID, threadId)
+                    putExtra(EXTRA_MESSAGE_URI, msgUri?.toString().orEmpty())
                 },
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
@@ -137,6 +141,39 @@ object SmsSender {
             )
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    fun resolveMessageId(intent: Intent): Long {
+        val directId = intent.getLongExtra(EXTRA_MESSAGE_ID, -1L)
+        if (directId > 0) return directId
+
+        val uriString = intent.getStringExtra(EXTRA_MESSAGE_URI).orEmpty()
+        if (uriString.isBlank()) return -1L
+
+        return runCatching {
+            Uri.parse(uriString).lastPathSegment?.toLongOrNull() ?: -1L
+        }.getOrDefault(-1L)
+    }
+
+    fun resolveThreadId(context: Context, msgId: Long, fallbackThreadId: Long = -1L): Long {
+        val directThreadId = fallbackThreadId
+        if (directThreadId > 0) return directThreadId
+        if (msgId <= 0) return -1L
+
+        return try {
+            context.contentResolver.query(
+                ContentUris.withAppendedId(Telephony.Sms.CONTENT_URI, msgId),
+                arrayOf("thread_id"),
+                null,
+                null,
+                null
+            )?.use { cursor ->
+                if (cursor.moveToFirst()) cursor.getLong(0) else -1L
+            } ?: -1L
+        } catch (e: Exception) {
+            e.printStackTrace()
+            -1L
         }
     }
 

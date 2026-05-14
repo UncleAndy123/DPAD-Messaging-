@@ -2,12 +2,17 @@ package com.dpad.messaging.receivers
 
 import android.app.Activity
 import android.content.BroadcastReceiver
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.provider.Telephony
 import android.util.Log
 import com.dpad.messaging.events.RefreshMessages
 import com.dpad.messaging.helpers.SmsSender
 import com.dpad.messaging.models.Message
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -39,20 +44,41 @@ import org.greenrobot.eventbus.EventBus
 class SmsStatusDeliveredReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        val msgId    = intent.getLongExtra(SmsSender.EXTRA_MESSAGE_ID, -1L)
-        val threadId = intent.getLongExtra(SmsSender.EXTRA_THREAD_ID, -1L)
+        val receiverResultCode = resultCode
+        val pendingResult = goAsync()
 
-        val status = mapDeliveryStatus(resultCode)
-        Log.d(
-            "DPAD_MSG",
-            "SmsStatusDeliveredReceiver.onReceive() msgId=$msgId threadId=$threadId resultCode=$resultCode mappedStatus=$status"
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val msgId = SmsSender.resolveMessageId(intent)
+                val threadId = SmsSender.resolveThreadId(
+                    context = context,
+                    msgId = msgId,
+                    fallbackThreadId = intent.getLongExtra(SmsSender.EXTRA_THREAD_ID, -1L)
+                )
 
-        if (msgId > 0) {
-            SmsSender.updateMessageStatus(context, msgId, status)
+                val status = mapDeliveryStatus(receiverResultCode)
+                Log.d(
+                    "DPAD_MSG",
+                    "SmsStatusDeliveredReceiver.onReceive() msgId=$msgId threadId=$threadId resultCode=$receiverResultCode mappedStatus=$status"
+                )
+
+                if (msgId > 0) {
+                    SmsSender.updateMessageStatus(context, msgId, status)
+                    if (status == Message.STATUS_COMPLETE) {
+                        context.contentResolver.update(
+                            Telephony.Sms.CONTENT_URI,
+                            ContentValues().apply { put("date_sent", System.currentTimeMillis()) },
+                            "_id = ?",
+                            arrayOf(msgId.toString())
+                        )
+                    }
+                }
+
+                if (threadId > 0) EventBus.getDefault().post(RefreshMessages(threadId))
+            } finally {
+                pendingResult.finish()
+            }
         }
-
-        if (threadId != -1L) EventBus.getDefault().post(RefreshMessages(threadId))
     }
 
     /**
@@ -91,4 +117,3 @@ class SmsStatusDeliveredReceiver : BroadcastReceiver() {
         }
     }
 }
-
