@@ -3,11 +3,13 @@ package com.dpad.messaging.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 /**
  * Mirrors a row in the system Telephony.Sms / Telephony.Mms tables,
  * cached locally so we can add app-level fields (scheduled, recycle bin, etc.)
  */
+@Serializable
 @Entity(tableName = "messages")
 data class Message(
     @PrimaryKey

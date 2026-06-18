@@ -2,6 +2,7 @@ package com.dpad.messaging.activities
 
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
@@ -9,16 +10,26 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.dpad.messaging.App
 import com.dpad.messaging.BuildConfig
 import com.dpad.messaging.R
 import com.dpad.messaging.databinding.ActivitySettingsBinding
+import com.dpad.messaging.helpers.BackupManager
 import com.dpad.messaging.helpers.Prefs
 import com.dpad.messaging.helpers.ThemeManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * Settings screen — Phase 3.
@@ -61,6 +72,48 @@ class SettingsActivity : BaseActivity() {
         applyAccent()
 
         buildSettingsRows()
+    }
+
+    private val backupLauncher = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json")
+    ) { uri ->
+        if (uri != null) {
+            lifecycleScope.launch {
+                try {
+                    val json = withContext(Dispatchers.IO) { BackupManager.backup(this@SettingsActivity) }
+                    withContext(Dispatchers.IO) {
+                        contentResolver.openOutputStream(uri)?.use { it.write(json.toByteArray()) }
+                    }
+                    Toast.makeText(this@SettingsActivity, R.string.backup_success, Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(this@SettingsActivity, "${getString(R.string.backup_failed)} ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private val restoreLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) {
+            lifecycleScope.launch {
+                try {
+                    val json = withContext(Dispatchers.IO) {
+                        contentResolver.openInputStream(uri)?.bufferedReader()?.readText() ?: ""
+                    }
+                    if (json.isBlank()) {
+                        Toast.makeText(this@SettingsActivity, R.string.restore_invalid, Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+                    val result = withContext(Dispatchers.IO) { BackupManager.restore(this@SettingsActivity, json) }
+                    val msg = if (result.success) R.string.restore_success else R.string.restore_failed
+                    Toast.makeText(this@SettingsActivity, getString(msg) + " " + result.message, Toast.LENGTH_LONG).show()
+                    if (result.success) recreate()
+                } catch (e: Exception) {
+                    Toast.makeText(this@SettingsActivity, "${getString(R.string.restore_failed)} ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -250,6 +303,27 @@ class SettingsActivity : BaseActivity() {
             summary   = getString(R.string.recycle_bin_enabled_summary),
             getValue  = { prefs.recycleBinEnabled },
             setValue  = { prefs.recycleBinEnabled = it }
+        )
+
+        // ── Backup & Restore ──────────────────────────────────────────────────
+        sectionHeader(c, getString(R.string.backup))
+
+        navRow(
+            container = c,
+            label     = getString(R.string.backup_create),
+            summary   = getString(R.string.backup_create_summary),
+            onClick   = {
+                val datePart = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+                backupLauncher.launch("DPAD-Messaging-backup-$datePart.json")
+            }
+        )
+        navRow(
+            container = c,
+            label     = getString(R.string.backup_restore),
+            summary   = getString(R.string.backup_restore_summary),
+            onClick   = {
+                restoreLauncher.launch(arrayOf("application/json", "*/*"))
+            }
         )
 
         // ── Other ─────────────────────────────────────────────────────────────

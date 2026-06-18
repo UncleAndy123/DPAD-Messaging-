@@ -3,9 +3,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/bubbleSentBg"/>
-            <!-- Thicker border for better visibility -->
-            <stroke android:width="3dp" android:color="?attr/colorControlActivated"/>
+            <solid android:color="?attr/sentMessageBubbleFocusedColor"/>
+            <stroke android:width="3dp" android:color="@color/focus_border_sent"/>
             <corners
                 android:topLeftRadius="@dimen/bubble_corner_radius"
                 android:topRightRadius="@dimen/bubble_corner_radius"
@@ -15,7 +14,7 @@
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/bubbleSentBg"/>
+            <solid android:color="?attr/sentMessageBubbleColor"/>
             <corners
                 android:topLeftRadius="@dimen/bubble_corner_radius"
                 android:topRightRadius="@dimen/bubble_corner_radius"

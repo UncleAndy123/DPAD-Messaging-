@@ -3,7 +3,9 @@ package com.dpad.messaging.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "recycle_bin_messages")
 data class RecycleBinMessage(
     /** Original Telephony message ID — used as PK so duplicate moves are idempotent. */

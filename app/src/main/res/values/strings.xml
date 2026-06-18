@@ -215,4 +215,16 @@
     <string name="schedule_day">Day</string>
     <string name="schedule_hour">Hour</string>
     <string name="schedule_minute">Minute</string>
+
+    <!-- Backup & Restore -->
+    <string name="backup">Backup &amp; Restore</string>
+    <string name="backup_create">Backup to file</string>
+    <string name="backup_create_summary">Save all messages, settings, and blocked lists to a JSON file</string>
+    <string name="backup_restore">Restore from file</string>
+    <string name="backup_restore_summary">Replace current data with a previously saved backup</string>
+    <string name="backup_success">Backup saved successfully</string>
+    <string name="backup_failed">Backup failed:</string>
+    <string name="restore_success">Restore completed:</string>
+    <string name="restore_failed">Restore failed:</string>
+    <string name="restore_invalid">Backup file is empty</string>
 </resources>
