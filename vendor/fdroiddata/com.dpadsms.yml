@@ -33,7 +33,7 @@ Builds:
     gradle:
       - yes
     srclibs:
-      - "mmslib|https://github.com/FossifyOrg/mmslib.git|v1.0.0"
+      - "mmslib@https://github.com/FossifyOrg/mmslib.git@v1.0.0"
     prebuild:
       - cp -r $$mmslib$$/library vendor/mmslib
 
