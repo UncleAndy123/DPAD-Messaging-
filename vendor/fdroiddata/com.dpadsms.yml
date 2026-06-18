@@ -1,0 +1,46 @@
+Categories:
+  - "Phone & SMS"
+License: MIT
+AuthorName: jbriones95
+AuthorEmail: 108902016+jbriones95@users.noreply.github.com
+SourceCode: https://github.com/jbriones95/DPAD-Messaging
+IssueTracker: https://github.com/jbriones95/DPAD-Messaging/issues
+
+AutoName: DPAD Messaging
+Summary: SMS/MMS messenger for Android TV with D-pad navigation
+Description: |-
+  DPAD Messaging is a privacy-focused SMS/MMS app designed for Android TV.
+  No ads, no tracking, no unnecessary permissions.
+
+  Features:
+  * Send and receive SMS and MMS messages
+  * Block unwanted messages by number or keyword
+  * Backup and restore messages, settings, and blocked lists
+  * Multiple accent themes (Blue, Green, Orange, Rose)
+  * Recycle bin for accidentally deleted messages
+  * Schedule messages to send later
+  * Full D-pad navigation for TV remotes
+  * Dark theme support
+
+RepoType: git
+Repo: https://github.com/jbriones95/DPAD-Messaging
+
+Builds:
+  - versionName: 0.1.4
+    versionCode: 14
+    commit: v0.1.4
+    subdir: app
+    gradle:
+      - yes
+    srclibs:
+      - [mmslib, https://github.com/FossifyOrg/mmslib.git, v1.0.0]
+    prebuild:
+      - cp -r $$mmslib$$/library vendor/mmslib
+      - echo 'include(":vendor:mmslib")' >> settings.gradle.kts
+      - echo 'project(":vendor:mmslib").projectDir = file("vendor/mmslib")' >> settings.gradle.kts
+      - sed -i 's|implementation("org.fossify:mmslib:1.0.0")|implementation(project(":vendor:mmslib"))|' app/build.gradle.kts
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 0.1.4
+CurrentVersionCode: 14
