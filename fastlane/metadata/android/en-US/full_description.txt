@@ -1,0 +1,13 @@
+DPAD Messaging is a privacy-focused SMS and MMS messaging app designed for Android TV devices. Navigate your conversations entirely with a D-pad remote — no touchscreen needed.
+
+Features:
+• Send and receive SMS and MMS messages
+• Full D-pad navigation optimized for TV remotes
+• Block unwanted messages by phone number or keyword
+• Backup and restore all messages, settings, and blocked lists to a JSON file
+• Multiple accent themes: Blue, Green, Orange, Rose
+• Schedule messages to be sent later
+• Recycle bin for accidentally deleted messages
+• Dark theme support
+• No ads, no tracking, no unnecessary permissions
+• Open source under the MIT license

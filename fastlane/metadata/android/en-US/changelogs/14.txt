@@ -1,0 +1,4 @@
+- Add Backup & Restore feature (export/import all messages, settings, blocked lists as JSON)
+- Fix sent message focus indicator invisible on blue accent theme
+- Fix accent color not propagating to main screen
+- Sent message bubbles now respect the selected accent theme
