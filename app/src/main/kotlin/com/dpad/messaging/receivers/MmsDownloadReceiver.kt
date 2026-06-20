@@ -1,5 +1,6 @@
 package com.dpad.messaging.receivers
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.ContentValues
@@ -21,6 +22,8 @@ import com.dpad.messaging.helpers.NotificationHelper
 import com.dpad.messaging.helpers.SmsWhitelistManager
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import androidx.core.net.toUri
+
 
 /**
  * Receives the result PendingIntent from SmsManager.downloadMultimediaMessage().
@@ -209,7 +212,7 @@ class MmsDownloadReceiver : BroadcastReceiver() {
 
             try {
                 context.contentResolver.query(
-                    Uri.parse("content://mms/$msgId/part"),
+                    "content://mms/$msgId/part".toUri(),
                     arrayOf("_id", "ct", "cl"),
                     null,
                     null,
@@ -280,7 +283,7 @@ class MmsDownloadReceiver : BroadcastReceiver() {
 
     /** Reads the FROM address for an MMS message (PduHeaders.FROM = type 137). */
     private fun getMmsFromAddress(context: Context, msgId: Long): String {
-        val addrUri = Uri.parse("content://mms/$msgId/addr")
+        val addrUri = "content://mms/$msgId/addr".toUri()
         try {
             context.contentResolver.query(
                 addrUri, arrayOf("address"), "type = ?", arrayOf("137"), null
@@ -298,6 +301,7 @@ class MmsDownloadReceiver : BroadcastReceiver() {
      * Attempts to find the correct thread_id for the given sender address.
      * Falls back to scanning the canonical-address table (same logic as SmsReceiver).
      */
+    @SuppressLint("UseKtx")
     private fun resolveThreadId(context: Context, address: String, fallback: Long): Long {
         if (address.isBlank()) return fallback
 
@@ -311,7 +315,7 @@ class MmsDownloadReceiver : BroadcastReceiver() {
         // Fast path: threadID URI
         for (cand in candidates) {
             try {
-                val uri = Uri.withAppendedPath(Uri.parse("content://mms-sms/threadID"), Uri.encode(cand))
+                val uri = Uri.withAppendedPath("content://mms-sms/threadID".toUri(), Uri.encode(cand))
                 context.contentResolver.query(uri, arrayOf("_id"), null, null, null)
                     ?.use { c -> if (c.moveToFirst()) return c.getLong(0) }
             } catch (_: Exception) {}
@@ -320,7 +324,7 @@ class MmsDownloadReceiver : BroadcastReceiver() {
         // Fallback: scan canonical-address table
         val normalizedSet = candidates.map { it.filter { ch -> ch.isDigit() } }.toSet()
         try {
-            val convUri = Uri.parse("content://mms-sms/conversations?simple=true")
+            val convUri = "content://mms-sms/conversations?simple=true".toUri()
             context.contentResolver.query(
                 convUri, arrayOf(Telephony.Threads._ID, Telephony.Threads.RECIPIENT_IDS),
                 null, null, null
@@ -331,7 +335,7 @@ class MmsDownloadReceiver : BroadcastReceiver() {
                     recipientIds.trim().split(" ").mapNotNull { it.trim().toLongOrNull() }.forEach { cid ->
                         try {
                             context.contentResolver.query(
-                                Uri.parse("content://mms-sms/canonical-address/$cid"),
+                                "content://mms-sms/canonical-address/$cid".toUri(),
                                 arrayOf("address"), null, null, null
                             )?.use { c2 ->
                                 if (c2.moveToFirst()) {

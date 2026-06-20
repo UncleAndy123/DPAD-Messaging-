@@ -17,6 +17,7 @@ import com.dpad.messaging.helpers.AppCoroutineScopes
 import com.dpad.messaging.helpers.NotificationHelper
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import androidx.core.net.toUri
 
 /**
  * Receives SMS_DELIVER when the app is the default SMS handler.
@@ -71,78 +72,76 @@ class SmsReceiver : BroadcastReceiver() {
     }
 
     private suspend fun processMessage(
-        context: Context,
-        address: String,
-        body: String,
-        timestamp: Long
-    ) {
-        if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver.processMessage() address=$address body='${body.take(40)}'")
+    context: Context,
+    address: String,
+    body: String,
+    timestamp: Long
+) {
+    if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver.processMessage() address=$address body='${body.take(40)}'")
 
-        // Resolve (or create) the thread ID for this sender address.
-        // resolveThreadId scans existing threads. If it returns null (new contact / short code)
-        // fall back to Telephony.Threads.getOrCreateThreadId which creates one if needed.
-        val threadId: Long = resolveThreadId(context, address)
-            ?: try {
-                val newId = Telephony.Threads.getOrCreateThreadId(context, address)
-                if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver: getOrCreateThreadId for '$address' -> $newId")
-                newId
-            } catch (e: Exception) {
-                if (BuildConfig.DEBUG) Log.e("DPAD_MSG", "SmsReceiver: getOrCreateThreadId failed for '$address'", e)
-                return
-            }
-        if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver.resolveThreadId() -> threadId=$threadId")
-
-        // Insert into Telephony Sms CP so every SMS reader app can see it.
-        val cv = ContentValues().apply {
-            put(Telephony.Sms.ADDRESS, address)
-            put(Telephony.Sms.BODY, body)
-            put(Telephony.Sms.DATE, timestamp)
-            put(Telephony.Sms.DATE_SENT, timestamp)
-            put(Telephony.Sms.TYPE, Telephony.Sms.MESSAGE_TYPE_INBOX)
-            put(Telephony.Sms.THREAD_ID, threadId)
-            put(Telephony.Sms.READ, 0)
-            put(Telephony.Sms.SEEN, 0)
-        }
-        try {
-            val insertedUri = context.contentResolver.insert(Telephony.Sms.CONTENT_URI, cv)
-            if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver: inserted SMS row -> $insertedUri")
-        } catch (e: Exception) {
-            if (BuildConfig.DEBUG) Log.e("DPAD_MSG", "SmsReceiver: insert failed", e)
-            e.printStackTrace()
-        }
-        // At the top of onReceive(), before the ContentValues insert:
-        //This will actually drop an incoming message, instead of just hiding it.
-        val filterResult = SmsWhitelistManager.check(context, address)
-        if (!filterResult.allowed) {
-            Log.i("DPAD_MSG", "SmsReceiver: dropped message from $address — ${filterResult.reason}")
-            return  // drop silently — don't insert, don't notify
-        }
-        // Check blocked keywords — suppress notification if the body OR sender address matches any.
-        val keywords = App.get().database.blockedKeywordsDao().getAll()
-        val blockedNumbers = App.get().database.blockedNumbersDao().getAll()
-        val normalizedAddrDigits = address.filter { it.isDigit() }
-
-        val isBlockedByNumber = blockedNumbers.any { bn ->
-            val ndigits = bn.number.filter { it.isDigit() }
-            bn.number == address || ndigits == normalizedAddrDigits
-        }
-
-        val isBlockedByKeyword = keywords.any { kw ->
-            body.contains(kw.keyword, ignoreCase = true)
-        }
-
-        val isBlocked = isBlockedByNumber || isBlockedByKeyword
-
-        if (!isBlocked) {
-            val senderName = App.get().contactHelper.getDisplayName(address)
-            NotificationHelper.showIncomingNotification(context, threadId, senderName, address, body)
-        }
-
-        // Refresh UI regardless of keyword blocking (message is still stored).
-        if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver: posting EventBus RefreshMessages(threadId=$threadId)")
-        EventBus.getDefault().post(RefreshConversations())
-        EventBus.getDefault().post(RefreshMessages(threadId))
+    // ── MDM hard-filter — must run first, before any thread/insert side effects ──
+    val filterResult = SmsWhitelistManager.check(context, address)
+    if (!filterResult.allowed) {
+        Log.i("DPAD_MSG", "SmsReceiver: dropped message from $address — ${filterResult.reason}")
+        return  // no thread created, no insert, no notification
     }
+    // ───────────────────────────────────────────────────────────────────────────
+
+    // Resolve (or create) the thread ID for this sender address.
+    val threadId: Long = resolveThreadId(context, address)
+        ?: try {
+            val newId = Telephony.Threads.getOrCreateThreadId(context, address)
+            if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver: getOrCreateThreadId for '$address' -> $newId")
+            newId
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) Log.e("DPAD_MSG", "SmsReceiver: getOrCreateThreadId failed for '$address'", e)
+            return
+        }
+    if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver.resolveThreadId() -> threadId=$threadId")
+
+    // Insert into Telephony Sms CP so every SMS reader app can see it.
+    val cv = ContentValues().apply {
+        put(Telephony.Sms.ADDRESS, address)
+        put(Telephony.Sms.BODY, body)
+        put(Telephony.Sms.DATE, timestamp)
+        put(Telephony.Sms.DATE_SENT, timestamp)
+        put(Telephony.Sms.TYPE, Telephony.Sms.MESSAGE_TYPE_INBOX)
+        put(Telephony.Sms.THREAD_ID, threadId)
+        put(Telephony.Sms.READ, 0)
+        put(Telephony.Sms.SEEN, 0)
+    }
+    try {
+        val insertedUri = context.contentResolver.insert(Telephony.Sms.CONTENT_URI, cv)
+        if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver: inserted SMS row -> $insertedUri")
+    } catch (e: Exception) {
+        if (BuildConfig.DEBUG) Log.e("DPAD_MSG", "SmsReceiver: insert failed", e)
+        e.printStackTrace()
+    }
+
+    // ── Local soft-filter (upstream blocklist + keywords) — suppress notification only ──
+    val keywords = App.get().database.blockedKeywordsDao().getAll()
+    val blockedNumbers = App.get().database.blockedNumbersDao().getAll()
+    val normalizedAddrDigits = address.filter { it.isDigit() }
+
+    val isBlockedByNumber = blockedNumbers.any { bn ->
+        val ndigits = bn.number.filter { it.isDigit() }
+        bn.number == address || ndigits == normalizedAddrDigits
+    }
+    val isBlockedByKeyword = keywords.any { kw ->
+        body.contains(kw.keyword, ignoreCase = true)
+    }
+    val isBlocked = isBlockedByNumber || isBlockedByKeyword
+
+    if (!isBlocked) {
+        val senderName = App.get().contactHelper.getDisplayName(address)
+        NotificationHelper.showIncomingNotification(context, threadId, senderName, address, body)
+    }
+
+    if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver: posting EventBus RefreshMessages(threadId=$threadId)")
+    EventBus.getDefault().post(RefreshConversations())
+    EventBus.getDefault().post(RefreshMessages(threadId))
+}
+
 
     private fun resolveThreadId(context: Context, address: String): Long? {
         // Try several normalized forms of the address because different carriers/ROMs
@@ -162,7 +161,7 @@ class SmsReceiver : BroadcastReceiver() {
             try {
                 if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver.resolveThreadId(): querying threadID for candidate='$cand'")
                 val uri = Uri.withAppendedPath(
-                    Uri.parse("content://mms-sms/threadID"),
+                    "content://mms-sms/threadID".toUri(),
                     Uri.encode(cand)
                 )
                 context.contentResolver.query(uri, arrayOf("_id"), null, null, null)
@@ -177,7 +176,7 @@ class SmsReceiver : BroadcastReceiver() {
         // expensive but reliable across ROMs that don't support the threadID URI.
         try {
             if (BuildConfig.DEBUG) Log.d("DPAD_MSG", "SmsReceiver.resolveThreadId(): fallback scanning conversations for address=$address")
-            val convUri = Uri.parse("content://mms-sms/conversations?simple=true")
+            val convUri = "content://mms-sms/conversations?simple=true".toUri()
             val proj = arrayOf(Telephony.Threads._ID, Telephony.Threads.RECIPIENT_IDS)
             val normalizedCandidates = candidates.map { it.filter { ch -> ch.isDigit() } }.toSet()
 
@@ -190,7 +189,7 @@ class SmsReceiver : BroadcastReceiver() {
                     val ids = recipientIds.trim().split(" ").mapNotNull { it.trim().toLongOrNull() }
                     for (cid in ids) {
                         try {
-                            val addrUri = Uri.parse("content://mms-sms/canonical-address/$cid")
+                            val addrUri = "content://mms-sms/canonical-address/$cid".toUri()
                             val c2 = context.contentResolver.query(addrUri, arrayOf("address"), null, null, null)
                             c2?.use {
                                 if (it.moveToFirst()) {
