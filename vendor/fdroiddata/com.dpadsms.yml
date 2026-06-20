@@ -1,0 +1,29 @@
+Categories:
+  - "Phone & SMS"
+License: MIT
+AuthorName: jbriones95
+AuthorEmail: 108902016+jbriones95@users.noreply.github.com
+SourceCode: https://github.com/jbriones95/DPAD-Messaging
+IssueTracker: https://github.com/jbriones95/DPAD-Messaging/issues
+
+AutoName: DPAD Messaging
+
+RepoType: git
+Repo: https://github.com/jbriones95/DPAD-Messaging
+
+Builds:
+  - versionName: 0.1.4
+    versionCode: 14
+    commit: v0.1.4
+    subdir: app
+    gradle:
+      - yes
+    srclibs:
+      - "mmslib@https://github.com/FossifyOrg/mmslib.git@v1.0.0"
+    prebuild:
+      - cp -r $$mmslib$$/library vendor/mmslib
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 0.1.4
+CurrentVersionCode: 14

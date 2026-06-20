@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <!-- ─── Notifications ─── -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -197,6 +198,12 @@
             android:exported="false"
             android:parentActivityName=".activities.SettingsActivity"
             android:label="@string/manage_blocked_keywords" />
+
+        <activity
+            android:name=".activities.BlockedNumbersActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.SettingsActivity"
+            android:label="@string/blocked_numbers" />
 
         <!-- Headless reply (RESPOND_VIA_MESSAGE) -->
         <service

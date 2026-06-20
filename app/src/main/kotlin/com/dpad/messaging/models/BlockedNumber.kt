@@ -6,12 +6,12 @@ import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Entity(tableName = "blocked_keywords")
-data class BlockedKeyword(
+@Entity(tableName = "blocked_numbers")
+data class BlockedNumber(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long = 0,
 
-    @ColumnInfo(name = "keyword")
-    val keyword: String
+    @ColumnInfo(name = "number")
+    val number: String
 )

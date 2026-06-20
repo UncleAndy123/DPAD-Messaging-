@@ -23,16 +23,16 @@ import com.dpad.messaging.App
 import com.dpad.messaging.R
 import com.dpad.messaging.databinding.ActivityConversationDetailsBinding
 import com.dpad.messaging.helpers.ThemeManager
-import com.dpad.messaging.models.BlockedKeyword
+import com.dpad.messaging.models.BlockedNumber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Conversation details screen.
- * Phase 4: rename persists via Room conversationsDao.setCustomTitle();
- *           block inserts a BlockedKeyword row so SmsReceiver suppresses notifications.
- */
+    * Conversation details screen.
+    * Phase 4: rename persists via Room conversationsDao.setCustomTitle();
+    *           block inserts a BlockedNumber row so receivers suppress notifications.
+    */
 class ConversationDetailsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityConversationDetailsBinding
@@ -337,10 +337,10 @@ class ConversationDetailsActivity : BaseActivity() {
             .setMessage(phoneNumber)
             .setPositiveButton(R.string.yes) { _, _ ->
                 // Insert the phone number as a blocked keyword so SmsReceiver
-                // will match both body.contains(kw) and address == kw.
+                // will be treated as a blocked number and suppressed by receivers.
                 lifecycleScope.launch(Dispatchers.IO) {
-                    App.get().database.blockedKeywordsDao()
-                        .insert(BlockedKeyword(keyword = phoneNumber))
+                    App.get().database.blockedNumbersDao()
+                        .insert(BlockedNumber(number = phoneNumber))
                     withContext(Dispatchers.Main) { finish() }
                 }
             }

@@ -85,6 +85,7 @@ class ThreadActivity : BaseActivity() {
     private var pendingScheduledAtMillis: Long? = null
 
     private lateinit var attachmentPickerLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var contactPickerLauncher: ActivityResultLauncher<Void?>
     private lateinit var cameraCaptureLauncher: ActivityResultLauncher<Uri>
     private var hasInitializedList = false
@@ -100,6 +101,19 @@ class ThreadActivity : BaseActivity() {
         extractThreadExtras(intent)
 
         if (threadId == -1L) { finish(); return }
+
+        // Permission requester: request READ_MEDIA_* (Android 13+) or READ_EXTERNAL_STORAGE (older)
+        permissionRequestLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { result ->
+            val granted = result.values.all { it }
+            if (granted) {
+                // Launch picker after permission granted
+                attachmentPickerLauncher.launch(arrayOf("image/*", "audio/*"))
+            } else {
+                android.widget.Toast.makeText(this, R.string.permission_denied, android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
 
         // Register before setupComposeBar() (must be called before onStart)
         attachmentPickerLauncher = registerForActivityResult(
@@ -384,7 +398,19 @@ class ThreadActivity : BaseActivity() {
             popup.menu.add(0, 3, 0, getString(R.string.attach_camera))
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    1 -> attachmentPickerLauncher.launch(arrayOf("image/*", "audio/*"))
+                    1 -> {
+                        // Ensure we have runtime permission to read external media (Android 13+)
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                            permissionRequestLauncher.launch(arrayOf(
+                                android.Manifest.permission.READ_MEDIA_IMAGES,
+                                android.Manifest.permission.READ_MEDIA_AUDIO
+                            ))
+                        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            permissionRequestLauncher.launch(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE))
+                        } else {
+                            attachmentPickerLauncher.launch(arrayOf("image/*", "audio/*"))
+                        }
+                    }
                     2 -> contactPickerLauncher.launch(null)
                     3 -> launchCameraAttachment()
                 }
@@ -412,19 +438,40 @@ class ThreadActivity : BaseActivity() {
     // ─── Attachment preview ─────────────────────────────────────────────────
 
     private fun showAttachmentPreview(uri: Uri) {
-        binding.attachmentPreviewBar.visibility = View.VISIBLE
-        val mimeType = contentResolver.getType(uri)?.lowercase().orEmpty()
-        if (mimeType.startsWith("image/")) {
-            Glide.with(this)
-                .load(uri)
-                .centerCrop()
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                .into(binding.ivAttachmentPreview)
-        } else {
+        try {
+            binding.attachmentPreviewBar.visibility = View.VISIBLE
+            val mimeType = try { contentResolver.getType(uri)?.lowercase().orEmpty() } catch (_: Exception) { "" }
+            if (mimeType.startsWith("image/")) {
+                try {
+                    // Avoid requesting original-size bitmaps (can OOM on very large images).
+                    Glide.with(this)
+                        .load(uri)
+                        .centerCrop()
+                        .override(800, 800)
+                        .into(binding.ivAttachmentPreview)
+                } catch (e: Exception) {
+                    // Glide or provider may throw — fallback to generic icon
+                    if (BuildConfig.DEBUG) Log.w("DPAD_MSG", "showAttachmentPreview: failed to load image preview", e)
+                    binding.ivAttachmentPreview.setImageResource(R.drawable.ic_attach)
+                }
+            } else {
+                binding.ivAttachmentPreview.setImageResource(R.drawable.ic_attach)
+            }
+            binding.btnRemoveAttachment.requestFocus()
+            updateSendButtonState()
+        } catch (e: SecurityException) {
+            // Missing permission to read the URI — show a friendly fallback and log
+            if (BuildConfig.DEBUG) Log.w("DPAD_MSG", "showAttachmentPreview: security error for uri=$uri", e)
+            binding.attachmentPreviewBar.visibility = View.VISIBLE
             binding.ivAttachmentPreview.setImageResource(R.drawable.ic_attach)
+            android.widget.Toast.makeText(this, R.string.error_picking_contact, android.widget.Toast.LENGTH_SHORT).show()
+            updateSendButtonState()
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) Log.w("DPAD_MSG", "showAttachmentPreview: unexpected error for uri=$uri", e)
+            binding.attachmentPreviewBar.visibility = View.VISIBLE
+            binding.ivAttachmentPreview.setImageResource(R.drawable.ic_attach)
+            updateSendButtonState()
         }
-        binding.btnRemoveAttachment.requestFocus()
-        updateSendButtonState()
     }
 
     private fun clearAttachment() {

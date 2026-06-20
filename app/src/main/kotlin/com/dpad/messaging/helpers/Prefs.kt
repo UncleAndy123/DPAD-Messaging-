@@ -34,6 +34,7 @@ class Prefs private constructor(context: Context) {
         private const val KEY_UI_SCALE            = "ui_scale"
         private const val KEY_MMS_PROXY_HOST      = "mms_proxy_host"
         private const val KEY_MMS_PROXY_PORT      = "mms_proxy_port"
+        private const val KEY_DEFAULT_SMS_DISMISSED = "default_sms_dismissed"
 
         const val PRIVACY_FULL        = "full"
         const val PRIVACY_SENDER_ONLY = "sender_only"
@@ -105,7 +106,7 @@ class Prefs private constructor(context: Context) {
      * Default: [PRIVACY_FULL].
      */
     var lockScreenPrivacy: String
-        get() = prefs.getString(KEY_LOCK_SCREEN_PRIVACY, PRIVACY_FULL) ?: PRIVACY_FULL
+        get() = prefs.getString(KEY_LOCK_SCREEN_PRIVACY, PRIVACY_SENDER_ONLY) ?: PRIVACY_SENDER_ONLY
         set(v) = prefs.edit().putString(KEY_LOCK_SCREEN_PRIVACY, v).apply()
 
     /** Move deleted messages to the recycle bin instead of hard-deleting. Default: false. */
@@ -216,4 +217,9 @@ class Prefs private constructor(context: Context) {
     var mmsProxyPort: Int
         get() = prefs.getInt(KEY_MMS_PROXY_PORT, -1)
         set(v) = prefs.edit().putInt(KEY_MMS_PROXY_PORT, v).apply()
+
+    /** User declined the "set as default SMS app" prompt — don't ask again. */
+    var defaultSmsDismissed: Boolean
+        get() = prefs.getBoolean(KEY_DEFAULT_SMS_DISMISSED, false)
+        set(v) = prefs.edit().putBoolean(KEY_DEFAULT_SMS_DISMISSED, v).apply()
 }

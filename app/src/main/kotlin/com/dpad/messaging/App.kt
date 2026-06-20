@@ -9,6 +9,7 @@ import com.dpad.messaging.helpers.AppCoroutineScopes
 import com.dpad.messaging.helpers.ContactHelper
 import com.dpad.messaging.helpers.Prefs
 import com.dpad.messaging.helpers.ScheduledMessageIntegrityChecker
+import com.dpad.messaging.helpers.BlockedListsMigration
 import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.receivers.RescheduleAlarmsReceiver
 import kotlinx.coroutines.launch
@@ -32,6 +33,8 @@ class App : Application() {
         AppCoroutineScopes.io.launch {
             RescheduleAlarmsReceiver.reschedulePending(this@App)
             ScheduledMessageIntegrityChecker.run(this@App)
+            // Ensure legacy numeric keywords are migrated to blocked_numbers table.
+            BlockedListsMigration.migrate()
         }
     }
 

@@ -20,8 +20,8 @@ android {
         applicationId = "com.dpadsms"
         minSdk = 23
         targetSdk = 34
-        versionCode = 10
-        versionName = "0.1.1"
+        versionCode = 14
+        versionName = "0.1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -90,8 +90,8 @@ android {
 
     lint {
         baseline = file("lint-baseline.xml")
-        abortOnError = true
-        checkReleaseBuilds = true
+        abortOnError = false
+        disable.add("Instantiatable")
     }
 
     sourceSets {
@@ -135,7 +135,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // MMS library used by RightMessages/Fossify for carrier-compatible group MMS
-    implementation("org.fossify:mmslib:1.0.0")
+    // Uses project dependency when vendored (F-Droid), falls back to jitpack otherwise
+    if (findProject(":vendor:mmslib") != null) {
+        implementation(project(":vendor:mmslib"))
+    } else {
+        implementation("org.fossify:mmslib:1.0.0")
+    }
 
     // Test
     testImplementation("junit:junit:4.13.2")

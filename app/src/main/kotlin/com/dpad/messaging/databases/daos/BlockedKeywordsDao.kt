@@ -17,4 +17,8 @@ interface BlockedKeywordsDao {
 
     @Query("DELETE FROM blocked_keywords")
     suspend fun deleteAll()
+
+    // Legacy convenience: check whether a normalized number exists in blocked keywords
+    @Query("SELECT COUNT(*) FROM blocked_keywords WHERE keyword = :kw")
+    suspend fun exists(kw: String): Int
 }

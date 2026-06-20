@@ -15,6 +15,8 @@
         <item name="android:navigationBarColor">@color/colorBackground</item>
         <item name="android:textColor">@color/colorOnBackground</item>
         <item name="android:textColorPrimary">@color/colorOnBackground</item>
+        <item name="sentMessageBubbleColor">@color/bubbleSentBg</item>
+        <item name="sentMessageBubbleFocusedColor">@color/bubbleSentBgFocused</item>
         <!-- Disable activity transition animations for snappy dumbphone feel -->
         <item name="android:windowAnimationStyle">@null</item>
     </style>
@@ -25,6 +27,8 @@
         <item name="colorSecondary">@color/accent_blue</item>
         <item name="colorControlActivated">@color/accent_blue</item>
         <item name="colorControlHighlight">@color/accent_blue_highlight</item>
+        <item name="sentMessageBubbleColor">@color/accent_blue</item>
+        <item name="sentMessageBubbleFocusedColor">@color/accent_blue_focused</item>
     </style>
 
     <style name="Theme.DpadMessaging.Green" parent="Theme.DpadMessaging">
@@ -33,6 +37,8 @@
         <item name="colorSecondary">@color/accent_green</item>
         <item name="colorControlActivated">@color/accent_green</item>
         <item name="colorControlHighlight">@color/accent_green_highlight</item>
+        <item name="sentMessageBubbleColor">@color/accent_green</item>
+        <item name="sentMessageBubbleFocusedColor">@color/accent_green_focused</item>
     </style>
 
     <style name="Theme.DpadMessaging.Orange" parent="Theme.DpadMessaging">
@@ -41,6 +47,8 @@
         <item name="colorSecondary">@color/accent_orange</item>
         <item name="colorControlActivated">@color/accent_orange</item>
         <item name="colorControlHighlight">@color/accent_orange_highlight</item>
+        <item name="sentMessageBubbleColor">@color/accent_orange</item>
+        <item name="sentMessageBubbleFocusedColor">@color/accent_orange_focused</item>
     </style>
 
     <style name="Theme.DpadMessaging.Rose" parent="Theme.DpadMessaging">
@@ -49,6 +57,8 @@
         <item name="colorSecondary">@color/accent_rose</item>
         <item name="colorControlActivated">@color/accent_rose</item>
         <item name="colorControlHighlight">@color/accent_rose_highlight</item>
+        <item name="sentMessageBubbleColor">@color/accent_rose</item>
+        <item name="sentMessageBubbleFocusedColor">@color/accent_rose_focused</item>
     </style>
 
     <!-- Splash screen: identical background so there's no flash -->

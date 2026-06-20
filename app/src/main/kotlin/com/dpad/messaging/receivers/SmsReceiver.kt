@@ -119,9 +119,19 @@ class SmsReceiver : BroadcastReceiver() {
         }
         // Check blocked keywords — suppress notification if the body OR sender address matches any.
         val keywords = App.get().database.blockedKeywordsDao().getAll()
-        val isBlocked = keywords.any { kw ->
-            body.contains(kw.keyword, ignoreCase = true) || address == kw.keyword
+        val blockedNumbers = App.get().database.blockedNumbersDao().getAll()
+        val normalizedAddrDigits = address.filter { it.isDigit() }
+
+        val isBlockedByNumber = blockedNumbers.any { bn ->
+            val ndigits = bn.number.filter { it.isDigit() }
+            bn.number == address || ndigits == normalizedAddrDigits
         }
+
+        val isBlockedByKeyword = keywords.any { kw ->
+            body.contains(kw.keyword, ignoreCase = true)
+        }
+
+        val isBlocked = isBlockedByNumber || isBlockedByKeyword
 
         if (!isBlocked) {
             val senderName = App.get().contactHelper.getDisplayName(address)

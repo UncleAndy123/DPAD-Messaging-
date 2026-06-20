@@ -20,6 +20,9 @@ interface MessagesDao {
     @Query("SELECT * FROM messages WHERE id = :id")
     suspend fun getMessage(id: Long): Message?
 
+    @Query("SELECT * FROM messages")
+    suspend fun getAllMessages(): List<Message>
+
     @Query("SELECT * FROM messages WHERE is_scheduled = 1 AND scheduled_date > :timestamp ORDER BY scheduled_date ASC")
     suspend fun getScheduledMessagesAfter(timestamp: Long): List<Message>
 
@@ -46,6 +49,9 @@ interface MessagesDao {
 
     @Query("DELETE FROM messages WHERE thread_id = :threadId")
     suspend fun deleteMessagesForThread(threadId: Long)
+
+    @Query("DELETE FROM messages")
+    suspend fun deleteAllMessages()
 
     @Query("UPDATE messages SET read = 1 WHERE thread_id = :threadId")
     suspend fun markThreadRead(threadId: Long)

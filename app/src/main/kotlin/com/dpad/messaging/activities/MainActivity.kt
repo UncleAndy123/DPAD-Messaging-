@@ -81,6 +81,9 @@ class MainActivity : BaseActivity() {
                 // Role granted — re-check and refresh UI
                 checkDefaultSmsApp()
                 loadConversations()
+            } else {
+                // User declined — don't ask again
+                Prefs.get().defaultSmsDismissed = true
             }
         }
 
@@ -481,6 +484,8 @@ class MainActivity : BaseActivity() {
     }
 
     private fun checkDefaultSmsApp() {
+        if (Prefs.get().defaultSmsDismissed) return
+
         val isDefault = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val roleManager = getSystemService(RoleManager::class.java)
             roleManager.isRoleHeld(RoleManager.ROLE_SMS)

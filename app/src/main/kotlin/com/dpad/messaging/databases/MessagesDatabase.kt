@@ -16,9 +16,10 @@ import com.dpad.messaging.models.*
         Attachment::class,
         Draft::class,
         RecycleBinMessage::class,
-        BlockedKeyword::class
+        BlockedKeyword::class,
+        BlockedNumber::class
     ],
-    version = 3,
+    version = 5,
     exportSchema = true
 )
 abstract class MessagesDatabase : RoomDatabase() {
@@ -28,6 +29,7 @@ abstract class MessagesDatabase : RoomDatabase() {
     abstract fun attachmentsDao(): AttachmentsDao
     abstract fun draftsDao(): DraftsDao
     abstract fun blockedKeywordsDao(): BlockedKeywordsDao
+    abstract fun blockedNumbersDao(): BlockedNumbersDao
 
     companion object {
         private const val DB_NAME = "dpad_messages.db"
@@ -64,6 +66,34 @@ abstract class MessagesDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `blocked_numbers` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `number` TEXT NOT NULL
+                    )
+                    """.trimIndent()
+                )
+            }
+        }
+
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Check if old whitelisted_numbers table exists and rename it
+                val cursor = db.query("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='whitelisted_numbers'")
+                cursor.moveToFirst()
+                if (cursor.getInt(0) > 0) {
+                    cursor.close()
+                    db.execSQL("ALTER TABLE `whitelisted_numbers` RENAME TO `blocked_numbers`")
+                } else {
+                    cursor.close()
+                    db.execSQL("CREATE TABLE IF NOT EXISTS `blocked_numbers` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `number` TEXT NOT NULL)")
+                }
+            }
+        }
+
         @Volatile
         private var instance: MessagesDatabase? = null
 
@@ -81,6 +111,8 @@ abstract class MessagesDatabase : RoomDatabase() {
             )
                 .addMigrations(MIGRATION_1_2)
                 .addMigrations(MIGRATION_2_3)
+                .addMigrations(MIGRATION_3_4)
+                .addMigrations(MIGRATION_4_5)
                 .build()
         }
     }

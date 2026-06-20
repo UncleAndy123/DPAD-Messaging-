@@ -411,9 +411,19 @@ object MmsDownloader {
         // ── Block-list check, notification, EventBus ──────────────────────────
         val body    = MmsHelper.getMmsDisplayBody(context, msgId, parsed.subject)
         val keywords = App.get().database.blockedKeywordsDao().getAll()
-        val isBlocked = keywords.any { kw ->
-            body.contains(kw.keyword, ignoreCase = true) || from == kw.keyword
+        val blockedNumbers = App.get().database.blockedNumbersDao().getAll()
+        val normalizedFromDigits = from.filter { it.isDigit() }
+
+        val isBlockedByNumber = blockedNumbers.any { bn ->
+            val ndigits = bn.number.filter { it.isDigit() }
+            bn.number == from || ndigits == normalizedFromDigits
         }
+
+        val isBlockedByKeyword = keywords.any { kw ->
+            body.contains(kw.keyword, ignoreCase = true)
+        }
+
+        val isBlocked = isBlockedByNumber || isBlockedByKeyword
 
         if (!isBlocked && from.isNotBlank()) {
             val senderName = App.get().contactHelper.getDisplayName(from)

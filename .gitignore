@@ -1,34 +1,21 @@
 # Gradle
 .gradle/
-build/
 **/build/
+/build
 
-# Android Studio
+# IDE
 *.iml
 .idea/
-local.properties
-.DS_Store
 
-# Keystore and signing files
+# Android
+local.properties
 keystore.properties
 *.jks
 *.keystore
 
-# Build outputs and IDE
-/.gradle
-/build
-**/build/
-
-# Android Studio
-*.iml
-
-# Misc
-.DS_Store
-Thumbs.db
+# Kotlin
+.kotlin/
 
 # OS
 .DS_Store
 Thumbs.db
-
-# Release keystore (generated locally, not committed)
-release.keystore

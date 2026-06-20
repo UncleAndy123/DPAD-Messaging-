@@ -18,7 +18,6 @@ import com.dpad.messaging.databinding.ItemMessageSendingBinding
 import com.dpad.messaging.databinding.ItemMessageSentBinding
 import com.dpad.messaging.databinding.ItemThreadDateBinding
 import com.dpad.messaging.helpers.Prefs
-import com.dpad.messaging.helpers.ThemeManager
 import com.dpad.messaging.models.Message
 import com.dpad.messaging.models.ThreadItem
 import java.text.SimpleDateFormat
@@ -111,11 +110,9 @@ class ThreadAdapter(
         private val binding: ItemMessageSentBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(message: Message) {
-            val accent = ThemeManager.accentColor(binding.root.context)
             binding.tvBody.text = message.body
             binding.tvBody.visibility = if (message.body.isBlank()) View.GONE else View.VISIBLE
             binding.tvTime.text = formatTime(message.date)
-            binding.bubbleContainer.background?.mutate()?.setTint(accent)
             if (message.status == Message.STATUS_COMPLETE) {
                 binding.tvStatus.text = binding.root.context.getString(R.string.delivered)
                 binding.tvStatus.visibility = View.VISIBLE
@@ -195,7 +192,6 @@ class ThreadAdapter(
         private val binding: ItemMessageSendingBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(message: Message) {
-            val accent = ThemeManager.accentColor(binding.root.context)
             val bodyText = when {
                 message.body.isNotBlank() -> message.body
                 message.isMms -> binding.root.context.getString(R.string.attach)
@@ -203,8 +199,6 @@ class ThreadAdapter(
             }
             binding.tvBody.text = bodyText
             binding.tvBody.visibility = if (bodyText.isBlank()) View.GONE else View.VISIBLE
-            binding.bubbleContainer.background?.mutate()?.setTint(accent)
-
             if (message.isScheduled) {
                 binding.ivScheduled.visibility = View.VISIBLE
                 binding.tvState.text = binding.root.context.getString(R.string.sending_later)
