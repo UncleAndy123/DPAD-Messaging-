@@ -32,6 +32,9 @@ object SmsWhitelistManager {
         val rm = context.getSystemService(Context.RESTRICTIONS_SERVICE) as RestrictionsManager
         val bundle = rm.applicationRestrictions
 
+        // Temporary diagnostic — remove once filtering is confirmed working.
+        Log.d("DPAD_MSG", "SmsWhitelistManager.check() address=$address mode=${bundle.getString(KEY_MODE)} allowed=${bundle.getString(KEY_ALLOWED)} blocked=${bundle.getString(KEY_BLOCKED)}")
+
         val mode = when (bundle.getString(KEY_MODE, "off")?.lowercase()) {
             "whitelist" -> FilterMode.WHITELIST
             "blocklist" -> FilterMode.BLOCKLIST
